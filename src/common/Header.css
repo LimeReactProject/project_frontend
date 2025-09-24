@@ -11,7 +11,7 @@
 .util__inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 8px 20px;
+  padding: 8px 60px 8px 95px;
 }
 
 .util__link-list {
@@ -178,6 +178,7 @@
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  --header-height: 110px;
 }
 
 .header__box {
@@ -186,8 +187,9 @@
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 60px 0 95px;
   height: 80px;
+  position: relative;
 }
 
 .header__logo {
@@ -195,7 +197,7 @@
 }
 
 .header__logo img {
-  height: 40px;
+  height: 30px;
 }
 
 /* 메인 메뉴 컨테이너 */
@@ -238,7 +240,7 @@
 /* 드롭다운 메뉴 컨테이너 - 전체 화면 너비 */
 .drop {
   position: fixed;
-  top: 120px;  /* 헤더 높이 만큼 내려오게 */
+  top: 110px;
   left: 0;
   right: 0;
   width: 100vw;
@@ -351,13 +353,15 @@
   transition: background 0.2s ease;
 }
 
-.btn_login:hover {
-  background: #ff5000;
-}
+
 
 .btn_login::before {
-  content: '👤';
-  font-size: 20px;
+  content: '';
+  width: 31px;
+  height: 30px;
+  background: url(/images/free-icon-person-5393061.png) no-repeat center;
+  background-size: contain;
+  display: block;
 }
 
 .t-hide {

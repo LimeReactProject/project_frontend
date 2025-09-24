@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import './MainVisualSwiper.css';
+import FlightSearch from './FlightSearch';
+import SearchModal from './SearchModal';
+import DateModal from './DateModal';
 
 // URL_LINK 유틸리티 함수들
 const URL_LINK = {
@@ -17,7 +20,51 @@ const sendGAAttrEvent = (event) => {
   console.log('GA Event:', event);
 };
 
+// 항공권 검색 함수
+const setSearchAvailParam = (isSearch, type) => {
+  console.log('Searching flights:', { isSearch, type });
+  // 실제 검색 로직 구현
+};
+
+// 최근 검색 삭제 함수
+const deletelatelySearch = (event) => {
+  console.log('Delete lately search:', event);
+  // 실제 삭제 로직 구현
+};
+
+// 즐겨찾기 버튼 클릭 함수
+const clickBtnFavorites = (event) => {
+  console.log('Click favorites:', event);
+  // 실제 즐겨찾기 로직 구현
+};
+
+// 승객 수 체크 함수들
+const chkAdtCount = (type) => {
+  console.log('Check adult count:', type);
+  // 실제 성인 수 체크 로직 구현
+};
+
+const chkChdCount = (type) => {
+  console.log('Check child count:', type);
+  // 실제 소아 수 체크 로직 구현
+};
+
+const chkInfCount = (type) => {
+  console.log('Check infant count:', type);
+  // 실제 유아 수 체크 로직 구현
+};
+
+const calcAge = () => {
+  console.log('Calculate age');
+  // 실제 나이 계산 로직 구현
+};
+
 function MainVisualSwiper() {
+  // 모달 상태 관리
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showDateModal, setShowDateModal] = useState(false);
+  const [modalType, setModalType] = useState('departure');
+
   // 슬라이드 데이터
   const slides = [
     {
@@ -53,7 +100,18 @@ function MainVisualSwiper() {
   ];
 
   return (
-    <div className="main-visual-swiper__wrap">
+    <>
+      <div className="main-visual-swiper__wrap">
+        <FlightSearch 
+          onOpenModal={({ type }) => {
+            setModalType(type);
+            setShowLocationModal(true);
+          }}
+          onOpenDateModal={({ type }) => {
+            setModalType(type);
+            setShowDateModal(true);
+          }}
+        />
       {/* PC 버전 스와이퍼 */}
       <div className="main-visual-swiper__container pc-only">
         <Swiper
@@ -131,7 +189,21 @@ function MainVisualSwiper() {
           ))}
         </Swiper>
       </div>
-    </div>
+      </div>
+      
+      {/* 모달을 MainVisualSwiper 밖에 배치 */}
+      <SearchModal 
+        isOpen={showLocationModal}
+        onClose={() => setShowLocationModal(false)}
+        modalType={modalType}
+      />
+      
+      <DateModal 
+        isOpen={showDateModal}
+        onClose={() => setShowDateModal(false)}
+        modalType={modalType}
+      />
+    </>
   );
 }
 

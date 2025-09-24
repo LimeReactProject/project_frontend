@@ -1,4 +1,5 @@
 import './Header.css';
+import { useEffect } from 'react';
 
 // 필요한 함수들 정의
 const URL_LINK = {
@@ -15,6 +16,36 @@ const sendGAAttrEvent = (event) => {
 };
 
 function Header() {
+	// 스크롤 시 드롭박스 위치 동적 조정
+	useEffect(() => {
+		const updateDropdownPosition = () => {
+			const header = document.querySelector('.sticky-header');
+			const dropdowns = document.querySelectorAll('.drop');
+			
+			if (header && dropdowns.length > 0) {
+				const headerRect = header.getBoundingClientRect();
+				const headerBottom = headerRect.bottom;
+				
+				dropdowns.forEach(dropdown => {
+					dropdown.style.top = `${headerBottom}px`;
+				});
+			}
+		};
+
+		// 초기 위치 설정
+		updateDropdownPosition();
+
+		// 스크롤 이벤트 리스너 추가
+		window.addEventListener('scroll', updateDropdownPosition);
+		window.addEventListener('resize', updateDropdownPosition);
+
+		// 클린업
+		return () => {
+			window.removeEventListener('scroll', updateDropdownPosition);
+			window.removeEventListener('resize', updateDropdownPosition);
+		};
+	}, []);
+
 	return ( 
 		<>
 
