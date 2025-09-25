@@ -1,5 +1,6 @@
 import './Header.css';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // 필요한 함수들 정의
 const URL_LINK = {
@@ -16,6 +17,9 @@ const sendGAAttrEvent = (event) => {
 };
 
 function Header() {
+
+  const nav = useNavigate();
+
 	// 스크롤 시 드롭박스 위치 동적 조정
 	useEffect(() => {
 		const updateDropdownPosition = () => {
@@ -110,14 +114,12 @@ function Header() {
 		<div className="sticky-header" data-sticky="">
   <div className="header__box">
     {/* header__box 추가 */}
-    <h1 className="header__logo">
-      <a href="javascript:;" data-action="menu" data-menu-name="main">
-        <img
-          src="https://static.jejuair.net/cms/images/banner_image/20250123100048468.png"
-          alt=""
-          loading="lazy"
-        />
-      </a>
+    <h1 className="header__logo" onClick={() =>  nav('/')} style={{ cursor: 'pointer' }}>
+      <img
+        src="https://static.jejuair.net/cms/images/banner_image/20250123100048468.png"
+        alt=""
+        loading="lazy"
+      />
     </h1>
 
     {/* S 전체매뉴 개선 start gnb + 전체메뉴 합치기 및 그룹화 */}

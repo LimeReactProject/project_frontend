@@ -79,7 +79,11 @@ function FlightSearch({ onOpenModal, onOpenDateModal }) {
                             {/* 오른쪽: 날짜/성인 */}
                             <div className="ticketing-right-group">
                                 <div className="ticketing-date">
-                                    <button type="button" className="btn-date">
+                                    <button 
+                                        type="button" 
+                                        className="btn-date"
+                                        onClick={() => onOpenDateModal({ type: 'departure' })}
+                                    >
                                         <Calendar className="compact-icon" />
                                         <span className="txt">
                                             {tripType === '왕복' 
