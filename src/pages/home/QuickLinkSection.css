@@ -1,0 +1,170 @@
+/* QuickLinkSection.css */
+
+.section_quick_link {
+    background: #f8f8f8;
+    min-height: 208px !important;
+    padding-top: 40px;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link {
+        min-height: 163px !important;
+        height: 163px !important;
+        margin: 0 -30px;
+        padding-top: 30px;
+    }
+}
+
+.section_quick_link .promotion-list {
+    width: 1004px;
+    margin: 0 auto;
+    margin-left: calc(50% - 502px - 60px); /* 60px 가 커질수록 왼쪽으로 이동 */
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list {
+        width: 100%;
+        margin: 0 auto;
+        padding-left: 16px;
+    }
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc {
+        margin-left: 0;
+        padding: 0 10px;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide {
+    min-width: 122px;
+    margin: 2px;
+    width: 140px;
+    background: transparent;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide:lang(ko) {
+    width: 122px;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide {
+        min-width: 90px;
+        height: 100px;
+    }
+
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide:lang(ko) {
+        min-width: 70px;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide:hover .carousel_bg img {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    transition: 0.2s ease-in;
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide:hover .txt-wrap .name {
+    font-weight: 600;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide:hover .txt-wrap .name {
+        font-size: 12px;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .carousel_bg {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .carousel_bg {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .carousel_bg img {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    transition: 0.2s ease-in;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .carousel_bg img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .txt-wrap {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .txt-wrap .name {
+    font-weight: 400;
+    color: #333;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-wrapper a.swiper-slide .txt-wrap .name {
+        font-size: 12px;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-scrollbar {
+    display: none;
+    height: 3px;
+    width: 100px;
+    margin: 0 auto;
+    background: #999;
+}
+
+@media (max-width: 1079px) {
+    .section_quick_link .promotion-list .MainBannerTop-pc .swiper-scrollbar {
+        display: block !important;
+    }
+}
+
+.section_quick_link .promotion-list .MainBannerTop-pc .swiper-scrollbar .swiper-scrollbar-drag {
+    height: 3px;
+    background: #ff5000;
+}

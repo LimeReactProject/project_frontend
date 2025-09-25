@@ -1,0 +1,467 @@
+/* EventBannerSection.css */
+
+.section_exception_boon {
+    width: 1004px;
+    margin-left: calc(50% - 502px - 60px);
+    overflow: visible;
+    padding: 0 80px 0 60px;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon {
+        width: 100%;
+        padding: 0 20px;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-pc .swiper-wrapper a.swiper-slide {
+    min-width: 330.5px;
+    margin: 2px;
+    text-decoration: none;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .NewBannerThin-pc .swiper-wrapper a.swiper-slide {
+        min-width: 100%;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-pc .swiper-wrapper a.swiper-slide .carousel_bg {
+    width: 320px;
+    height: 140px;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .NewBannerThin-pc .swiper-wrapper a.swiper-slide .carousel_bg {
+        width: calc(100% - 4px);
+        height: 140px;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper a.swiper-slide {
+    min-width: 100%;
+    text-decoration: none;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper a.swiper-slide .carousel_bg {
+    width: calc(100% - 11px);
+    height: 140px;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container {
+    overflow: hidden;
+    margin-left: 4px;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .swiper-slide {
+    display: block;
+    margin: 2px 6px;
+    min-width: 100%;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg {
+    margin: 0 auto;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    position: relative;
+    height: 140px;
+    border-radius: 10px;
+    background-size: cover;
+    width: 100%;
+    background-position: 0 center;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg .event-banner {
+    padding: 20px;
+    width: 100%;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg .event-banner .event-banner__text {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #000;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg .event-banner .event-banner__title {
+    margin-top: 1px;
+    font-size: 24px;
+    font-weight: 600;
+    justify-content: left;
+    display: flex;
+    color: #000;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg .label-wrap {
+    top: auto;
+    bottom: 0;
+    position: absolute;
+    left: 0;
+    display: flex;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg .label-wrap .label-wrap__item {
+    min-width: 50px;
+    height: 22px;
+    margin-left: 0;
+    padding: 0 7px;
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    line-height: 22px;
+    border-radius: 2px;
+}
+
+.section_exception_boon .NewBannerThin-list .NewBannerThin-mo .swiper-wrapper .swiper-container .carousel_bg .label-wrap .label-wrap__item.label-wrap__item--type2 {
+    background: #ff5000;
+}
+
+.section_exception_boon .NewBannerThin-list {
+    position: relative;
+    margin: 60px auto;
+    font-size: 0;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list {
+        margin-top: 50px;
+        margin-bottom: 0;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .title {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.section_exception_boon .NewBannerThin-list .title .title_more_btn {
+    background: #ff5000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(120px);
+}
+
+.section_exception_boon .NewBannerThin-list .title .title_more_btn:hover {
+    background: #e04500;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .title {
+        margin-top: 50px;
+        margin-bottom: 15px;
+        justify-content: space-between;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .title .title__section {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: normal;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .title .title__section {
+        font-size: 18px;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container {
+    overflow: hidden;
+    margin-left: 4px;
+    width: 1004px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .swiper-container {
+        margin-left: -4px;
+        width: 100%;
+        max-width: 1004px;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide {
+    display: block;
+    margin: 2px 4px;
+    min-width: 330px;
+    width: 330px;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide {
+        margin: 0;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg {
+    margin: 0 auto;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    position: relative;
+    height: 140px;
+    border-radius: 10px;
+    background-size: cover;
+    width: 100%;
+    background-position: 0 center;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .event-banner {
+    padding: 20px;
+    width: 100%;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .event-banner .event-banner__text {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #000;
+    margin-left: 10px;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .event-banner .event-banner__title {
+    margin-top: 1px;
+    font-size: 24px;
+    font-weight: 600;
+    justify-content: left;
+    display: flex;
+    color: #000;
+    margin-left: 10px;
+    letter-spacing: normal;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .event-banner .event-banner__title {
+        font-size: 16px;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .label-wrap {
+    top: auto;
+    bottom: 0;
+    position: absolute;
+    left: 0;
+    display: flex;
+    display: none;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .label-wrap .label-wrap__item {
+    min-width: 50px;
+    height: 22px;
+    margin-left: 0;
+    padding: 0 7px;
+    font-size: 13px;
+    color: #fff;
+    text-align: center;
+    line-height: 22px;
+    border-radius: 2px;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .carousel_bg .label-wrap .label-wrap__item.label-wrap__item--type2 {
+    background: #ff5000;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2 {
+    display: none;
+    position: absolute;
+    top: 120px;
+    left: -20px;
+    width: 52px;
+    height: 52px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    color: black;
+    font-size: 24px;
+    font-weight: normal;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2 {
+    display: none;
+    position: absolute;
+    top: 120px;
+    right: -155px;
+    width: 52px;
+    height: 52px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    color: black;
+    font-size: 24px;
+    font-weight: normal;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2.show,
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2.show {
+    display: flex;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2:focus,
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2:active {
+    outline: none;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2:focus,
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2:active {
+    outline: none;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2:disabled,
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__pagination1 .swiper-pagination-bullet {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__pagination1 .swiper-pagination-bullet:hover {
+    opacity: 0.7;
+}
+
+@media (max-width: 1079px) {
+    .section_exception_boon .NewBannerThin-list .carousel__button_new-prev2.show,
+    .section_exception_boon .NewBannerThin-list .carousel__button_new-next2.show {
+        display: none;
+    }
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2:focus,
+.section_exception_boon .NewBannerThin-list .carousel__button_new-prev2:active {
+    outline: none;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2:focus,
+.section_exception_boon .NewBannerThin-list .carousel__button_new-next2:active {
+    outline: none;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap {
+    margin-top: 20px;
+    transform: matrix(1, 0, 0.0005, 1, 0, 0);
+    width: fit-content;
+    margin-left: 30px;
+    position: absolute;
+    top: 0;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap .name {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap .name:lang(en) {
+    font-size: 15px;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap .text {
+    margin-top: 1px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    justify-content: left;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap .text:lang(en) {
+    font-size: 19px;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap .date {
+    margin-top: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.section_exception_boon .NewBannerThin-list .swiper-container .swiper-slide .txt-wrap .date:lang(en) {
+    font-size: 12px;
+}
+
+.section_exception_boon .NewBannerThin-list.NewBannerThin-list--main .link-wrap--arrow {
+    position: absolute;
+    top: 140px;
+    left: -240px;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__pagination1 {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__pagination1 .swiper-pagination-bullet {
+    background: #4c4c4c;
+    opacity: 0.3;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    display: block;
+}
+
+.section_exception_boon .NewBannerThin-list .carousel__pagination1 .swiper-pagination-bullet-active {
+    opacity: 1;
+    width: 12px;
+    border-radius: 3px;
+    background: #ff8300;
+}
+
+.section_exception_boon .NewBannerThin-list .pagination-nom-gp {
+    position: absolute;
+    z-index: 6;
+    top: 116px;
+    right: 0;
+    font-size: 12px;
+    color: #fff;
+    background-color: #0009;
+    border-radius: 10px 0;
+    padding: 4px 8px;
+    display: flex;
+}
+
+.section_exception_boon .NewBannerThin-list .pagination-nom-gp .carousel__pagination1-2 {
+    position: relative;
+    font-size: 12px;
+    color: #fff;
+}
+
+.section_exception_boon .NewBannerThin-list .pagination-nom-gp .btn_pagination_more {
+    margin-left: 5px;
+    font-size: 12px;
+    color: #fff;
+}
