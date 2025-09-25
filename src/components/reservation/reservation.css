@@ -1,0 +1,716 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "FlightSans";
+  background-color: #fff;
+  color: #333;
+}
+
+.main {
+  background: #fff;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+.page-title-wrap {
+  text-align: left; /* 중앙 → 왼쪽 정렬 */
+  margin-bottom: 40px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+}
+
+.quick-book-sch {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main-ticketing {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* 탭 스타일 */
+.ticketing-type {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
+  justify-content: flex-start; /* 중앙 → 왼쪽 정렬 */
+  gap: 30px;
+  margin-bottom: 40px;
+  padding-left: 40px; /* 왼쪽 여백 추가 */
+}
+
+.ticketing-type .item {
+  position: relative;
+}
+
+.ticketing-type .item-btn {
+  display: block;
+  padding: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #999;
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.ticketing-type .item.selected .item-btn {
+  color: #ff6600;
+  border-bottom-color: #ff6600;
+  font-weight: 600;
+}
+
+/* 컨텐츠 영역 */
+.ticketing-content {
+  padding: 0 40px 40px 40px;
+}
+
+/* 노선 행 */
+/* 노선 행 */
+.route-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+  position: relative; 
+}
+
+.departure-section,
+.arrival-section {
+  flex: 1;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 60px;
+}
+
+.departure-section {
+  text-align: left ;
+}
+
+.arrival-section {
+  text-align: right ;
+}
+
+.departure-section:hover,
+.arrival-section:hover {
+  border-color: #FF5000;
+}
+
+.city-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #AAA;
+}
+
+/* 화살표 */
+.route-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.arrow-icon {
+  font-size: 20px;
+  color: #999;
+}
+
+/* 날짜 섹션 */
+.date-section {
+  flex: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 0px 0px 30px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 60px; 
+}
+
+
+.txt::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url('https://static.jejuair.net/hpgg/resources/images/ticketing/reserve_step1_icon.png');
+  background-position: 0 -201px;
+  background-repeat: no-repeat;
+  background-size: 605px; /* 중요: 이미지가 축소되어 있기 때문에 반드시 포함 */
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.date-text {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+  
+}
+
+/* 승객 행 */
+.passenger-row {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  width: calc(28% - 13.33px); /* departure-section과 동일한 너비 */
+  /* 또는 더 정확하게 하려면 */
+  /* width: 200px; departure-section의 실제 너비와 맞춤 */
+}
+
+
+.passenger-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+  color: #333;
+  width: 100%;
+}
+
+.person-icon {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url('https://static.jejuair.net/hpgg/resources/images/ticketing/reserve_step1_icon.png');
+  background-position: -46px -200px;
+  background-repeat: no-repeat;
+  background-size: 605px; /* 중요: 이미지가 축소되어 있기 때문에 반드시 포함 */
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.passenger-text {
+  font-weight: 500;
+  color: #333;
+}
+
+
+/* 옵션 행 */
+.options-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.payment-section {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* 제목과 옵션 사이 간격 */
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0; /* 하단 마진 제거 */
+
+}
+.btnMark{
+    background-position: 0 0;
+    background-image: url('/public/images/icon_one_way.png');
+    background-size: 36px auto;
+    background-repeat: no-repeat;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: inline-block;
+    position: relative; /* 추가: ::before의 기준점 설정 */
+
+}
+.btnMark.round-trip::before {
+    content: "";
+    position: absolute;
+        top: 0; /* btnMark와 정확히 같은 위치 */
+    left: 0; /* btnMark와 정확히 같은 위치 */
+    width: 36px;
+    height: 36px;
+    background-repeat: no-repeat;
+    background-position: 0 -88px;
+    background-image: url('/public/images/reserve_step1_icon.png');
+    background-size: 605px;
+}
+
+/* 왕복일 때 기존 배경 숨기기 */
+.btnMark.round-trip {
+    background-image: none;
+}
+.btnMark:hover {
+    background-position: 0 -72px; /* 세 번째 이미지 (0, -36px는 두 번째) */
+    /* 또는 이미지 스프라이트에 따라 조정 */
+}
+
+.btnMark.round-trip:hover::before {
+    background-position: -61px -88px; /* 호버시 다른 위치 */
+}
+
+.payment-options {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.payment-option input[type="radio"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: #FF5000; 
+}
+/* 구형 브라우저 지원을 위한 커스텀 라디오 버튼 */
+.payment-option input[type="radio"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.payment-option input[type="radio"]:checked {
+  border-color: #FF5000;
+  background: #fff;
+}
+
+.payment-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FF5000;
+  transform: translate(-50%, -50%);
+}
+
+.payment-option input[type="radio"]:hover {
+  border-color: #FF5000;
+}
+
+/* 선택된 옵션의 텍스트 색상도 변경 (선택사항) */
+.payment-option input[type="radio"]:checked + span {
+  color: #333;
+  font-weight: 600;
+}
+/* 할인 방법 */
+.promotion-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.promo-input {
+  width: 280px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.promo-input::placeholder {
+  color: #ff6600;
+}
+
+.coupon-link {
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.coupon-link:hover {
+  text-decoration: underline;
+}
+
+/* 검색 버튼 */
+.btn-search {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+  height: 48px;
+}
+
+.btn-search:hover {
+  background: #e55500;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .route-row {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  
+  .date-section {
+    margin-left: 0;
+  }
+  
+  .options-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 30px;
+  }
+  
+  .btn-search {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 20px 10px;
+  }
+  
+  .page-title-wrap {
+    padding-left: 20px;
+  }
+  
+  .ticketing-content {
+    padding: 0 20px 30px 20px;
+  }
+  
+  .ticketing-type {
+    padding-left: 20px;
+  }
+  
+  .route-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .city-name {
+    font-size: 20px;
+  }
+  
+  .payment-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .promotion-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .promo-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .ticketing-type {
+    gap: 20px;
+  }
+  
+.ticketing-type .item-btn {
+  display: block;
+  padding: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #999;
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+}
+  
+
+/* 선택된 탭 스타일 */
+.ticketing-type .item.selected .item-btn {
+  color: #FF5000; /* 개발자 도구에서 본 색상과 동일 */
+  border-bottom-color: #FF5000;
+  font-weight: 600;
+}
+
+/* 호버 효과 */
+.ticketing-type .item:not(.selected) .item-btn:hover {
+  color: #FF5000;
+}
+  .city-name {
+    font-size: 18px;
+  }
+}
+
+/* 날짜 입력 필드 스타일 */
+.date-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+}
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.prevMonthDay {
+  color: #ccc !important;
+}
+/* flatpickr 기본 스타일 재정의 */
+.flatpickr-day {
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 2px !important;
+  border: 1px solid transparent !important; /* 기본 테두리 투명으로 */
+  background: transparent !important; /* 기본 배경 투명으로 */
+}
+/* Flatpickr 커스텀 스타일 */
+.flatpickr-calendar {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  z-index: 1000;
+  margin-top: 5px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  min-width: 1080px;
+  font-size: 14px;
+}
+
+/* 선택된 날짜 (제주항공 색상) */
+.flatpickr-day.selected {
+  background: #FF5000 !important;
+  border-color: #FF5000 !important;
+  color: white !important;
+    border-radius: 50% !important; /* 원형으로 변경 */
+
+}
+
+.flatpickr-day.startRange {
+  background: #FF5000 !important;
+  border-color: #FF5000 !important;
+  color: white !important;
+    border-radius: 50% !important; /* 원형으로 변경 */
+
+}
+
+.flatpickr-day.endRange {
+  background: #FF5000 !important;
+  border-color: #FF5000 !important;
+  color: white !important;
+    border-radius: 50% !important; /* 원형으로 변경 */
+
+}
+
+/* 범위 선택시 중간 날짜들 */
+.flatpickr-day.inRange {
+  background: #f2f2f2 !important;
+  border-color: #f2f2f2 !important;
+  color: #333 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  margin: 2px 0 !important; /* 상하 마진만 유지, 좌우는 0 */
+}
+
+/* 오늘 날짜 */
+.flatpickr-day.today {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #333 !important;
+  border-radius: 50% !important;
+  position: relative;
+}
+.flatpickr-day.today::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: #ff0000;
+  border-radius: 50%;
+  display: block !important;
+}
+
+.flatpickr-day.today.selected::before {
+  background: #ff5500;
+}
+
+.flatpickr-day.today.selected {
+  background: #FF5000 !important;
+  border-color: #FF5000 !important;
+  color: white !important;
+  border-radius: 50% !important;
+}
+/* 호버 효과 */
+.flatpickr-day:hover {
+  background: #fff5f0 !important;
+  border-color: #FF5000 !important;
+  Color: #FF5000 !important;
+    border-radius: 50% !important; /* 호버시에도 원형 */
+
+}
+
+/* 비활성화된 날짜 */
+.flatpickr-day.flatpickr-disabled {
+  color: #ccc !important;
+}
+
+/* 달력 헤더 */
+.flatpickr-months .flatpickr-month {
+  color: #333;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  background: transparent;
+}
+
+/* 화살표 버튼 */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  color: #666;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  color: #FF5000;
+}
+
+/* 요일 헤더 */
+.flatpickr-weekday {
+  color: #666;
+  font-weight: 600;
+}
+
+/* 날짜 섹션 */
+.ticketing-date {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 60px;
+  position: relative;
+  overflow: visible; /* 달력이 보이도록 */
+
+}
+
+.btn-date {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.btn-date .txt {
+    font-family: "FlightSans";
+  font-size: 14px;
+  color: #333;
+  font-weight: 700; /* 출발지/도착지와 같은 굵기 */
+  white-space: nowrap;
+  position: relative;
+  top: 7px;
+  display: inline-block;
+}
+  
+  .flatpickr-input {
+  display: none ;
+}
+/* 달력이 다른 요소들 위에 나타나도록 */
+.flatpickr-calendar.open {
+  z-index: 1001;
+}
+
+/* 다구간일 때 두 번째 달력도 같은 스타일 적용 */
+.multi-segment .flatpickr-calendar {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  margin-top: 5px;
+}
+
+.flatpickr-calendar .flatpickr-day,
+.flatpickr-calendar .flatpickr-day.today,
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange,
+.flatpickr-calendar .flatpickr-day.inRange {
+  box-shadow: none !important;
+}
+
+
+.flatpickr-day::before,
+.flatpickr-day::after {
+  display: none !important;
+}

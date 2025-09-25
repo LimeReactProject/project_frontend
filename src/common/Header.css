@@ -1,0 +1,443 @@
+/* 제주항공 스타일 드롭다운 메뉴 CSS */
+
+/* 상단 유틸리티 메뉴 */
+.header__util {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 12px;
+  color: #666;
+}
+
+.util__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 60px 8px 95px;
+}
+
+.util__link-list {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.util__link {
+  color: #666;
+  text-decoration: none;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+}
+
+.util__link:hover {
+  color: #ff5000;
+}
+
+.util__link:not(:last-of-type)::after {
+  content: '|';
+  margin-left: 8px;
+  color: #ddd;
+}
+
+/* 언어/국가 선택 버튼 */
+.util__country {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.util__country:hover {
+  color: #ff5000;
+}
+
+.util__country .text::after {
+  content: '▼';
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+/* 국가/언어 선택 드롭다운 */
+.header-country__layer {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  min-width: 300px;
+  z-index: 1001;
+  display: none;
+}
+
+.util__country[data-custom-toggle="button"]:hover + .header-country__layer,
+.header-country__layer:hover {
+  display: block;
+}
+
+.country__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.country__input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select-wrap {
+  position: relative;
+}
+
+.select-wrap__select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 12px;
+  color: #333;
+  cursor: pointer;
+}
+
+.select-wrap__select:focus {
+  outline: none;
+  border-color: #ff5000;
+}
+
+.country__button {
+  background: #ff5000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 10px;
+}
+
+.country__button:hover {
+  background: #e64600;
+}
+
+.button-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #999;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-close:hover {
+  color: #333;
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* PC 전용 표시 */
+.pc-only {
+  display: block;
+}
+
+
+
+
+
+/* 기본 헤더 스타일 */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  --header-height: 110px;
+}
+
+.header__box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px 0 95px;
+  height: 80px;
+  position: relative;
+}
+
+.header__logo {
+  margin: 0;
+  cursor: pointer;
+}
+
+.header__logo img {
+  height: 30px;
+}
+
+/* 메인 메뉴 컨테이너 */
+.header_gnb {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.mega-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 40px;
+}
+
+.mega-menu > li {
+  position: relative;
+}
+
+/* 메인 메뉴 링크 스타일 */
+.mega-menu > li > a {
+  display: block;
+  padding: 20px 0;
+  text-decoration: none;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.mega-menu > li > a:hover,
+.mega-menu > li:hover > a {
+  color: #ff5000;
+  border-bottom-color: #ff5000;
+}
+
+/* 드롭다운 메뉴 컨테이너 - 전체 화면 너비 */
+.drop {
+  position: fixed;
+  top: 110px;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  background: white;
+  border-top: 1px solid #e5e5e5;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 999;
+}
+
+/* 호버 시 드롭다운 표시 */
+.mega-menu > li:hover .drop {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* 드롭다운 내부 메뉴 리스트 - 중앙 정렬과 최대 너비 설정 */
+.drop > ul {
+  display: flex;
+  list-style: none;
+  margin: 0 auto;
+  padding: 40px 20px;
+  gap: 60px;
+  max-width: 1200px;
+  justify-content: flex-start;
+}
+
+.drop > ul > li {
+  flex: 1;
+}
+
+/* 2차 메뉴 제목 */
+.drop > ul > li > a {
+  display: block;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 15px;
+  transition: color 0.2s ease;
+}
+
+.drop > ul > li > a:hover {
+  color: #ff5000;
+}
+
+/* 3차 메뉴 컨테이너 */
+.drop-depth {
+  margin-top: 15px;
+}
+
+.drop-depth ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drop-depth ul li {
+  margin-bottom: 8px;
+}
+
+/* 3차 메뉴 링크 */
+.gnb__list-item {
+  display: block;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #666;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.gnb__list-item:hover {
+  color: #ff5000;
+  padding-left: 8px;
+}
+
+.gnb__list-item:hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  background: #ff5000;
+  border-radius: 50%;
+}
+
+/* 마이페이지 버튼 */
+.header_mypage {
+  margin-left: 20px;
+}
+
+.btn_login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+
+
+.btn_login::before {
+  content: '';
+  width: 31px;
+  height: 30px;
+  background: url(/images/free-icon-person-5393061.png) no-repeat center;
+  background-size: contain;
+  display: block;
+}
+
+.t-hide {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* 특별 스타일 (J-트립, J SHOP 등) */
+.mega-menu a[style*="color: #ff5000"] {
+  color: #ff5000 !important;
+  font-weight: 700;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .header__box {
+    padding: 0 15px;
+  }
+  
+  .mega-menu {
+    gap: 30px;
+  }
+  
+  .mega-menu > li > a {
+    font-size: 16px;
+  }
+  
+  .drop > ul {
+    padding: 30px 20px;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mega-menu {
+    gap: 20px;
+  }
+  
+  .mega-menu > li > a {
+    font-size: 14px;
+    padding: 15px 0;
+  }
+  
+  .drop > ul {
+    padding: 20px;
+    gap: 20px;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__box {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 15px;
+  }
+  
+  .drop {
+    top: 120px; /* 헤더 높이 조정 */
+  }
+  
+  .header_gnb {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .mega-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+}
