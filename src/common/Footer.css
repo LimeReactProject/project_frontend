@@ -1,0 +1,448 @@
+/* Footer.css - 푸터 스타일 */
+
+.footer-wrap {
+    background: #f2f2f2;
+    padding: 80px 0;
+    margin-top: 120px;
+    width: 100%;
+}
+
+.footer-wrap .responsive-accordion {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 60px 0 95px;   /*여백기준*/
+}
+
+/* 고객센터 섹션 */
+.footer-wrap-customer {
+    margin-bottom: 30px;
+}
+
+.footer-wrap-customer__head {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.footer-wrap-customer__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-wrap-customer__tel {
+    font-size: 18px;
+    font-weight: 800;
+    color: #000;
+}
+
+.footer-wrap-customer__time {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 반응형 아코디언 */
+.responsive-accordion {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.responsive-accordion--line {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+    justify-content: flex-start;
+}
+
+.responsive-accordion--line .responsive-accordion__item {
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+}
+
+/* 사이트맵을 약관및안내와 같은 열에 정렬 */
+.responsive-accordion--line .responsive-accordion__item:last-child {
+    margin-left: 0;
+    flex: 0 0 auto;
+}
+
+.responsive-accordion--column {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+}
+
+.responsive-accordion--column .responsive-accordion__item {
+    display: flex;
+    align-items: flex-start;
+}
+
+.responsive-accordion--column .responsive-accordion__item {
+    flex: 1;
+    margin-right: 40px;
+}
+
+.responsive-accordion--column .responsive-accordion__item:last-child {
+    margin-right: 0;
+    flex: 0 0 auto;
+}
+
+.responsive-accordion__item {
+    border-bottom: none;
+}
+
+.responsive-accordion--line .responsive-accordion__item {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.responsive-accordion--line .responsive-accordion__item:last-child {
+    border-bottom: none;
+}
+
+.responsive-accordion__item--link {
+    border-bottom: none;
+    flex: 0 0 auto;
+}
+
+.responsive-accordion__item--ccm {
+    text-align: center;
+    padding: 20px 0;
+    flex: 0 0 auto;
+}
+
+.responsive-accordion__item--ccm {
+    transform: translateX(120px);
+}
+
+.responsive-accordion__item--ccm img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.responsive-accordion__header {
+    padding: 20px 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.responsive-accordion__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.responsive-accordion__panel {
+    padding-bottom: 20px;
+}
+
+.responsive-accordion__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.responsive-accordion__list li {
+    margin-bottom: 8px;
+}
+
+.responsive-accordion__list li:last-child {
+    margin-bottom: 0;
+}
+
+.responsive-accordion__list a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.responsive-accordion__list a:hover {
+    color: #ff5000;
+}
+
+.footer__top-link {
+    font-weight: 700;
+    color: #333;
+    text-decoration: none;
+    cursor: default;
+    pointer-events: none;
+}
+
+.footer__top-link:hover {
+    color: #333;
+}
+
+.button-footer {
+    font-weight: 600;
+    color: #666;
+}
+
+.button-footer:hover {
+    color: #ff5000;
+}
+
+/* 회사 정보 섹션 */
+.responsive-accordion__left {
+    flex: 1;
+    margin-right: 40px;
+    max-width: 600px;
+}
+
+.responsive-accordion__right {
+    flex: 0 0 auto;
+    position: relative;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    transform: translateX(120px);
+}
+
+.footer-wrap__info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.footer-wrap__info > li {
+    display: flex;
+    align-items: center;
+}
+
+.footer-wrap__info > li:after {
+    content: "";
+    width: 1px;
+    height: 14px;
+    background: #ddd;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.footer-wrap__info > li:last-child:after {
+    display: none;
+}
+
+.footer-wrap__info--type2 {
+    margin-bottom: 15px;
+}
+
+.footer-wrap address {
+    font-size: 14px;
+    font-style: normal;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.footer-wrap__copy {
+    font-size: 13px;
+    color: #666;
+    margin-top: 16px;
+}
+
+/* SNS 링크 */
+.footer-wrap__sns-list {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 16px;
+    margin-bottom: 0;
+    margin-top: 0;
+    align-self: flex-start;
+    transform: translateX(120px);
+}
+
+.footer-wrap__sns {
+    display: inline-block;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.footer-wrap__sns:hover {
+    transform: translateY(-2px);
+}
+
+.footer-wrap__sns .icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.footer-wrap__sns .icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.footer-wrap__sns .hidden {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* QR 코드 섹션 */
+.footer-wrap__qr-code {
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: right;
+    color: #333;
+    display: flex;
+    column-gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+    align-self: flex-start;
+}
+
+.footer-wrap__qr-code em {
+    width: 80px;
+    height: 80px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-wrap__qr-code em img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 배너 섹션 */
+.footer-wrap__bnr {
+    margin: 30px 0;
+    position: relative;
+    font-size: 12px;
+}
+
+.footer-wrap__bnr-item {
+    display: inline-block;
+    vertical-align: middle;
+    background: url('https://static.jejuair.net/hpgg/resources/images/banner/banner_footer_CCM.png') left 0px center no-repeat;
+    background-size: 30px auto;
+    text-decoration: none;
+    color: #333;
+}
+
+.footer-wrap__bnr span {
+    display: flex;
+    align-items: center;
+    padding: 11px 0 11px 40px;
+    text-align: left;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .responsive-accordion--line {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .responsive-accordion--line .responsive-accordion__item {
+        flex: none;
+        max-width: none;
+    }
+    
+    .responsive-accordion--column {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .responsive-accordion__left {
+        margin-right: 0;
+        margin-bottom: 20px;
+        max-width: none;
+    }
+    
+    .responsive-accordion__right {
+        position: static;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-wrap {
+        padding: 40px 0;
+        margin-top: 60px;
+    }
+    
+    .footer-wrap__qr-code {
+        position: static;
+        margin-top: 20px;
+        justify-content: center;
+    }
+    
+    .footer-wrap__sns-list {
+        justify-content: center;
+    }
+    
+    .footer-wrap__info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .footer-wrap__info > li:after {
+        display: none;
+    }
+}
+
+/* PC 전용 */
+.pc-only {
+    display: block;
+}
+
+/* 모바일 전용 */
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .pc-only {
+        display: none;
+    }
+    
+    .mobile-only {
+        display: block;
+    }
+}
+
+/* 아코디언 열림/닫힘 상태 */
+.responsive-accordion__item.is-open .responsive-accordion__panel {
+    display: block;
+}
+
+.responsive-accordion__item:not(.is-open) .responsive-accordion__panel {
+    display: none;
+}
+
+/* 유틸리티 클래스 */
+.util__link {
+    color: #666;
+    text-decoration: none;
+}
+
+.util__link:hover {
+    color: #ff5000;
+}
+
+.block {
+    display: block;
+}

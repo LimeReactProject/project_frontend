@@ -1,0 +1,164 @@
+.main-visual-swiper__wrap {
+  position: relative;
+  width: 100%;
+  height: 600px; /* 500px에서 600px로 증가 */
+  overflow: hidden;
+}
+
+.main-visual-swiper__container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.main-visual-swiper__container.pc-only {
+  display: block;
+}
+
+.main-visual-swiper__container.mobile-only {
+  display: none;
+}
+
+/* Swiper 기본 스타일 */
+.main-visual-swiper,
+.main-visual-swiper-mobile {
+  width: 100%;
+  height: 100%;
+}
+
+.main-visual-swiper .swiper-slide,
+.main-visual-swiper-mobile .swiper-slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.main-visual-swiper__item {
+  width: 100%;
+  height: 100%;
+}
+
+.main-visual-swiper__link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.main-visual-swiper__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-visual-swiper__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 양쪽에 동일한 여백 생성 */
+  display: block;
+  background-color: #f0f0f0; /* 여백 부분 배경색 */
+}
+
+.main-visual-swiper__wrap .main-visual-swiper__title {
+  position: absolute;
+  top: 60px; /* bottom에서 top으로 변경 */
+  left: 50%; /* 가운데 정렬을 위해 */
+  transform: translateX(-50%); /* 가운데 정렬 */
+  z-index: 2;
+  padding: 0 !important; /* 패딩 제거 */
+  background: none !important; /* 배경 제거 */
+  color: white !important;
+  font-size: 50px !important; /* 우선순위 높임 */
+  font-weight: bold !important;
+  line-height: 1.3; /* 줄 간격 조정 */
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* 텍스트 그림자로 가독성 확보 */
+}
+
+.main-visual-swiper__title.title {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 페이지네이션 제거됨 - 자동 슬라이드만 사용 */
+
+.swiper-notification {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .main-visual-swiper__container.pc-only {
+    display: none;
+  }
+  
+  .main-visual-swiper__container.mobile-only {
+    display: block;
+  }
+  
+  .main-visual-swiper__title {
+    font-size: 40px; /* 40px로 통일 */
+    padding: 0; /* 패딩 제거 */
+    background: none; /* 배경 제거 */
+    top: 40px; /* 모바일에서 위치 조정 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* 텍스트 그림자 */
+  }
+  
+  /* 페이지네이션 제거됨 */
+}
+
+/* 스와이퍼 애니메이션 */
+.swiper-container-initialized .swiper-wrapper {
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 호버 효과 */
+.main-visual-swiper__link:hover .main-visual-swiper__title {
+  background: rgba(0, 0, 0, 0.8); /* 더 진한 배경 */
+  transform: translateX(-50%) scale(1.05); /* 살짝 크게 */
+  transition: all 0.3s ease; /* 부드러운 전환 */
+}
+
+/* 접근성 */
+.main-visual-swiper__prev:focus,
+.main-visual-swiper__next:focus,
+.main-visual-swiper__pause:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* 큰 화면에서 더 큰 슬라이드 */
+@media (min-width: 1200px) {
+  .main-visual-swiper__wrap {
+    height: 700px; /* 더 큰 화면에서 700px */
+  }
+  
+  .main-visual-swiper__title {
+    font-size: 40px; /* 40px로 통일 */
+    top: 80px; /* 위치 조정 */
+  }
+}
+
+/* 중간 화면 크기 */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .main-visual-swiper__wrap {
+    height: 650px; /* 중간 크기 */
+  }
+  
+  .main-visual-swiper__title {
+    font-size: 40px; /* 40px로 통일 */
+    top: 70px;
+  }
+}
+

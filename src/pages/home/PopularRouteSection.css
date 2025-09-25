@@ -1,0 +1,290 @@
+/* PopularRouteSection.css - 전체 코드 */
+
+.section_route_popularity {
+    width: 1004px;
+    margin: 80px auto;
+}
+
+.section_route_popularity .title {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+.section_route_popularity .title .title__section {
+    font-size: 30px;
+    font-weight: 800;
+    color: #222;
+    letter-spacing: normal;
+}
+
+.section_route_popularity .title_info_txt {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #666;
+}
+
+.section_route_popularity .title_info_txt .orange {
+    color: #ff5000;
+}
+
+@media (max-width: 1079px) {
+    .section_route_popularity {
+        margin: 0;
+        width: 100%;
+    }
+    
+    .section_route_popularity .title .title__section {
+        font-size: 18px;
+    }
+}
+
+.section_route_popularity .routepopularity-list {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* 스와이퍼 컨테이너 */
+.section_route_popularity .swiper-container {
+    overflow: hidden;
+    padding: 0 60px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.section_route_popularity .swiper-wrapper {
+    display: flex;
+    gap: 13px;
+    transition-property: transform;
+    transition-timing-function: ease-out;
+    width: max-content;
+    margin-left: -55px; /*낮을수록 왼쪽으로 이동*/
+}
+
+/* 슬라이드 카드 스타일 */
+.section_route_popularity .swiper-slide {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    width: 220px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.section_route_popularity .swiper-slide:hover .carousel_bg {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* 카드 이미지 영역 - 둥근 모서리 적용 */
+.section_route_popularity .carousel_bg {
+    width: 220px;
+    height: 280px;
+    border-radius: 110px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.section_route_popularity .carousel_bg .hidden {
+    display: none;
+}
+
+/* 텍스트 영역 */
+.section_route_popularity .txt-wrap {
+    padding: 20px 10px;
+    text-align: center;
+}
+
+.section_route_popularity .txt-wrap .name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.section_route_popularity .txt-wrap .text {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+.section_route_popularity .txt-wrap .text .price_txt {
+    font-size: 28px;
+    font-weight: 800;
+    color: #222;
+}
+
+.section_route_popularity .txt-wrap .text .unit {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+}
+
+.section_route_popularity .txt-wrap .text .tilde {
+    font-size: 24px;
+    font-weight: 600;
+    color: #666;
+}
+
+.section_route_popularity .txt-wrap .date {
+    font-size: 14px;
+    color: #666;
+    font-weight: 400;
+}
+
+/* 이전/다음 버튼 스타일 */
+.section_route_popularity .carousel__button_route_popularity-prev2,
+.section_route_popularity .carousel__button_route_popularity-next2 {
+    position: absolute;
+    top: 47%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    z-index: 10;
+    font-size: 24px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.section_route_popularity .carousel__button_route_popularity-prev2 {
+    left: -5px;
+}
+
+.section_route_popularity .carousel__button_route_popularity-next2 {
+    right: -5px;
+}
+
+.section_route_popularity .carousel__button_route_popularity-prev2:hover,
+.section_route_popularity .carousel__button_route_popularity-next2:hover {
+    background: #f8f8f8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.section_route_popularity .carousel__button_route_popularity-prev2:disabled,
+.section_route_popularity .carousel__button_route_popularity-next2:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.section_route_popularity .carousel__button_route_popularity-prev2.swiper-button-disabled,
+.section_route_popularity .carousel__button_route_popularity-next2.swiper-button-disabled {
+    display: none;
+}
+
+/* swiper notification 숨김 */
+.section_route_popularity .swiper-notification {
+    position: absolute;
+    left: -10000px;
+    opacity: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1079px) {
+    .section_route_popularity {
+        padding: 0 15px;
+        margin: 50px auto;
+    }
+    
+    .section_route_popularity .title {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .section_route_popularity .title .title__section {
+        font-size: 24px;
+    }
+    
+    .section_route_popularity .swiper-container {
+        padding: 0 40px;
+        max-width: 780px;
+    }
+    
+     .section_route_popularity .swiper-slide {
+         min-width: 180px;
+         width: 180px;
+     }
+     
+     .section_route_popularity .carousel_bg {
+         width: 180px;
+         height: 230px;
+         border-radius: 90px;
+     }
+    
+    .section_route_popularity .txt-wrap .name {
+        font-size: 16px;
+    }
+    
+    .section_route_popularity .txt-wrap .text .price_txt {
+        font-size: 22px;
+    }
+    
+    .section_route_popularity .txt-wrap .text .unit {
+        font-size: 16px;
+    }
+    
+    .section_route_popularity .txt-wrap .date {
+        font-size: 13px;
+    }
+    
+    .section_route_popularity .carousel__button_route_popularity-prev2,
+    .section_route_popularity .carousel__button_route_popularity-next2 {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .section_route_popularity .carousel__button_route_popularity-prev2 {
+        left: 5px;
+    }
+    
+    .section_route_popularity .carousel__button_route_popularity-next2 {
+        right: 5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section_route_popularity .swiper-container {
+        padding: 0;
+        max-width: 540px;
+    }
+    
+    .section_route_popularity .carousel__button_route_popularity-prev2,
+    .section_route_popularity .carousel__button_route_popularity-next2 {
+        display: none !important;
+    }
+    
+     .section_route_popularity .swiper-slide {
+         min-width: 160px;
+         width: 160px;
+     }
+     
+     .section_route_popularity .carousel_bg {
+         width: 160px;
+         height: 200px;
+         border-radius: 80px;
+     }
+}
