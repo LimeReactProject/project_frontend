@@ -2,8 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Login from './pages/login/Login.jsx'
 import Home from './pages/home/Home.jsx';
-import FlightSearch from './pages/home/FlightSearch.jsx';
-
+import EntityList from './components/EntityList';
 
 function App() {
  
@@ -13,7 +12,7 @@ function App() {
       <Routes>
        <Route path="/" element={<Home />} />
        <Route path="/login" element={<Login />} />
-       <Route path="/compact-flight-form" element={<FlightSearch />} />
+       <Route path="/" element={<EntityList/>}/>
       </Routes>
    </BrowserRouter>
   )
