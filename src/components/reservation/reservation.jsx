@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './reservation.css';
 import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css'; // 이 줄 추가
+import 'flatpickr/dist/flatpickr.min.css';
+import Header from '../../common/Header';
+import Footer from '../../common/Footer';
 
 const JejuAirBody = () => {
 	  const [selectedTab, setSelectedTab] = useState('RT'); // RT: 왕복, OW: 편도, MT: 다구간
@@ -43,9 +45,9 @@ const JejuAirBody = () => {
           : selectedDates.departure,
         inline: false,
         static: true,
-         appendTo: dateRef.current.closest('.ticketing-date'), // 부모 요소에 추가
-        positionElement: dateRef.current.closest('.btn-date'), // 위치 기준 요소
-        locale: {
+        appendTo: dateRef.current.closest('.route-row'), // route-row에 추가
+        positionElement: dateRef.current.closest('.route-row'), // route-row를 기준으로 위치
+      locale: {
           weekdays: {
             shorthand: ['일', '월', '화', '수', '목', '금', '토'],
             longhand: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일']
@@ -87,8 +89,8 @@ const JejuAirBody = () => {
         defaultDate: selectedDates.segment2,
         inline: false,
         static: true,
-        appendTo: segment2DateRef.current.closest('.ticketing-date'), // 부모 요소에 추가
-        positionElement: segment2DateRef.current.closest('.btn-date'), // 위치 기준 요소
+        appendTo: segment2DateRef.current.closest('.route-row'), // route-row에 추가
+        positionElement: segment2DateRef.current.closest('.route-row'), // route-row를 기준으로 위치
         locale: {
           weekdays: {
             shorthand: ['일', '월', '화', '수', '목', '금', '토'],
@@ -173,78 +175,53 @@ const JejuAirBody = () => {
   };
 
   return (
-    <main id="main" className="main">
-      <div className="page-title-wrap">
-        <div className="page-title">항공권 예매</div>
-      </div>
-      
-      <div className="quick-book-sch">
-        <div className="main-ticketing">
-          <div className="ticketing-in">
-            <ul className="ticketing-type">
-              <li className={`item ${selectedTab === 'RT' ? 'selected' : ''}`}>
-                 <span 
-                  className="item-btn"
-                  onClick={() => handleTabClick('RT')}
-                >
-                  왕복
-                </span>
-              </li>
-              <li className={`item ${selectedTab === 'OW' ? 'selected' : ''}`}>
-                <span 
-                  className="item-btn"
-                  onClick={() => handleTabClick('OW')}
-                >
-                  편도
-                </span>
-              </li>
-              <li className={`item ${selectedTab === 'MT' ? 'selected' : ''}`}>
-                <span 
-                  className="item-btn"
-                  onClick={() => handleTabClick('MT')}
-                >
-                  다구간
-                </span>
-              </li>
-            </ul>
-            
-      <div className="ticketing-content">
-          <div className="route-row">
-			<div className="departure-section">
-				<div className="city-name">출발지</div>
-			</div>
-			
-			<div className="route-arrow">
-        <button type="button" 
-        className={`btn-open js-target-pick btnMark ${selectedTab === 'RT' ? 'round-trip' : ''}`}
-         data-route="DEP" id="btnExchangeRoute1">
-        </button>			
-      </div>
-			
-			<div className="arrival-section">
-				<div className="city-name">도착지</div>
-			</div>
-      
-     <div className="ticketing-date">
-        <button type="button" className="btn-date" id="btnDatePicker" onClick={handleDateButtonClick}>
-          <span className="txt">{formatDateDisplay()}</span>
-        </button>
-      {/* flatpickr용 숨겨진 input */}
-        <input type="text" ref={dateRef} style={{display: 'none'}} />
-        <input type="hidden" id="departureDate" value={formatHiddenDate(selectedDates.departure)} />
-        <input type="hidden" id="arrivalDate" value={formatHiddenDate(selectedDates.return)} />
-      </div>
-			</div>
-       {/* 다구간 선택시 두 번째 구간 추가 */}
-              {selectedTab === 'MT' && (
-                <div className="route-row multi-segment">
+    <React.Fragment>
+      <Header />
+      <main id="main" className="main">
+        <div className="page-title-wrap">
+          <div className="page-title">항공권 예매</div>
+        </div>
+        
+        <div className="quick-book-sch">
+          <div className="main-ticketing">
+            <div className="ticketing-in">
+              <ul className="ticketing-type">
+                <li className={`item ${selectedTab === 'RT' ? 'selected' : ''}`}>
+                  <span 
+                    className="item-btn"
+                    onClick={() => handleTabClick('RT')}
+                  >
+                    왕복
+                  </span>
+                </li>
+                <li className={`item ${selectedTab === 'OW' ? 'selected' : ''}`}>
+                  <span 
+                    className="item-btn"
+                    onClick={() => handleTabClick('OW')}
+                  >
+                    편도
+                  </span>
+                </li>
+                <li className={`item ${selectedTab === 'MT' ? 'selected' : ''}`}>
+                  <span 
+                    className="item-btn"
+                    onClick={() => handleTabClick('MT')}
+                  >
+                    다구간
+                  </span>
+                </li>
+              </ul>
+              
+              <div className="ticketing-content">
+                <div className="route-row">
                   <div className="departure-section">
                     <div className="city-name">출발지</div>
                   </div>
                   
                   <div className="route-arrow">
-                    <button type="button" className="btn-open js-target-pick btnMark" data-route="DEP" 
-                      id="btnExchangeRoute2">
+                    <button type="button" 
+                      className={`btn-open js-target-pick btnMark ${selectedTab === 'RT' ? 'round-trip' : ''}`}
+                      data-route="DEP" id="btnExchangeRoute1">
                     </button>			
                   </div>
                   
@@ -252,57 +229,87 @@ const JejuAirBody = () => {
                     <div className="city-name">도착지</div>
                   </div>
                   
-              <div className="ticketing-date">
-                    <button type="button" className="btn-date" id="btnDatePicker2" onClick={handleSegment2ButtonClick}>
-                      <span className="txt">
-                       {selectedDates.segment2.toLocaleDateString('ko-KR', { 
-                          year: 'numeric', 
-                          month: '2-digit', 
-                          day: '2-digit', 
-                          weekday: 'short' 
-                        }).replace(/\./g, '.').replace(/ /g, '')}
-                      </span>
+                  <div className="ticketing-date">
+                    <button type="button" className="btn-date" id="btnDatePicker" onClick={handleDateButtonClick}>
+                      <span className="txt">{formatDateDisplay()}</span>
                     </button>
                     {/* flatpickr용 숨겨진 input */}
-                    <input type="text" ref={segment2DateRef} style={{display: 'none'}} />
-                    <input type="hidden" id="segment2Date" value={formatHiddenDate(selectedDates.segment2)} />
+                    <input type="text" ref={dateRef} style={{display: 'none'}} />
+                    <input type="hidden" id="departureDate" value={formatHiddenDate(selectedDates.departure)} />
+                    <input type="hidden" id="arrivalDate" value={formatHiddenDate(selectedDates.return)} />
                   </div>
                 </div>
-              )}        
-              <div className="passenger-row">
-                <button type="button" className="passenger-btn">
-					<span className="person-icon"> </span>
-					<span className="passenger-text">성인1</span>
-					</button>
-              </div>
-              
-              <div className="options-row">
-             <div className="payment-section">
-					<div className="section-title">결제 방법</div>
-					<div className="payment-options">
-					<label className="payment-option">
-						<input type="radio" name="payment" defaultChecked />
-						<span>일반</span>
-					</label>
-					<label className="payment-option">
-						<input type="radio" name="payment" />
-						<span>포인트</span>
-					</label>
-					<label className="payment-option">
-						<input type="radio" name="payment" />
-						<span>기프티켓</span>
-					</label>
-					</div>
-				</div>
-            
                 
-                <button className="btn-search">항공편 검색</button>
+                {/* 다구간 선택시 두 번째 구간 추가 */}
+                {selectedTab === 'MT' && (
+                  <div className="route-row multi-segment">
+                    <div className="departure-section">
+                      <div className="city-name">출발지</div>
+                    </div>
+                    
+                    <div className="route-arrow">
+                      <button type="button" className="btn-open js-target-pick btnMark" data-route="DEP" 
+                        id="btnExchangeRoute2">
+                      </button>			
+                    </div>
+                    
+                    <div className="arrival-section">
+                      <div className="city-name">도착지</div>
+                    </div>
+                    
+                    <div className="ticketing-date">
+                      <button type="button" className="btn-date" id="btnDatePicker2" onClick={handleSegment2ButtonClick}>
+                        <span className="txt">
+                          {selectedDates.segment2.toLocaleDateString('ko-KR', { 
+                            year: 'numeric', 
+                            month: '2-digit', 
+                            day: '2-digit', 
+                            weekday: 'short' 
+                          }).replace(/\./g, '.').replace(/ /g, '')}
+                        </span>
+                      </button>
+                      {/* flatpickr용 숨겨진 input */}
+                      <input type="text" ref={segment2DateRef} style={{display: 'none'}} />
+                      <input type="hidden" id="segment2Date" value={formatHiddenDate(selectedDates.segment2)} />
+                    </div>
+                  </div>
+                )}        
+                
+                <div className="passenger-row">
+                  <button type="button" className="passenger-btn">
+                    <span className="person-icon"> </span>
+                    <span className="passenger-text">성인1</span>
+                  </button>
+                </div>
+                
+                <div className="options-row">
+                  <div className="payment-section">
+                    <div className="section-title">결제 방법</div>
+                    <div className="payment-options">
+                      <label className="payment-option">
+                        <input type="radio" name="payment" defaultChecked />
+                        <span>일반</span>
+                      </label>
+                      <label className="payment-option">
+                        <input type="radio" name="payment" />
+                        <span>포인트</span>
+                      </label>
+                      <label className="payment-option">
+                        <input type="radio" name="payment" />
+                        <span>기프티켓</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <button className="btn-search">항공편 검색</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </React.Fragment>
   );
 };
 

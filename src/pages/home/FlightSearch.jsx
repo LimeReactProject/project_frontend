@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import styles from '../../css/home/FlightSearch.module.css';
 import { Calendar, Users, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function FlightSearch({ onOpenModal, onOpenDateModal }) {
     const [tripType, setTripType] = useState('왕복');
     const [activeTab, setActiveTab] = useState('항공권 예매');
     const [activeSubTab, setActiveSubTab] = useState('운항 스케줄');
+    const navigate= useNavigate();
+    
 
     return (
         <div className={styles['flight-overlay-container']}>
