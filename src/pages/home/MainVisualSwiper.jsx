@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
-import './MainVisualSwiper.css';
+import '../../css/home/MainVisualSwiper.css';
 import FlightSearch from './FlightSearch';
 import SearchModal from './SearchModal';
 import DateModal from './DateModal';

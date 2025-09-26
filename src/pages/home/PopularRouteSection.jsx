@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './PopularRouteSection.css';
+import '../../css/home/PopularRouteSection.css';
 
 // URL_LINK 유틸리티 함수
 const URL_LINK = {

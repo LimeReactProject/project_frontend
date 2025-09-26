@@ -1,4 +1,4 @@
-import './Header.css';
+import '../css/common/Header.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

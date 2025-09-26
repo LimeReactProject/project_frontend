@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './DateModal.css';
+import '../../css/home/DateModal.css';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function DateModal({ isOpen, onClose, modalType }) {
