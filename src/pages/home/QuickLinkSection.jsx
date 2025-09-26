@@ -1,5 +1,5 @@
 import React from 'react';
-import './QuickLinkSection.css';
+import '../../css/home/QuickLinkSection.css';
 import { useNavigate } from 'react-router-dom';
 
 // URL_LINK 유틸리티 함수

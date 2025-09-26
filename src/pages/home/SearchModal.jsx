@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './SearchModal.css';
+import '../../css/home/SearchModal.css';
 import { X, Search, MapPin, Clock, Star, ChevronRight } from 'lucide-react';
 
 function SearchModal({ isOpen, onClose, modalType }) {

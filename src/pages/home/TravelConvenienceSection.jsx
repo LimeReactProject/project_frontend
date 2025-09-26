@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './TravelConvenienceSection.css';
+import '../../css/home/TravelConvenienceSection.css';
 
 // URL_LINK 유틸리티 함수
 const URL_LINK = {
