@@ -1,0 +1,295 @@
+.airport-selector-wrap {
+  position: absolute;
+  top: 100%;
+  width: 1120px;
+  margin-top: -500px;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 1000;
+  height: 400px;
+}
+
+.selector-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
+
+.selector-header .title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.region-tabs {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+  height: 100%;
+  overflow-y: auto; /* 스크롤바는 숨기되 스크롤 기능은 유지 */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.region-tab {
+  border-bottom: 1px solid #eee;
+}
+
+.region-tab:last-child {
+  border-bottom: none;
+}
+
+.tab-btn {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: #fff;
+  color: #333;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #ff5500;
+  font-weight: 600;
+  border-right: 2px solid #ff5500;
+}
+
+.selector-content {
+  display: flex;
+  height: calc(100% - 180px); /* 160px에서 180px로 증가 */
+  overflow: hidden; /* 내부 요소가 밖으로 나가지 못하도록 */
+}
+
+.selector-left {
+  width: 150px;
+  border-right: 1px solid #eee;
+  background: #f8f9fa;
+  overflow-y: auto; /* 스크롤 허용하되 영역 내에서만 */
+}
+
+.selector-right {
+  flex: 1;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.selector-search {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px 16px;
+  gap: 8px;
+  background: #fff;
+  width: 100%;
+}
+
+.selector-search input {
+  border: none;
+  outline: none;
+  flex: 1;
+  background: transparent;
+  font-size: 14px;
+  color: #333;
+}
+
+.selector-search input::placeholder {
+  color: #999;
+}
+
+.selector-tabs {
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+.category-btn {
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #ff5500;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.category-btn.active {
+  color: #ff5500;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.category-btn:not(.active) {
+  color: #999;
+  text-decoration: none;
+}
+
+.category-btn:hover {
+  color: #ff7700;
+}
+
+.airport-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  background: #fff;
+  height: 100%; /* max-height 대신 height 사용 */
+}
+
+.airport-row {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.airport-row:hover {
+  background: #fff5f0;
+}
+
+.airport-row:last-child {
+  border-bottom: none;
+}
+
+.airport-row .code {
+  font-weight: 700;
+  color: #ff5500;
+  min-width: 60px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.airport-row .info {
+  flex: 1;
+  margin-left: 20px;
+  min-width: 0; /* 텍스트 오버플로우 방지 */
+}
+
+.airport-row .info .line1 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.airport-row .info .line2 {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.2;
+}
+
+.no-result {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 스크롤바 스타일 */
+.airport-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.airport-list::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.airport-list::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 2px;
+}
+
+.airport-list::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+/* 왼쪽 탭 스크롤바 숨김 */
+.region-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .airport-selector-wrap {
+    left: -20px;
+    width: calc(100vw - 40px);
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .selector-left {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .region-tabs {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 20px;
+  }
+  
+  .region-tab {
+    border-bottom: none;
+    border-right: 1px solid #eee;
+    white-space: nowrap;
+  }
+  
+  .region-tab:last-child {
+    border-right: none;
+  }
+  
+  .tab-btn {
+    padding: 10px 15px;
+    border-right: none !important;
+  }
+  
+  .airport-list {
+    max-height: 300px;
+  }
+}
