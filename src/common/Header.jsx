@@ -164,7 +164,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/ibe/booking/Availability.do'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/reserv'); }}
                         >항공권 예매</a
                       >
                     </li>
