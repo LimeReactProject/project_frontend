@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './MemberBenefitSection.css';
+import '../../css/home/MemberBenefitSection.css';
 
 // URL_LINK 유틸리티 함수
 const URL_LINK = {
