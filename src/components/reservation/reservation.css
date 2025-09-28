@@ -716,3 +716,18 @@ body {
 .flatpickr-day::after {
   display: none !important;
 }
+
+.payment-option.disabled {
+  opacity: 0.5;
+  cursor: default; /* not-allowed 대신 default */
+  pointer-events: none; /* 모든 상호작용 비활성화 */
+}
+
+.payment-option.disabled input {
+  cursor: default;
+}
+
+.payment-option.disabled span {
+  cursor: default;
+  color: #999;
+}

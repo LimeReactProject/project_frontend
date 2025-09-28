@@ -22,12 +22,26 @@ const JejuAirBody = () => {
     const flatpickrInstance = useRef(null);
     const segment2FlatpickrInstance = useRef(null);
     const [selectedAirports, setSelectedAirports] = useState({
-      departure: { code: '', city: '', name: '' },
-      arrival:   { code: '', city: '', name: '' }
+      departure: { code: '', city: '출발지', name: '' },
+      arrival:   { code: '', city: '도착지', name: '' },
+      departure2: { code: '', city: '출발지', name: '' },
+      arrival2:   { code: '', city: '도착지', name: '' }
     });
   
   const handleTabClick = (tabType) => {
     setSelectedTab(tabType);
+    
+    // 탭 변경 시 공항 정보 초기화
+    setSelectedAirports({
+      departure: { code: '', city: '출발지', name: '' },
+      arrival:   { code: '', city: '도착지', name: '' },
+      departure2: { code: '', city: '출발지', name: '' },
+      arrival2:   { code: '', city: '도착지', name: '' }
+    });
+    
+    // 열려있는 공항 패널 닫기
+    setOpenAirportPanel(null);
+    
     //탭 변경 시 flatpickr 값 초기화
     initializeFlatpickr(tabType);
   };
@@ -64,7 +78,7 @@ const JejuAirBody = () => {
             longhand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
           }
         },
-        onChange: function(selectedDates, dateStr, instance) {
+        onChange: function(selectedDates) {
           if (tabType === 'RT' && selectedDates.length === 2) {
             setSelectedDates(prev => ({
               ...prev,
@@ -108,7 +122,7 @@ const JejuAirBody = () => {
             longhand: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
           }
         },
-        onChange: function(selectedDates, dateStr, instance) {
+        onChange: function(selectedDates) {
           if (selectedDates.length === 1) {
             setSelectedDates(prev => ({
               ...prev,
@@ -137,12 +151,6 @@ const JejuAirBody = () => {
     setModalType('departure');
   };
 
-  const handleSegment2ButtonClick = () => {
-    if (segment2FlatpickrInstance.current) {
-      segment2FlatpickrInstance.current.open();
-    }
-  };
-
   const handleModalClose = () => {
     setIsDateModalOpen(false);
   };
@@ -155,8 +163,17 @@ const JejuAirBody = () => {
     setOpenAirportPanel(prev => prev === 'arrival' ? null : 'arrival');
   };
 
+    // 다구간 두 번째 구간용 핸들러 추가
+    const handleDeparture2Click = () => {
+      setOpenAirportPanel(prev => prev === 'departure2' ? null : 'departure2');
+    };
+  
+    const handleArrival2Click = () => {
+      setOpenAirportPanel(prev => prev === 'arrival2' ? null : 'arrival2');
+    };
   const handleAirportSelect = (ap, type) => {
     setSelectedAirports(p => ({ ...p, [type]: ap }));
+    setOpenAirportPanel(null); // 선택 후 패널 닫기
   };
   const closeAirportPanel = () => setOpenAirportPanel(null);
 
@@ -197,6 +214,24 @@ const JejuAirBody = () => {
     return date ? date.toISOString().split('T')[0] : '';
   };
 
+    // 출발지와 도착지 교환 함수 추가
+    const handleRouteExchange = () => {
+      setSelectedAirports(prev => ({
+        ...prev,
+        departure: prev.arrival,
+        arrival: prev.departure
+      }));
+    };
+  
+    // 다구간 두 번째 구간 교환 함수 추가
+    const handleRoute2Exchange = () => {
+      setSelectedAirports(prev => ({
+        ...prev,
+        departure2: prev.arrival2,
+        arrival2: prev.departure2
+      }));
+    };
+  
   return (
     <React.Fragment>
       <Header />
@@ -238,18 +273,37 @@ const JejuAirBody = () => {
               <div className="ticketing-content">
                 <div className="route-row">
                   <div className="departure-section" onClick={handleDepartureClick} style={{cursor:'pointer'}}>
-                    <div className="city-name">출발지</div>
+                    <div className="city-name">
+                      {selectedAirports.departure.code ? (
+                        <>
+                          <div className="airport-name" style={{color: '#333'}}>{selectedAirports.departure.city}</div>
+                        </>
+                      ) : (
+                        '출발지'
+                      )}
+                    </div>
                   </div>
+                  
                   
                   <div className="route-arrow">
                     <button type="button" 
                       className={`btn-open js-target-pick btnMark ${selectedTab === 'RT' ? 'round-trip' : ''}`}
-                      data-route="DEP" id="btnExchangeRoute1">
+                      data-route="DEP" id="btnExchangeRoute1"
+                      onClick={handleRouteExchange}>
                     </button>			
                   </div>
                   
                   <div className="arrival-section" onClick={handleArrivalClick} style={{cursor:'pointer'}}>
-                    <div className="city-name">도착지</div>
+                    <div className="city-name">
+                      {selectedAirports.arrival.code ? (
+                        <>
+                          
+                          <div className="airport-name" style={{color: '#333'}}>{selectedAirports.arrival.city}</div>
+                        </>
+                      ) : (
+                        '도착지'
+                      )}
+                    </div>
                   </div>
                   
                   <div className="ticketing-date">
@@ -263,48 +317,63 @@ const JejuAirBody = () => {
                   </div>
                 </div>
 
+      
+                {/* 다구간 선택시 두 번째 구간 추가 */}
+                {selectedTab === 'MT' && (
+                  <div className="route-row multi-segment">
+                    <div className="departure-section" onClick={handleDeparture2Click} style={{cursor:'pointer'}}>
+                      <div className="city-name">
+                        {selectedAirports.departure2.code ? (
+                          <>
+                            <div className="airport-name" style={{color: '#333'}}>{selectedAirports.departure2.city}</div>
+                          </>
+                        ) : (
+                          '출발지'
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="route-arrow">
+                      <button type="button" className="btn-open js-target-pick btnMark" data-route="DEP" 
+                        id="btnExchangeRoute2"
+                        onClick={handleRoute2Exchange}>
+
+                      </button>			
+                    </div>
+                    
+                    <div className="arrival-section" onClick={handleArrival2Click} style={{cursor:'pointer'}}>
+                      <div className="city-name">
+                        {selectedAirports.arrival2.code ? (
+                          <>
+                            <div className="airport-name" style={{color: '#333'}}>{selectedAirports.arrival2.city}</div>
+                          </>
+                        ) : (
+                          '도착지'
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="ticketing-date">
+                    <button type="button" className="btn-date" id="btnDatePicker" onClick={handleDateButtonClick}>
+                      <span className="txt">{formatDateDisplay()}</span>
+                    </button>
+                    {/* flatpickr용 숨겨진 input */}
+                    <input type="text" ref={dateRef} style={{display: 'none'}} />
+                    <input type="hidden" id="departureDate" value={formatHiddenDate(selectedDates.departure)} />
+                    <input type="hidden" id="arrivalDate" value={formatHiddenDate(selectedDates.return)} />
+                  </div>
+                  </div>
+                )}        
+
                 {openAirportPanel && (
                   <AirportSelector
                     type={openAirportPanel}
                     onSelect={handleAirportSelect}
                     onClose={closeAirportPanel}
+                    selectedAirports={selectedAirports}
                   />
                 )}
-
-                {/* 다구간 선택시 두 번째 구간 추가 */}
-                {selectedTab === 'MT' && (
-                  <div className="route-row multi-segment">
-                    <div className="departure-section">
-                      <div className="city-name">출발지</div>
-                    </div>
-                    
-                    <div className="route-arrow">
-                      <button type="button" className="btn-open js-target-pick btnMark" data-route="DEP" 
-                        id="btnExchangeRoute2">
-                      </button>			
-                    </div>
-                    
-                    <div className="arrival-section">
-                      <div className="city-name">도착지</div>
-                    </div>
-                    
-                    <div className="ticketing-date">
-                      <button type="button" className="btn-date" id="btnDatePicker2" onClick={handleSegment2ButtonClick}>
-                        <span className="txt">
-                          {selectedDates.segment2.toLocaleDateString('ko-KR', { 
-                            year: 'numeric', 
-                            month: '2-digit', 
-                            day: '2-digit', 
-                            weekday: 'short' 
-                          }).replace(/\./g, '.').replace(/ /g, '')}
-                        </span>
-                      </button>
-                      {/* flatpickr용 숨겨진 input */}
-                      <input type="text" ref={segment2DateRef} style={{display: 'none'}} />
-                      <input type="hidden" id="segment2Date" value={formatHiddenDate(selectedDates.segment2)} />
-                    </div>
-                  </div>
-                )}        
+                
                 
                 <div className="passenger-row">
                   <button type="button" className="passenger-btn">
@@ -321,12 +390,12 @@ const JejuAirBody = () => {
                         <input type="radio" name="payment" defaultChecked />
                         <span>일반</span>
                       </label>
-                      <label className="payment-option">
-                        <input type="radio" name="payment" />
+                      <label className="payment-option disabled" title="점검 중">
+                        <input type="radio" name="payment" disabled />
                         <span>포인트</span>
                       </label>
-                      <label className="payment-option">
-                        <input type="radio" name="payment" />
+                      <label className="payment-option disabled" title="점검 중">
+                        <input type="radio" name="payment" disabled />
                         <span>기프티켓</span>
                       </label>
                     </div>

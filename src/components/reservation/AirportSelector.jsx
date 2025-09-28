@@ -1,63 +1,144 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './AirportSelector.css';
 import { Search } from 'lucide-react';
 
-const AIRPORT_GROUPS = {
-  국내: [
-    { code: 'ICN', city: '서울', name: '인천', fullName: '인천국제공항' },
-    { code: 'GMP', city: '서울', name: '김포', fullName: '김포공항' },
-    { code: 'CJU', city: '제주', name: '제주', fullName: '제주국제공항' },
-    { code: 'PUS', city: '부산', name: '김해', fullName: '김해국제공항' },
-    { code: 'TAE', city: '대구', name: '대구', fullName: '대구국제공항' },
-    { code: 'KWJ', city: '광주', name: '광주', fullName: '광주공항' },
-    { code: 'YNY', city: '양양', name: '양양', fullName: '양양국제공항' },
-    { code: 'USN', city: '울산', name: '울산', fullName: '울산공항' },
-    { code: 'RSU', city: '여수', name: '여수', fullName: '여수공항' },
-  ],
-  일본: [
-    { code: 'NRT', city: '도쿄', name: '나리타', fullName: '나리타국제공항' },
-    { code: 'HND', city: '도쿄', name: '하네다', fullName: '하네다공항' },
-    { code: 'KIX', city: '오사카', name: '간사이', fullName: '간사이국제공항' },
-    { code: 'FUK', city: '후쿠오카', name: '후쿠오카', fullName: '후쿠오카공항' },
-    { code: 'CTS', city: '삿포로', name: '신치토세', fullName: '신치토세공항' },
-    { code: 'OKA', city: '오키나와', name: '나하', fullName: '나하공항' },
-  ],
-  중국: [
-    { code: 'PVG', city: '상하이', name: '푸동', fullName: '상하이푸동국제공항' },
-    { code: 'PEK', city: '베이징', name: '수도', fullName: '베이징수도국제공항' },
-    { code: 'CAN', city: '광저우', name: '바이윈', fullName: '광저우바이윈국제공항' },
-    { code: 'SZX', city: '선전', name: '선전', fullName: '선전바오안국제공항' },
-  ],
-  동남아: [
-    { code: 'BKK', city: '방콕', name: '수완나품', fullName: '수완나품국제공항' },
-    { code: 'SIN', city: '싱가포르', name: '창이', fullName: '창이국제공항' },
-    { code: 'KUL', city: '쿠알라룸푸르', name: 'KLIA', fullName: '쿠알라룸푸르국제공항' },
-    { code: 'MNL', city: '마닐라', name: '니노이', fullName: '니노이아키노국제공항' },
-    { code: 'CEB', city: '세부', name: '막탄', fullName: '막탄-세부국제공항' },
-  ],
-};
-
-function AirportSelector({ type, onSelect, onClose }) {
+function AirportSelector({ type, onSelect, onClose, selectedAirports }) {
   const [keyword, setKeyword] = useState('');
-  const [regionTab, setRegionTab] = useState('국내');
+  const [regionTab, setRegionTab] = useState('대한민국');
+  const [airports, setAirports] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+  console.log(selectedAirports); // 전달받은거 테스트용
+
+  // API에서 공항 데이터 가져오기
+  useEffect(() => {
+    const fetchAirports = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:8080/api/airports');
+        if (!response.ok) {
+          throw new Error('공항 데이터를 불러오는데 실패했습니다.');
+        }
+        const airportData = await response.json();
+        
+        // 국가별로 공항 데이터 그룹화
+        const groupedAirports = airportData.reduce((acc, airport) => {
+          const country = airport.country || '기타';
+          if (!acc[country]) {
+            acc[country] = [];
+          }
+          acc[country].push({
+            code: airport.airportCode,
+            city: airport.airportName.split('(')[0]?.trim() || airport.airportName,
+            name: airport.airportName.includes('(') 
+              ? airport.airportName.split('(')[1]?.replace(')', '').trim() 
+              : airport.airportName,
+            fullName: airport.airportName
+          });
+          return acc;
+        }, {});
+        
+        setAirports(groupedAirports);
+        
+        // 대한민국을 기본 탭으로 설정, 없으면 첫 번째 지역
+        if (groupedAirports['대한민국']) {
+          setRegionTab('대한민국');
+        } else {
+          const firstRegion = Object.keys(groupedAirports)[0];
+          if (firstRegion) {
+            setRegionTab(firstRegion);
+          }
+        }
+        
+      } catch (err) {
+        setError(err.message);
+        console.error('공항 데이터 로딩 오류:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAirports();
+  }, []);
 
   const filtered = useMemo(() => {
-    const list = AIRPORT_GROUPS[regionTab] || [];
-    if (!keyword.trim()) return list;
-    const k = keyword.toLowerCase();
-    return list.filter(a =>
-      a.code.toLowerCase().includes(k) ||
-      a.city.toLowerCase().includes(k) ||
-      a.name.toLowerCase().includes(k) ||
-      a.fullName.toLowerCase().includes(k)
+    const list = airports[regionTab] || [];
+    
+    // 이미 선택된 공항 코드들 수집
+    let excludeCodes = [];
+    
+    if (type === 'departure' || type === 'arrival') {
+      // 첫 번째 구간 (왕복/편도)
+      if (type === 'departure' && selectedAirports?.arrival?.code) {
+        excludeCodes.push(selectedAirports.arrival.code);
+      } else if (type === 'arrival' && selectedAirports?.departure?.code) {
+        excludeCodes.push(selectedAirports.departure.code);
+      }
+    } else if (type === 'departure2' || type === 'arrival2') {
+      // 두 번째 구간 (다구간)
+      if (type === 'departure2' && selectedAirports?.arrival2?.code) {
+        excludeCodes.push(selectedAirports.arrival2.code);
+      } else if (type === 'arrival2' && selectedAirports?.departure2?.code) {
+        excludeCodes.push(selectedAirports.departure2.code);
+      }
+    }
+    
+    // 제외할 공항들을 필터링
+    let filteredList = list.filter(airport => !excludeCodes.includes(airport.code));
+    
+    // 키워드 검색 적용
+    if (keyword.trim()) {
+      const k = keyword.toLowerCase();
+      filteredList = filteredList.filter(a =>
+        a.code.toLowerCase().includes(k) ||
+        a.city.toLowerCase().includes(k) ||
+        a.name.toLowerCase().includes(k) ||
+        a.fullName.toLowerCase().includes(k)
+      );
+    }
+    
+    return filteredList;
+  }, [keyword, regionTab, airports, selectedAirports, type]);
+
+  if (loading) {
+    return (
+      <div className="airport-selector-wrap">
+        <div className="selector-header">
+          <div className="title">
+            {type === 'departure' || type === 'departure2' ? '출발지 선택' : '도착지 선택'}
+          </div>
+          <button className="close-btn" onClick={onClose}>×</button>
+        </div>
+        <div className="loading-message" style={{padding: '40px', textAlign: 'center'}}>
+          공항 정보를 불러오는 중...
+        </div>
+      </div>
     );
-  }, [keyword, regionTab]);
+  }
+
+  if (error) {
+    return (
+      <div className="airport-selector-wrap">
+        <div className="selector-header">
+          <div className="title">
+            {type === 'departure' || type === 'departure2' ? '출발지 선택' : '도착지 선택'}
+          </div>
+          <button className="close-btn" onClick={onClose}>×</button>
+        </div>
+        <div className="error-message" style={{padding: '40px', textAlign: 'center', color: 'red'}}>
+          {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="airport-selector-wrap">
       <div className="selector-header">
         <div className="title">
-          {type === 'departure' ? '출발지 선택' : '도착지 선택'}
+          {type === 'departure' || type === 'departure2' ? '출발지 선택' : '도착지 선택'}
         </div>
         <button className="close-btn" onClick={onClose}>×</button>
       </div>
@@ -81,7 +162,7 @@ function AirportSelector({ type, onSelect, onClose }) {
       <div className="selector-content">
         <div className="selector-left">
           <ul className="region-tabs">
-            {Object.keys(AIRPORT_GROUPS).map(tab => (
+            {Object.keys(airports).map(tab => (
               <li key={tab} className="region-tab">
                 <button
                   className={`tab-btn ${regionTab === tab ? 'active' : ''}`}
@@ -105,7 +186,7 @@ function AirportSelector({ type, onSelect, onClose }) {
                 <div className="code">{ap.code}</div>
                 <div className="info">
                   <div className="line1">{ap.city}({ap.name})</div>
-                  <div className="line2">{ap.fullName}</div>
+                  <div className="line2">{ap.city}</div>
                 </div>
               </div>
             ))}
