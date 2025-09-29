@@ -206,6 +206,53 @@
     color: white;
 }
 
+/* 왕복 날짜 범위 시각적 효과 */
+.calendar-day.in-range {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.calendar-day.in-range .day-number {
+    color: #92400e;
+}
+
+.calendar-day.in-range .day-price {
+    color: #92400e;
+}
+
+.calendar-day.start-date {
+    background: #f97316;
+    color: white;
+    border-radius: 50% 0 0 50%;
+}
+
+.calendar-day.start-date .day-number {
+    color: white;
+}
+
+.calendar-day.start-date .day-price {
+    color: white;
+}
+
+.calendar-day.end-date {
+    background: #f97316;
+    color: white;
+    border-radius: 0 50% 50% 0;
+}
+
+.calendar-day.end-date .day-number {
+    color: white;
+}
+
+.calendar-day.end-date .day-price {
+    color: white;
+}
+
+/* 시작일과 끝일이 같은 경우 */
+.calendar-day.start-date.end-date {
+    border-radius: 50%;
+}
+
 /* 선택 정보 */
 .selection-info {
     display: flex;
