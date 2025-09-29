@@ -178,7 +178,7 @@ body {
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid #e0e0e0;
-  width: calc(28% - 13.33px); /* departure-section과 동일한 너비 */
+  width: calc(33% - 13.33px); /* departure-section과 동일한 너비 */
   /* 또는 더 정확하게 하려면 */
   /* width: 200px; departure-section의 실제 너비와 맞춤 */
 }

@@ -6,6 +6,8 @@ import Header from '../../common/Header';
 import Footer from '../../common/Footer';
 import DateModal from '../../pages/home/DateModal';
 import AirportSelector from './AirportSelector';
+import PassengerModal from './PassengerModal';
+import AlertModal from './AlertModal';
 
 const JejuAirBody = () => {
 	  const [selectedTab, setSelectedTab] = useState('RT'); // RT: 왕복, OW: 편도, MT: 다구간
@@ -27,6 +29,14 @@ const JejuAirBody = () => {
       departure2: { code: '', city: '출발지', name: '' },
       arrival2:   { code: '', city: '도착지', name: '' }
     });
+    const [isPassengerModalOpen, setIsPassengerModalOpen] = useState(false);
+    const [passengerCounts, setPassengerCounts] = useState({
+      adult: 1,
+      child: 0,
+      infant: 0
+    });
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
   
   const handleTabClick = (tabType) => {
     setSelectedTab(tabType);
@@ -232,6 +242,28 @@ const JejuAirBody = () => {
       }));
     };
   
+    const handlePassengerClick = () => {
+      // 출발지와 도착지가 모두 선택되었는지 확인
+      if (!selectedAirports.departure.code || !selectedAirports.arrival.code) {
+        setAlertMessage('여정 및 일정을 선택하세요');
+        setIsAlertModalOpen(true);
+        return;
+      }
+      setIsPassengerModalOpen(true);
+    };
+
+    const handlePassengerConfirm = (counts) => {
+      setPassengerCounts(counts);
+    };
+
+    const getPassengerText = () => {
+      const { adult, child, infant } = passengerCounts;
+      let text = `성인${adult}`;
+      if (child > 0) text += `, 소아${child}`;
+      if (infant > 0) text += `, 유아${infant}`;
+      return text;
+    };
+  
   return (
     <React.Fragment>
       <Header />
@@ -376,9 +408,9 @@ const JejuAirBody = () => {
                 
                 
                 <div className="passenger-row">
-                  <button type="button" className="passenger-btn">
+                  <button type="button" className="passenger-btn" onClick={handlePassengerClick}>
                     <span className="person-icon"> </span>
-                    <span className="passenger-text">성인1</span>
+                    <span className="passenger-text">{getPassengerText()}</span>
                   </button>
                 </div>
                 
@@ -414,6 +446,19 @@ const JejuAirBody = () => {
         isOpen={isDateModalOpen}
         onClose={handleModalClose}
         modalType={modalType}
+      />
+      <AlertModal 
+        isOpen={isAlertModalOpen}
+        onClose={() => setIsAlertModalOpen(false)}
+        message={alertMessage}
+      />
+      <PassengerModal 
+        isOpen={isPassengerModalOpen}
+        onClose={() => setIsPassengerModalOpen(false)}
+        onConfirm={handlePassengerConfirm}
+        initialCounts={passengerCounts}
+        selectedAirports={selectedAirports}
+        selectedTab={selectedTab}
       />
     </React.Fragment>
   );
