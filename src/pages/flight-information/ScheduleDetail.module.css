@@ -1,0 +1,532 @@
+/* ScheduleDetail.module.css */
+
+.schedule-detail-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+/* 페이지 헤더 */
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+/* 검색 영역 - FlightInfo와 동일한 스타일 */
+.tabs-container {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.info-text {
+  background: #e3f2fd;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.info-text p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #1976d2;
+  line-height: 1.4;
+}
+
+.trip-type {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+.radio-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: #f97316;
+}
+
+.radio-text {
+  font-weight: 500;
+}
+
+/* FlightInfo와 동일한 스타일 */
+.schedule-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.schedule-target {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 3;
+  min-width: 600px;
+}
+
+.schedule-right-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.schedule-start-button,
+.schedule-target-button {
+  flex: 1;
+  padding: 15px 0 6px 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  min-width: 250px;
+}
+
+.schedule-start-button {
+  text-align: left;
+}
+
+.schedule-target-button {
+  text-align: right;
+}
+
+.schedule-start-button:hover,
+.schedule-target-button:hover {
+  border-bottom-color: #3b82f6;
+}
+
+.schedule-start-button.active {
+  border-bottom-color: #ff5000;
+}
+
+.txt {
+  display: block;
+  color: #000;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 32px;
+}
+
+.txt.before-select {
+  color: #999;
+  font-weight: 600;
+}
+
+.schedule-date {
+  margin-bottom: 0;
+}
+
+.schedule-btn-date {
+  width: 100%;
+  min-width: 300px;
+  padding: 12px 0 12px 0;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.schedule-btn-date:hover {
+  border-bottom-color: #3b82f6;
+}
+
+.schedule-btn-date .txt {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  line-height: 24px;
+}
+
+.compact-icon {
+  width: 16px;
+  height: 16px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.schedule-search-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 48px;
+  align-self: flex-end;
+}
+
+.schedule-search-button:hover {
+  background: #4b5563;
+}
+
+.search-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* 탭 영역 - 회색 테마로 변경 */
+.tabs-container {
+  margin-bottom: 30px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e5e7eb;
+  justify-content: center;
+}
+
+.tab {
+  padding: 16px 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+  position: relative;
+  transition: all 0.2s ease;
+  border-radius: 6px 6px 0 0;
+}
+
+.tab.active {
+  color: #374151;
+  background: #e5e7eb;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6b7280;
+}
+
+.tab:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+/* 항공편 목록 */
+.flights-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.flights-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.boarding_detail {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.boarding_detail + .boarding_detail {
+  margin-top: 20px;
+}
+
+.boarding__info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  gap: 20px;
+}
+
+.boarding__info.time_wrap {
+  margin-top: 0;
+}
+
+.flight-info-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 0 0 35%;
+  max-width: 400px;
+}
+
+.flight-dates-right {
+  flex: 1;
+  min-width: 0;
+}
+
+.time-num {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.2;
+  min-width: 80px;
+  text-align: center;
+}
+
+.time-num.target {
+  text-align: center;
+}
+
+.moving_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  margin: 0 20px;
+}
+
+.text_pnr {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.icon-mark {
+  width: 20px;
+  height: 2px;
+  background: #ff6b35;
+  border-radius: 1px;
+}
+
+.moving-time {
+  font-size: 14px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.seukejul_list {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.seukejul_list li {
+  flex: 1;
+  min-width: 50px;
+}
+
+.seukejul-btn {
+  width: 100%;
+  padding: 10px 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 60px;
+}
+
+.seukejul-btn:hover:not(.disabled) {
+  border-color: #ff6b35;
+  background: #fff3f0;
+}
+
+.seukejul-btn.today {
+  border-color: #ff6b35;
+  background: #fff3f0;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+}
+
+.seukejul-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.day {
+  font-size: 10px;
+  color: #999;
+  text-align: center;
+  min-height: 12px;
+}
+
+.resulte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 20px;
+  min-height: 20px;
+}
+
+.plane-icon {
+  display: inline-block;
+  width: 24px;
+  height: 20px;
+  background: url('/images/free-icon-plane-17162314.png') no-repeat;
+  background-size: contain;
+  vertical-align: top;
+}
+
+/* 로딩 */
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* 안내 문구 */
+.info-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.info-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 8px 0;
+}
+
+.info-text:last-child {
+  margin-bottom: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .schedule-detail-container {
+    padding: 20px 10px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .search-container {
+    padding: 20px;
+  }
+  
+  .search-main-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .search-target {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search-right-group {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .search-date {
+    flex: 1;
+  }
+  
+  .flight-main-info {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .flight-details {
+    margin: 0;
+  }
+  
+  .flight-dates {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .date-cell {
+    min-width: 50px;
+    padding: 8px 4px;
+  }
+  
+  .date-text {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-type {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .search-start-button,
+  .search-target-button {
+    min-width: 120px;
+    padding: 12px 16px;
+  }
+  
+  .search-btn-date {
+    padding: 12px 16px;
+  }
+  
+  .search-button {
+    padding: 12px 24px;
+  }
+  
+  .flight-dates {
+    gap: 2px;
+  }
+  
+  .date-cell {
+    min-width: 45px;
+    padding: 6px 2px;
+  }
+}

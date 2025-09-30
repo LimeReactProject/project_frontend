@@ -10,7 +10,7 @@ import SearchModal from '../home/SearchModal';
 
 function FlightInfo() {
     const location = useLocation();
-    const navigate = useNavigate();
+    const nav = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('출도착 현황');
     const [searchType, setSearchType] = useState('구간 조회');
@@ -80,6 +80,21 @@ function FlightInfo() {
             setSearchParams({ index: '2' });
         }
     };
+
+    const handleSearch = () => {
+        nav('/ScheduleDetail',{
+            state: {
+                departure: departure,
+                arrival: arrival,
+                departureCode: departureCode,
+                arrivalCode: arrivalCode,
+                departureDate: departureDate,
+                returnDate: returnDate
+            }
+        });
+        
+    };
+        
 
     return (
         <>
@@ -182,7 +197,10 @@ function FlightInfo() {
                                             </button>
                                         </div>
                                         
-                                        <button className={styles['schedule-search-button']}>
+                                        <button 
+                                            className={styles['schedule-search-button']}
+                                            onClick={handleSearch}
+                                        >
                                             <Search className={styles['search-icon']} />
                                             조회
                                         </button>
@@ -297,7 +315,9 @@ function FlightInfo() {
                                             </div>
                                         </div>
                                         
-                                        <button className={styles['search-button']}>
+                                        <button 
+                                        onClick={handleSearch}
+                                        className={styles['search-button']}>
                                             <Search className={styles['search-icon']} />
                                             조회
                                         </button>
@@ -326,10 +346,6 @@ function FlightInfo() {
                 onClose={() => setIsDateModal(false)}
                 modalType={modalType}
                 onSelectDate={handleDateSelect}
-                departure={departure}
-                arrival={arrival}
-                departureCode={departureCode}
-                arrivalCode={arrivalCode}
                 searchType={searchType}
             />}
             

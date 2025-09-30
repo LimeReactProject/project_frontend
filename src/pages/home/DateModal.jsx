@@ -11,122 +11,17 @@ const toYMDLocal = (d) => {
     return `${y}-${m}-${day}`;
 };
 
-function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arrival, departureCode, arrivalCode, searchType }) {
+function DateModal({ isOpen, onClose, modalType, onSelectDate, searchType }) {
     const [selectedDeparture, setSelectedDeparture] = useState(null);
     const [selectedReturn, setSelectedReturn] = useState(null);
     const [currentMonth, setCurrentMonth] = useState(new Date(2025, 8)); // 2025년 9월 (0-based)
     const [nextMonth, setNextMonth] = useState(new Date(2025, 9)); // 2025년 10월
-    const [priceData, setPriceData] = useState({});
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        console.log('useEffect 실행됨 - departure:', departure, 'arrival:', arrival, 'departureCode:', departureCode, 'arrivalCode:', arrivalCode, 'currentMonth:', currentMonth);
-        const fetchPriceData = async () => {
-            console.log('API 호출 시작 - departure:', departure, 'arrival:', arrival, 'departureCode:', departureCode, 'arrivalCode:', arrivalCode);
-            
-            if (!departure || !arrival) {
-                console.log('departure 또는 arrival이 없어서 API 호출 안함');
-                return;
-            }
-            
-            setLoading(true);
-            try {
-                // 9월과 10월 데이터를 모두 가져옴
-                const september = new Date(2025, 8, 1); // 2025년 9월
-                const october = new Date(2025, 9, 1); // 2025년 10월
-                
-                const septemberDate = toYMDLocal(september);
-                const octoberDate = toYMDLocal(october);
-                
-                console.log('API 요청 데이터:', { 
-                    departure, 
-                    arrival, 
-                    departureCode, 
-                    arrivalCode, 
-                    date: octoberDate 
-                });
-                const response = await apiClient.get("/schedule-detail", { 
-                    params: {
-                        departure: departureCode, // TAE
-                        arrival: arrivalCode,     // CJU
-                        date: octoberDate // (실제 데이터가 있는 월)
-                    }
-                });
-                
-                console.log('API 응답 전체:', response);
-                console.log('API 응답 데이터:', response.data);
-                
-                // API 응답 데이터를 날짜별 가격 객체로 변환
-                const priceMap = {};
-                
-                if (response.data && Array.isArray(response.data)) {
-                    // 배열 형태의 데이터
-                    response.data.forEach(item => {
-                        console.log('처리 중인 아이템:', item);
-                        // flightDate를 날짜로, price 필드 사용 (price가 0이어도 표시)
-                        if (item.flightDate && item.price !== null && item.price !== undefined) {
-                            // 같은 날짜에 이미 가격이 있으면 덮어쓰지 않음 (첫 번째 가격 유지)
-                            if (!priceMap[item.flightDate]) {
-                                priceMap[item.flightDate] = item.price;
-                                console.log(`날짜 ${item.flightDate}에 가격 ${item.price} 설정`);
-                            } else {
-                                console.log(`날짜 ${item.flightDate}는 이미 가격 ${priceMap[item.flightDate]}가 있음, ${item.price} 무시`);
-                            }
-                        }
-                    });
-                } else if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
-                    // 객체 형태의 데이터
-                    console.log('객체 형태의 데이터 처리');
-                    Object.keys(response.data).forEach(key => {
-                        if (response.data[key] && typeof response.data[key] === 'number') {
-                            priceMap[key] = response.data[key];
-                        }
-                    });
-                } else if (typeof response.data === 'number') {
-                    // 단순 숫자 형태의 데이터 (현재 선택된 날짜의 가격)
-                    console.log('단순 숫자 형태의 데이터:', response.data);
-                    priceMap[dateString] = response.data;
-                } else if (typeof response.data === 'string' && !isNaN(response.data)) {
-                    // 문자열 숫자 형태의 데이터
-                    console.log('문자열 숫자 형태의 데이터:', response.data);
-                    priceMap[dateString] = parseInt(response.data);
-                } else if (response.data === '' || response.data === null || response.data === undefined) {
-                    // 빈 응답인 경우
-                    console.log('빈 응답 데이터 - 가격 정보 없음');
-                }
-                
-                console.log('최종 priceMap:', priceMap);
-                setPriceData(priceMap);
-                console.log('가격 데이터 로딩 성공:', priceMap);
-            } catch (error) {
-                console.error('날짜 데이터 로딩 실패:', error);
-                console.error('에러 상세:', error.response?.data);
-                setPriceData({});
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPriceData();
-    }, [departure, arrival, currentMonth]);
+    // 가격 관련 useEffect 제거 - 이제 날짜 선택만 담당
 
 
-    // 백엔드에서 받은 날짜별 가격 데이터 사용
-    const getPriceForDate = (date) => {
-        const dateString = toYMDLocal(date); // ✅ 로컬 기준 YYYY-MM-DD 형식
-        const price = priceData[dateString] || null;
-        
-        // 디버깅용 로그 (가격이 있을 때만)
-        if (price) {
-            console.log(`날짜 ${dateString}의 가격:`, price);
-        }
-        
-        return price;
-    };
-
-    const formatPrice = (price) => {
-        return price !== null && price !== undefined ? price.toLocaleString() : '';
-    };
+    // 가격 관련 함수들 제거 - 이제 날짜 선택만 담당
 
     const isWeekend = (date) => {
         const day = date.getDay();
@@ -202,7 +97,7 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
         }
     };
 
-    const handleSelect = async () => {
+    const handleSelect = () => {
         if (searchType === '왕복') {
             // 왕복일 때: 출발일과 도착일을 모두 전달
             if (selectedDeparture) {
@@ -213,24 +108,13 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
             }
             onClose();
         } else {
-            // 편도일 때: 기존 로직
+            // 편도일 때: 선택된 날짜만 전달
             const selectedDate = modalType === 'departure' ? selectedDeparture : selectedReturn;
             if (selectedDate) {
                 console.log(`Selected ${modalType} date:`, selectedDate);
                 if (onSelectDate) {
                     onSelectDate(selectedDate, modalType);
                 }
-
-                // ✅ 선택된 날짜로 백엔드 호출 (오늘X, ISOX)
-                const q = toYMDLocal(selectedDate);       // "YYYY-MM-DD"
-                console.log('스케줄 조회 요청:', q);
-                try {
-                    const res = await apiClient.get('/schedule-detail', { params: { date: q } }); // ✅ 언더스코어
-                    console.log('스케줄 조회 응답:', res.data);
-                } catch (e) {
-                    console.error('스케줄 조회 실패', e);
-                }
-
                 onClose();
             }
         }
@@ -258,7 +142,6 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
         // 6주 * 7일 = 42일
         for (let i = 0; i < 42; i++) {
             const date = new Date(currentDate);
-            const price = getPriceForDate(date);
             const disabled = isDisabled(date);
             const selected = isSelected(date);
             const weekend = isWeekend(date);
@@ -267,11 +150,6 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
             const isStart = isStartDate(date);
             const isEnd = isEndDate(date);
 
-            // 디버깅용 로그 (처음 몇 개만)
-            if (i < 5) {
-                console.log(`날짜 ${date.toISOString().split('T')[0]} - 가격:`, price, '현재월:', isCurrentMonth);
-            }
-
             days.push(
                 <div
                     key={i}
@@ -279,9 +157,6 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
                     onClick={() => handleDateClick(date)}
                 >
                     <div className="day-number">{date.getDate()}</div>
-                    {price !== null && price !== undefined && (
-                        <div className="day-price">{formatPrice(price)}</div>
-                    )}
                 </div>
             );
             currentDate.setDate(currentDate.getDate() + 1);
@@ -305,7 +180,6 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
                         }
                     </h2>
                     <div className="header-right">
-                        <span className="currency-info">통화 : 원</span>
                         <button className="modal-close" onClick={onClose}>
                             <X size={24} />
                         </button>
@@ -313,8 +187,7 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
                 </div>
 
                 <div className="modal-info">
-                    <span className="price-info">① 1인 편도 총액 기준</span>
-                    {loading && <span className="loading-info">가격 정보를 불러오는 중...</span>}
+                    {/* 가격 정보 제거 */}
                 </div>
 
                 <div className="calendar-section">
@@ -374,7 +247,7 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
                             }
                         </span>
                     </div>
-                    <span className="price-note">(공항세 + 유류할증료 등 포함)</span>
+                    {/* 가격 관련 노트 제거 */}
                 </div>
 
                 <div className="modal-footer">
