@@ -1,0 +1,127 @@
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Noto Sans KR", sans-serif;
+  text-align: center;
+}
+
+.header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 카카오 로그인 */
+.kakaoBtn {
+  width: 100%;
+  background: #ffeb00;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* 입력창 */
+.formBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.passwordRow {
+  position: relative;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+}
+
+.checkRow {
+  font-size: 14px;
+  text-align: left;
+  color: #444;
+}
+
+.loginBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #666;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 링크 */
+.links {
+  font-size: 14px;
+  margin: 10px 0 20px;
+  color: #666;
+}
+
+.links a {
+  color: #333;
+  text-decoration: none;
+}
+
+/* 간편 로그인 */
+.simpleLogin p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.simpleBtns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.simpleBtn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+/* 비회원 로그인 */
+.guestBtn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.guestInfo {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+  line-height: 1.4;
+}

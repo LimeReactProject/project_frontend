@@ -102,6 +102,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   height: 60px;
+  position: relative;
 }
 
 .departure-section {
@@ -177,7 +178,7 @@ body {
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid #e0e0e0;
-  width: calc(28% - 13.33px); /* departure-section과 동일한 너비 */
+  width: calc(33% - 13.33px); /* departure-section과 동일한 너비 */
   /* 또는 더 정확하게 하려면 */
   /* width: 200px; departure-section의 실제 너비와 맞춤 */
 }
@@ -529,14 +530,15 @@ body {
 /* Flatpickr 커스텀 스타일 */
 .flatpickr-calendar {
   position: absolute !important;
-  top: 100% !important;
-  left: 0 !important;
+  top: 100% !important; /* route-row 바로 아래 */
+  left: 50% !important;
+  transform: translateX(-50%) !important; /* 중앙 정렬 */
   z-index: 1000;
-  margin-top: 5px;
+  margin-top: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   border: 1px solid #e0e0e0;
-  min-width: 1080px;
+  min-width: 350px;
   font-size: 14px;
 }
 
@@ -713,4 +715,19 @@ body {
 .flatpickr-day::before,
 .flatpickr-day::after {
   display: none !important;
+}
+
+.payment-option.disabled {
+  opacity: 0.5;
+  cursor: default; /* not-allowed 대신 default */
+  pointer-events: none; /* 모든 상호작용 비활성화 */
+}
+
+.payment-option.disabled input {
+  cursor: default;
+}
+
+.payment-option.disabled span {
+  cursor: default;
+  color: #999;
 }

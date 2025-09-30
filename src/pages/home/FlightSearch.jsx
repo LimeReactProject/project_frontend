@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import styles from '../../css/home/FlightSearch.module.css';
 import { Calendar, Users, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function FlightSearch({ onOpenModal, onOpenDateModal }) {
     const [tripType, setTripType] = useState('왕복');
     const [activeTab, setActiveTab] = useState('항공권 예매');
     const [activeSubTab, setActiveSubTab] = useState('운항 스케줄');
+    const navigate= useNavigate();
+    
 
     return (
         <div className={styles['flight-overlay-container']}>
@@ -119,9 +122,13 @@ function FlightSearch({ onOpenModal, onOpenDateModal }) {
                         <div className={styles['reservation-form-grid']}>
                             <div className={styles['reservation-form-group']}>
                                 <label>예약번호</label>
-                                <button type="button" className={styles['reservation-input-btn']}>
-                                    <span className={styles['txt']}>예약번호를 입력하세요</span>
-                                </button>
+                                <input 
+                                type="text" 
+                                className={styles['reservation-input-btn']} 
+                                placeholder="예약번호를 입력하세요"
+                                maxLength={6}
+                                >
+                                </input>
                             </div>
                             <div className={styles['reservation-form-group']}>
                                 <label>탑승일자</label>
@@ -132,15 +139,13 @@ function FlightSearch({ onOpenModal, onOpenDateModal }) {
                             </div>
                             <div className={styles['reservation-form-group']}>
                                 <label>성</label>
-                                <button type="button" className={styles['reservation-input-btn']}>
-                                    <span className={styles['txt']}>성을 입력하세요</span>
-                                </button>
+                                <input type="text" className={styles['reservation-input-btn']} placeholder="성">
+                                </input>
                             </div>
                             <div className={styles['reservation-form-group']}>
                                 <label>이름</label>
-                                <button type="button" className={styles['reservation-input-btn']}>
-                                    <span className={styles['txt']}>이름을 입력하세요</span>
-                                </button>
+                                <input type="text" className={styles['reservation-input-btn']} placeholder="이름">
+                                </input>
                             </div>
                         </div>
                         
@@ -150,7 +155,7 @@ function FlightSearch({ onOpenModal, onOpenDateModal }) {
                                 <p>• 여행사, 공항, 고객센터, 비회원 예약 고객님도 조회 가능합니다.</p>
                                 <p>• 예약시 입력한 탑승객명을 입력해 주세요.</p>
                                 <p>• 국제선의 경우 영문명을 입력해 주세요.</p>
-                                <p>• 2명 이상 예약 조회는 <span className={styles['highlight']}>여기</span>를 클릭해 주세요</p>
+                                <p>• 2명 이상 예약 조회는 <a className={styles['highlight']} a href="/ViewOnOffReservationList">여기</a>를 클릭해 주세요</p>
                             </div>
                             
                             <div className={styles['compact-search-wrapper']}>
