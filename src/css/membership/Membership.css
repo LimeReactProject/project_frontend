@@ -1,0 +1,273 @@
+/* 회원가입 페이지 컨테이너 */
+.membership-container {
+    min-height: calc(100vh - 200px);
+    background-color: white;
+    padding: 40px 20px 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.membership-content {
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 40px 30px;
+    margin-bottom: 20px;
+}
+
+/* 회원가입 헤더 */
+.membership-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.membership-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.membership-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+/* 회원가입 폼 */
+.membership-form {
+    width: 100%;
+}
+
+/* 입력 그룹 */
+.input-group {
+    margin-bottom: 24px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.label-text {
+    margin-right: 4px;
+}
+
+.required {
+    color: #ff5000;
+    font-weight: 600;
+}
+
+/* 입력 필드 래퍼 */
+.input-wrapper {
+    position: relative;
+}
+
+/* 공통 입력 필드 스타일 */
+.form-name,
+.form-email,
+.form-id,
+.form-password {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e8e8e8;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-name:focus,
+.form-email:focus,
+.form-id:focus,
+.form-password:focus {
+    outline: none;
+    border-color: #ff5000;
+    box-shadow: 0 0 0 3px rgba(255, 80, 0, 0.1);
+}
+
+.form-name::placeholder,
+.form-email::placeholder,
+.form-id::placeholder,
+.form-password::placeholder {
+    color: #999;
+    font-size: 15px;
+}
+
+.form-name:hover,
+.form-email:hover,
+.form-id:hover,
+.form-password:hover {
+    border-color: #d0d0d0;
+}
+
+/* 버튼 그룹 */
+.button-group {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.signup-button {
+    width: 100%;
+    padding: 16px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    background-color: #ff5000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 80, 0, 0.3);
+}
+
+.signup-button:hover {
+    background-color: #e64500;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 80, 0, 0.4);
+}
+
+.signup-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 80, 0, 0.3);
+}
+
+/* 로그인 링크 */
+.login-link {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.login-link p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.login-link .link {
+    color: #ff5000;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-link .link:hover {
+    color: #e64500;
+    text-decoration: underline;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .membership-container {
+        padding: 20px 15px 10px 15px;
+        min-height: calc(100vh - 150px);
+        align-items: center;
+    }
+    
+    .membership-content {
+        padding: 30px 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .membership-header h1 {
+        font-size: 28px;
+    }
+    
+    .membership-subtitle {
+        font-size: 14px;
+    }
+    
+    .form-name,
+    .form-email,
+    .form-id,
+    .form-password {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+    
+    .signup-button {
+        padding: 14px 24px;
+        font-size: 16px;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+    }
+    
+    .button-group {
+        margin-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .membership-content {
+        padding: 25px 15px;
+    }
+    
+    .membership-header h1 {
+        font-size: 24px;
+    }
+    
+    .form-name,
+    .form-email,
+    .form-id,
+    .form-password {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .signup-button {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+}
+
+/* 입력 필드 포커스 애니메이션 */
+.form-name:focus,
+.form-email:focus,
+.form-id:focus,
+.form-password:focus {
+    animation: focusGlow 0.3s ease-out;
+}
+
+@keyframes focusGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 80, 0, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 0 3px rgba(255, 80, 0, 0.1);
+    }
+}
+
+/* 버튼 호버 애니메이션 */
+.signup-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.signup-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.signup-button:hover::before {
+    left: 100%;
+}
+
