@@ -57,7 +57,7 @@ function Header() {
       <div className="util__inner">
         <div className="util__link-list" data-custom-toggle="wrap">
           <a href="javascript:;" className="util__link" data-action="menu" data-menu-name="login">로그인</a>
-          <a href="javascript:;" className="util__link" data-action="menu" data-menu-name="join">회원가입</a>
+          <a onClick={() =>nav('/user-agreement')} href="javascript:;" className="util__link" data-action="menu" data-menu-name="join">회원가입</a>
 
           {/* // 로그인 전 노출 */}
 
@@ -80,8 +80,8 @@ function Header() {
             </div>
             <div className="country__input">
               <div className="select-wrap select-wrap--line">
-                <select title="국가 선택" className="select-wrap__select selected" name="countryChoice" id="countryChoice">
-                  <option value="KR" selected={true}>대한민국</option>
+                <select title="국가 선택" className="select-wrap__select selected" name="countryChoice" id="countryChoice" defaultValue="KR">
+                  <option value="KR">대한민국</option>
                   <option value="JP">日本</option>
                   <option value="CN">中国</option>
                   <option value="US">US</option>
@@ -237,7 +237,7 @@ function Header() {
               <li>
                 <a
                   href="javascript:void(0);"
-                  onClick={() => URL_LINK.getI18Url('/ibe/mypage/viewOnOffReservationList.do')}
+                  onClick={(e) => { sendGAAttrEvent(e); nav('/ViewOnOffReservationList'); }}
                   >예약 안내</a
                 >
 
@@ -255,7 +255,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/ibe/mypage/viewReservationList.do'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/ViewReservationList'); }}
                         >나의 예약 현황</a
                       >
                     </li>
@@ -270,7 +270,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/ibe/mypage/viewOnOffReservationList.do'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/ViewOnOffReservationList'); }}
                         >비회원 예약 조회</a
                       >
                     </li>
@@ -283,7 +283,7 @@ function Header() {
               <li>
                 <a
                   href="javascript:void(0);"
-                  onClick={() => URL_LINK.getI18Url('/prepare/fare/domesticBenefit.do')}
+                  onClick={(e) => { sendGAAttrEvent(e); nav('/DomesticBenefit'); }}
                   >운임 규정 안내</a
                 >
 
@@ -301,7 +301,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/prepare/fare/domesticBenefit.do'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/DomesticBenefit'); }}
                         >국내선 운임</a
                       >
                     </li>
@@ -316,7 +316,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/prepare/fare/internationalBenefit.do'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/internationalBenefit'); }}
                         >국제선 운임</a
                       >
                     </li>
@@ -329,7 +329,7 @@ function Header() {
               <li>
                 <a
                   href="javascript:void(0);"
-                  onClick={() => URL_LINK.getI18Url('/prepare/flight/viewScheduleInfo.do?index=1')}
+                  onClick={() => nav('/flight-info')}
                   >운항 조회</a
                 >
 
@@ -347,7 +347,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/prepare/flight/viewScheduleInfo.do?index=1'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/flight-info?index=1'); }}
                         >운항 스케줄</a
                       >
                     </li>
@@ -362,7 +362,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/prepare/flight/viewScheduleInfo.do?index=2'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/flight-info?index=2'); }}
                         >출도착 현황</a
                       >
                     </li>
@@ -1539,8 +1539,9 @@ function Header() {
 
     {/* 신규 myPage 아이콘*/}
     <div className="header_mypage login">
-      <a href="/ko/member/mypage/main.do" className="btn_login"
-        ><span className="t-hide">마이페이지</span></a>
+      <a href="/login" className="btn_login"
+        >
+          <span className="t-hide">마이페이지</span></a>
     </div>
 
     {/*  전체 매뉴 개선 토글버튼 삭제 */}

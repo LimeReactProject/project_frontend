@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '../../common/Header';
 import Footer from '../../common/Footer';
 import { Calendar, Search } from 'lucide-react';
@@ -8,12 +9,77 @@ import SearchModal from '../home/SearchModal';
 
 
 function FlightInfo() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('출도착 현황');
     const [searchType, setSearchType] = useState('구간 조회');
     const [departure, setDeparture] = useState('');
     const [arrival, setArrival] = useState('');
+    const [departureCode, setDepartureCode] = useState('');
+    const [arrivalCode, setArrivalCode] = useState('');
     const [flightNumber, setFlightNumber] = useState('');
-    const [date, setDate] = useState('2025.09.25(목)');
+    const [departureDate, setDepartureDate] = useState('2025.09.25(목)');
+    const [returnDate, setReturnDate] = useState('');
+    const [isSearchModal, setIsSearchModal] = useState(false);
+    const [isDateModal, setIsDateModal] = useState(false);
+    const [modalType, setModalType] = useState('departure');
+    const [dateData, setDateData] = useState({}); // 날짜별 가격 데이터
+
+    // 도시 선택 함수
+    const handleCitySelect = (cityName, cityCode) => {
+        console.log('도시 선택됨:', { cityName, cityCode, modalType });
+        if (modalType === 'departure') {
+            setDeparture(cityName);
+            setDepartureCode(cityCode); // 코드도 저장
+            console.log('출발지 설정:', { cityName, cityCode });
+        } else if (modalType === 'arrival') {
+            setArrival(cityName);
+            setArrivalCode(cityCode); // 코드도 저장
+            console.log('도착지 설정:', { cityName, cityCode });
+        }
+    };
+
+    // 날짜 선택 함수
+    const handleDateSelect = (selectedDate, type) => {
+        const formattedDate = selectedDate.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            weekday: 'short'
+        }).replace(/\./g, '.').replace(/ /g, '');
+        
+        if (type === 'departure') {
+            setDepartureDate(formattedDate);
+        } else if (type === 'return') {
+            setReturnDate(formattedDate);
+        }
+        
+        console.log(`Selected ${type} date:`, formattedDate);
+    };
+
+    // URL Query Parameter에 따른 탭 설정
+    useEffect(() => {
+        const index = searchParams.get('index');
+        if (index === '1') {
+            setActiveTab('운항 스케줄');
+        } else if (index === '2') {
+            setActiveTab('출도착 현황');
+        } else if (!index) {
+            // index가 없으면 운항 스케줄로 리다이렉트
+            setSearchParams({ index: '1' });
+        }
+    }, [searchParams, setSearchParams]);
+
+    // 탭 변경 함수
+    const handleTabChange = (tabName) => {
+        setActiveTab(tabName);
+        if (tabName === '운항 스케줄') {
+            setSearchParams({ index: '1' });
+        } else if (tabName === '출도착 현황') {
+            setSearchParams({ index: '2' });
+        }
+    };
 
     return (
         <>
@@ -30,13 +96,13 @@ function FlightInfo() {
                     <div className={styles['tabs']}>
                         <button 
                             className={`${styles['tab']} ${activeTab === '운항 스케줄' ? styles['active'] : ''}`}
-                            onClick={() => setActiveTab('운항 스케줄')}
+                            onClick={() => handleTabChange('운항 스케줄')}
                         >
                             운항 스케줄
                         </button>
                         <button 
                             className={`${styles['tab']} ${activeTab === '출도착 현황' ? styles['active'] : ''}`}
-                            onClick={() => setActiveTab('출도착 현황')}
+                            onClick={() => handleTabChange('출도착 현황')}
                         >
                             출도착 현황
                         </button>
@@ -76,7 +142,7 @@ function FlightInfo() {
                                 <div className={styles['schedule-main-row']}>
                                     <div className={styles['schedule-target']}>
                                         <button
-                                          
+                                            onClick={() => {setModalType('departure'); setIsSearchModal(true)}}
                                             type="button" 
                                             className={`${styles['schedule-start-button']} ${styles['active']}`}
                                         >
@@ -88,6 +154,7 @@ function FlightInfo() {
                                         </div>
                                         
                                         <button 
+                                            onClick={() =>{setModalType('arrival'); setIsSearchModal(true)}}
                                             type="button" 
                                             className={styles['schedule-target-button']}
                                         >
@@ -98,11 +165,20 @@ function FlightInfo() {
                                     <div className={styles['schedule-right-group']}>
                                         <div className={styles['schedule-date']}>
                                             <button 
+                                                onClick={() => {
+                                                    setModalType('departure');
+                                                    setIsDateModal(true);
+                                                }}
                                                 type="button" 
                                                 className={styles['schedule-btn-date']}
                                             >
                                                 <Calendar className={styles['compact-icon']} />
-                                                <span className={styles['txt']}>{date}</span>
+                                                <span className={styles['txt']}>
+                                                    {searchType === '왕복' 
+                                                        ? `${departureDate} ~ ${returnDate || '도착일'}`
+                                                        : departureDate
+                                                    }
+                                                </span>
                                             </button>
                                         </div>
                                         
@@ -150,6 +226,7 @@ function FlightInfo() {
                                     <div className={styles['status-main-row']}>
                                         <div className={styles['status-target']}>
                                             <button 
+                                                onClick={() => { setModalType('departure'); setIsSearchModal(true)}}
                                                 type="button" 
                                                 className={`${styles['status-start-button']} ${styles['active']}`}
                                             >
@@ -161,6 +238,7 @@ function FlightInfo() {
                                             </div>
                                             
                                             <button 
+                                                onClick={() => {setModalType('arrival'); setIsSearchModal(true)}}
                                                 type="button" 
                                                 className={styles['status-target-button']}
                                             >
@@ -171,11 +249,15 @@ function FlightInfo() {
                                         <div className={styles['status-right-group']}>
                                             <div className={styles['status-date']}>
                                                 <button 
+                                                    onClick={() => {
+                                                        setModalType('departure');
+                                                        setIsDateModal(true);
+                                                    }}
                                                     type="button" 
                                                     className={styles['status-btn-date']}
                                                 >
                                                     <Calendar className={styles['compact-icon']} />
-                                                    <span className={styles['txt']}>{date}</span>
+                                                    <span className={styles['txt']}>{departureDate}</span>
                                                 </button>
                                             </div>
                                             
@@ -208,7 +290,7 @@ function FlightInfo() {
                                                 <input 
                                                     type="text" 
                                                     className={styles['flight-date-field']}
-                                                    value={date}
+                                                    value={departureDate}
                                                     readOnly
                                                 />
                                                 <Calendar className={styles['flight-calendar-icon']} />
@@ -231,6 +313,28 @@ function FlightInfo() {
                     </div>
                 </div>
             </div>
+   
+            {isSearchModal && <SearchModal
+                isOpen={isSearchModal}
+                onClose={() => setIsSearchModal(false)}
+                modalType={modalType}
+                onSelectCity={handleCitySelect}
+            /> }
+            
+            {isDateModal && <DateModal
+                isOpen={isDateModal}
+                onClose={() => setIsDateModal(false)}
+                modalType={modalType}
+                onSelectDate={handleDateSelect}
+                departure={departure}
+                arrival={arrival}
+                departureCode={departureCode}
+                arrivalCode={arrivalCode}
+                searchType={searchType}
+            />}
+            
+            {/* 디버깅용 - DateModal에 전달되는 값 확인 */}
+            {isDateModal && console.log('DateModal에 전달되는 값:', { departure, arrival, modalType })}
         <Footer/>
         </>
     )
