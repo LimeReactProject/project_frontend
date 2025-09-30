@@ -1,0 +1,360 @@
+/* 약관동의 페이지 전체 컨테이너 */
+.agreement-container {
+    min-height: calc(100vh - 200px);
+    background-color: white;
+    padding: 40px 20px 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* 메인 콘텐츠 박스 */
+.agreement-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* 전체 동의 섹션 */
+.agreement-section {
+    margin-bottom: 30px;
+}
+
+.agreement-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* 체크박스 스타일 - 새로운 디자인 적용 */
+.checkbox-container {
+    position: relative;
+    margin-right: 12px;
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkbox-label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-label .checkbox__ico {
+    display: inline-block;
+    position: relative;
+    height: 20px;
+    width: 20px;
+}
+
+.checkbox-label .checkbox__ico:before {
+    content: "";
+    display: inline-block;
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiByeD0iNCIgZmlsbD0iI0Y1RjVGNSIgc3Ryb2tlPSIjRDFEMUQxIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+') 0 0 no-repeat;
+    background-size: 20px 20px;
+}
+
+.checkbox:checked + .checkbox-label .checkbox__ico:before {
+    background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiByeD0iNCIgZmlsbD0iI0ZGNTAwMCIgc3Ryb2tlPSIjRkY1MDAwIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTYgMTBMMTAgMTNMMTQgNyIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+') 0 0 no-repeat;
+    background-size: 20px 20px;
+}
+
+.checkbox:checked + .checkbox-label .agreement-text {
+    color: #ff5000;
+}
+
+.checkbox:checked + .checkbox-label .agreement-title {
+    color: #ff5000;
+}
+
+/* 전체 동의 제목 */
+.agreement-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 구분선 */
+.divider {
+    height: 1px;
+    background-color: #e8e8e8;
+    margin-bottom: 15px;
+}
+
+/* 설명 텍스트 */
+.agreement-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 개별 약관 항목들 */
+.agreement-items {
+    margin-bottom: 25px;
+}
+
+.agreement-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.agreement-item:last-child {
+    border-bottom: none;
+}
+
+.agreement-text {
+    flex: 1;
+    font-size: 16px;
+    color: #333;
+    margin-left: 12px;
+}
+
+.arrow {
+    font-size: 16px;
+    color: #999;
+    font-weight: bold;
+}
+
+/* 마케팅 안내 */
+.marketing-notice {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fafafa;
+    border-radius: 8px;
+}
+
+.asterisk {
+    color: #ff4444;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 8px;
+    margin-top: 2px;
+}
+
+.notice-text {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.4;
+}
+
+/* 다음 버튼 */
+.next-button {
+    width: 100%;
+    padding: 16px;
+    background-color: #e8e8e8;
+    color: #666;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.next-button:hover {
+    background-color: #d1d1d1;
+    color: #555;
+}
+
+.next-button:active {
+    transform: translateY(1px);
+}
+
+/* 다음 버튼 스타일 */
+.next-button-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.next-button {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.next-button.active {
+    background-color: #ff5000; /* Jeju Air orange */
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 80, 0, 0.3);
+}
+
+.next-button.active:hover {
+    background-color: #e64500;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 80, 0, 0.4);
+}
+
+.next-button.disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.next-button.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* react-modal 스타일 */
+.terms-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.terms-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    outline: none;
+}
+
+.terms-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.terms-modal .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.terms-modal .modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.terms-modal .modal-close-btn:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.terms-modal .modal-content {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    line-height: 1.6;
+}
+
+.terms-modal .modal-content h4 {
+    margin: 20px 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.terms-modal .modal-content h4:first-child {
+    margin-top: 0;
+}
+
+.terms-modal .modal-content p {
+    margin: 10px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.terms-modal .modal-content ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.terms-modal .modal-content li {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.terms-modal .modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.terms-modal .modal-agree-button {
+    background-color: #ff5000;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+.terms-modal .modal-agree-button:hover {
+    background-color: #e04500;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .agreement-container {
+        padding: 20px 15px 10px 15px;
+        min-height: calc(100vh - 150px);
+    }
+    
+    .agreement-content {
+        padding: 25px 20px;
+        margin-bottom: 15px;
+    }
+    
+    .agreement-title {
+        font-size: 16px;
+    }
+    
+    .agreement-text {
+        font-size: 14px;
+    }
+}

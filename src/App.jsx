@@ -9,6 +9,8 @@ import InternationalBenefit from './pages/fare/InternationalBenefit.jsx';
 import ViewOnOffReservationList from './pages/mypage/ViewOnOffReservationList.jsx';
 import ViewReservationList from './pages/mypage/ViewReservationList.jsx';
 import ReservationDetails from './pages/mypage/ReservationDetails.jsx';
+import Membership from './pages/membership/Membership.jsx';
+import UserAgreement from './pages/membership/UserAgreement.jsx';
 
 function App() {
  
@@ -25,6 +27,8 @@ function App() {
        <Route path="/ViewOnOffReservationList" element={<ViewOnOffReservationList />} />
        <Route path="/ViewReservationList" element={<ViewReservationList />} />
        <Route path="/ReservationDetails" element={<ReservationDetails />} />
+       <Route path="/membership" element={<Membership/>} />
+       <Route path="/user-agreement" element={<UserAgreement/>} />
       </Routes>
    </BrowserRouter>
   )

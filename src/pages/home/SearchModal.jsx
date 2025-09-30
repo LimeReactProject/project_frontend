@@ -1,45 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../css/home/SearchModal.css';
 import { X, Search, MapPin, Clock, Star, ChevronRight } from 'lucide-react';
+import { apiClient } from '../../apis/FlightInfoApi';
 
-function SearchModal({ isOpen, onClose, modalType }) {
+function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeTab, setActiveTab] = useState('최근 검색');
-    const [selectedCountry, setSelectedCountry] = useState('대한민국');
+    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedCity, setSelectCity] = useState('');
 
-    // 국가별 도시 데이터 - 예시로 2개 국가만
-    const cities = {
-        '대한민국': [
-            { code: 'SEL', name: '서울(모든 공항)' },
-            { code: 'ICN', name: '서울(인천)' },
-            { code: 'GMP', name: '서울(김포)' },
-            { code: 'PUS', name: '부산' },
-            { code: 'CJU', name: '제주' }
-        ],
-        '일본': [
-            { code: 'NRT', name: '도쿄(나리타)' },
-            { code: 'HND', name: '도쿄(하네다)' },
-            { code: 'KIX', name: '오사카' },
-            { code: 'FUK', name: '후쿠오카' }
-        ]
-    };
+    
+    const [cities, setCities] = useState({});
+    const [recentSearches, setRecentSearches] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+    const [countries, setCountries] = useState([]);
 
-    const recentSearches = [
-        { code: 'GMP', name: '서울(김포)' },
-        { code: 'PUS', name: '부산' },
-        { code: 'DAD', name: '다낭' },
-        { code: 'NRT', name: '도쿄(나리타)' },
-        { code: 'ICN', name: '서울(인천)' },
-        { code: 'TAG', name: '보홀' },
-        { code: 'CJU', name: '제주' }
-    ];
-
-    const favorites = [
-        { code: 'CJU', name: '제주' },
-        { code: 'PUS', name: '부산' },
-        { code: 'GMP', name: '서울(김포)' },
-        { code: 'NRT', name: '도쿄(나리타)' }
-    ];
+    // API에서 데이터 가져오기 
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await apiClient.get('/country');
+                
+                // 중복 제거 
+                const uniqueCountries = [];
+                const seen = new Set();
+                
+                response.data.forEach(item => {
+                    if (!seen.has(item.country)) {
+                        seen.add(item.country);
+                        uniqueCountries.push(item);
+                    }
+                });
+                
+                setCountries(uniqueCountries);  
+                
+                // 국가별 도시 데이터 만들기
+                const citiesData = {};
+                response.data.forEach(item => {
+                    if (!citiesData[item.country]) {
+                        citiesData[item.country] = [];
+                    }
+                    citiesData[item.country].push({
+                        name: item.airportName,
+                        code: item.airportCode
+                    });
+                });
+                setCities(citiesData);
+                
+    
+            } catch (error) {
+                console.log('에러:', error);
+            }
+        };
+        
+        if (isOpen) {
+            getData();
+        }
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -95,57 +112,65 @@ function SearchModal({ isOpen, onClose, modalType }) {
                 <div className="modal-body">
                     {activeTab === '최근 검색' && (
                         <div className="recent-searches">
-                            {recentSearches.map((item, index) => (
-                                <div 
-                                    key={index} 
-                                    className="search-item"
-                                    onClick={() => {
-                                        console.log(`Selected: ${item.name}`);
-                                        onClose();
-                                    }}
-                                >
-                                    <Clock size={16} className="item-icon" />
-                                    <span className="item-text">{item.name}</span>
-                                    <span className="item-code">{item.code}</span>
-                                    <button 
-                                        className="item-delete"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            console.log('Delete recent search:', item.name);
+                            {recentSearches.length > 0 ? (
+                                recentSearches.map((item, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="search-item"
+                                        onClick={() => {
+                                            console.log(`Selected: ${item.name}`);
+                                            onClose();
                                         }}
                                     >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
+                                        <Clock size={16} className="item-icon" />
+                                        <span className="item-text">{item.name}</span>
+                                        <span className="item-code">{item.code}</span>
+                                        <button 
+                                            className="item-delete"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                console.log('Delete recent search:', item.name);
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="no-data">최근 검색 기록이 없습니다.</div>
+                            )}
                         </div>
                     )}
 
                     {activeTab === '즐겨찾기' && (
                         <div className="favorites">
-                            {favorites.map((item, index) => (
-                                <div 
-                                    key={index} 
-                                    className="search-item"
-                                    onClick={() => {
-                                        console.log(`Selected: ${item.name}`);
-                                        onClose();
-                                    }}
-                                >
-                                    <Star size={16} className="item-icon star" />
-                                    <span className="item-text">{item.name}</span>
-                                    <span className="item-code">{item.code}</span>
-                                    <button 
-                                        className="item-delete"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            console.log('Delete favorite:', item.name);
+                            {favorites.length > 0 ? (
+                                favorites.map((item, index) => (
+                                    <div 
+                                        key={index} 
+                                        className="search-item"
+                                        onClick={() => {
+                                            console.log(`Selected: ${item.name}`);
+                                            onClose();
                                         }}
                                     >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
+                                        <Star size={16} className="item-icon star" />
+                                        <span className="item-text">{item.name}</span>
+                                        <span className="item-code">{item.code}</span>
+                                        <button 
+                                            className="item-delete"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                console.log('Delete favorite:', item.name);
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="no-data">즐겨찾기가 없습니다.</div>
+                            )}
                         </div>
                     )}
 
@@ -161,16 +186,20 @@ function SearchModal({ isOpen, onClose, modalType }) {
                              <div className="countries-sidebar">
                                  <h3 className="section-title">국가</h3>
                                  <div className="countries-list">
-                                     {Object.keys(cities).map((country) => (
-                                         <button 
-                                             key={country}
-                                             className={`country-btn ${selectedCountry === country ? 'active' : ''}`}
-                                             onClick={() => setSelectedCountry(country)}
-                                         >
-                                             <MapPin size={16} />
-                                             <span>{country}</span>
-                                         </button>
-                                     ))}
+                                     {countries.length > 0 ? (
+                                         countries.map((item, index) => (
+                                             <button 
+                                                 key={index}
+                                                 className="country-btn"
+                                                 onClick={() => setSelectedCountry(item.country)}
+                                             >
+                                                 <MapPin size={16} />
+                                                 <span>{item.country}</span>
+                                             </button>
+                                         ))
+                                     ) : (
+                                         <div className="no-data">데이터 로딩 중...</div>
+                                     )}
                                  </div>
                              </div>
                              
@@ -185,16 +214,17 @@ function SearchModal({ isOpen, onClose, modalType }) {
                                              <button 
                                                  key={index} 
                                                  className="city-btn"
-                                                 onClick={() => {
-                                                     console.log(`Selected: ${city.name}`);
-                                                     onClose();
-                                                 }}
+                                                onClick={() => {
+                                                    setSelectCity(city.name);
+                                                    onSelectCity(city.name, city.code);  // ← 도시명과 코드 모두 전달!
+                                                    onClose();
+                                                }}
                                              >
                                                  <div className="city-info">
                                                      <span className="city-name">{city.name}</span>
                                                      <span className="city-code">{city.code}</span>
                                                  </div>
-                                                 <button 
+                                                 <div 
                                                      className="favorite-btn"
                                                      onClick={(e) => {
                                                          e.stopPropagation();
@@ -202,7 +232,7 @@ function SearchModal({ isOpen, onClose, modalType }) {
                                                      }}
                                                  >
                                                      <Star size={16} />
-                                                 </button>
+                                                 </div>
                                              </button>
                                          ))
                                      ) : (
