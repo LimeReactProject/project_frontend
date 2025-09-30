@@ -45,11 +45,11 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, departure, arriva
                     arrivalCode, 
                     date: octoberDate 
                 });
-                const response = await apiClient.get("/schedule-detail", { // ✅ 백엔드와 경로 통일(언더스코어)
+                const response = await apiClient.get("/schedule-detail", { 
                     params: {
                         departure: departureCode, // TAE
                         arrival: arrivalCode,     // CJU
-                        date: octoberDate // 10월 데이터 요청 (실제 데이터가 있는 월)
+                        date: octoberDate // (실제 데이터가 있는 월)
                     }
                 });
                 
