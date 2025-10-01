@@ -4,10 +4,12 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import Header from '../../common/Header';
 import Footer from '../../common/Footer';
-import DateModal from '../../pages/home/DateModal';
+import DateModal from './DateModal';
 import AirportSelector from './AirportSelector';
 import PassengerModal from './PassengerModal';
 import AlertModal from './AlertModal';
+import LoadingScreen from './LoadingScreen'; // 새로 추가
+
 
 const JejuAirBody = () => {
 	  const [selectedTab, setSelectedTab] = useState('RT'); // RT: 왕복, OW: 편도, MT: 다구간
@@ -37,6 +39,9 @@ const JejuAirBody = () => {
     });
     const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+   
+  // 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(false);
   
   const handleTabClick = (tabType) => {
     setSelectedTab(tabType);
@@ -264,6 +269,31 @@ const JejuAirBody = () => {
       return text;
     };
   
+     // 항공편 검색 핸들러 추가
+  const handleFlightSearch = () => {
+    // 필수 정보 검증
+    if (!selectedAirports.departure.code || !selectedAirports.arrival.code) {
+      setAlertMessage('출발지와 도착지를 선택해주세요');
+      setIsAlertModalOpen(true);
+      return;
+    }
+      // 로딩 시작
+    setIsLoading(true);
+
+    // 실제 검색 로직을 여기에 추가
+    // 예시: setTimeout으로 3초 후 로딩 종료 (실제로는 API 호출)
+    setTimeout(() => {
+      setIsLoading(false);
+      // 검색 결과 페이지로 이동하거나 다른 처리
+      console.log('항공편 검색 완료');
+    }, 3000);
+  };
+  // 로딩 중일 때는 로딩 화면 표시
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+  
+
   return (
     <React.Fragment>
       <Header />
@@ -390,10 +420,9 @@ const JejuAirBody = () => {
                       <span className="txt">{formatDateDisplay()}</span>
                     </button>
                     {/* flatpickr용 숨겨진 input */}
-                    <input type="text" ref={dateRef} style={{display: 'none'}} />
-                    <input type="hidden" id="departureDate" value={formatHiddenDate(selectedDates.departure)} />
-                    <input type="hidden" id="arrivalDate" value={formatHiddenDate(selectedDates.return)} />
-                  </div>
+                      <input type="text" ref={segment2DateRef} style={{display: 'none'}} />
+                      <input type="hidden" id="departureDate2" value={formatHiddenDate(selectedDates.segment2)} />
+                    </div>
                   </div>
                 )}        
 
@@ -433,7 +462,9 @@ const JejuAirBody = () => {
                     </div>
                   </div>
                   
-                  <button className="btn-search">항공편 검색</button>
+                  <button className="btn-search" onClick={handleFlightSearch}>
+                    항공편 검색
+                  </button>
                 </div>
               </div>
             </div>
@@ -442,11 +473,31 @@ const JejuAirBody = () => {
       </main>
       <Footer />
       
-      <DateModal 
-        isOpen={isDateModalOpen}
-        onClose={handleModalClose}
-        modalType={modalType}
-      />
+   
+    <DateModal 
+      isOpen={isDateModalOpen}
+      onClose={handleModalClose}
+      modalType={modalType}
+      onSelectDate={(date, type) => {
+        if (type === 'departure') {
+          setSelectedDates(prev => ({
+            ...prev,
+            departure: date
+          }));
+        } else if (type === 'return') {
+          setSelectedDates(prev => ({
+            ...prev,
+            return: date
+          }));
+        }
+      }}
+      // 출발지/도착지 정보 전달 (누락된 부분 추가)
+      departure={selectedAirports.departure.city}
+      arrival={selectedAirports.arrival.city}
+      departureCode={selectedAirports.departure.code}
+      arrivalCode={selectedAirports.arrival.code}
+      searchType={selectedTab === 'RT' ? '왕복' : '편도'}
+    />
       <AlertModal 
         isOpen={isAlertModalOpen}
         onClose={() => setIsAlertModalOpen(false)}
