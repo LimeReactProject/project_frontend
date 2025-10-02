@@ -3,6 +3,12 @@ import styles from "./Login.module.css";
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 
+
+
+
+
+
+
 function Login() {
   return (
     <React.Fragment>
@@ -18,14 +24,22 @@ function Login() {
 
           {/* 아이디/비밀번호 입력 */}
           <div className={styles.formBox}>
-            <input type="text" placeholder="아이디" className={styles.input} />
+            <input 
+            type="text" 
+            placeholder="아이디" 
+            className={styles.input} 
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            />
             <div className={styles.passwordRow}>
-              <input
-                type="password"
-                placeholder="비밀번호"
-                className={styles.input}
-              />
-              <span className={styles.eyeIcon}>👁</span>
+            <input
+              type="password"
+              placeholder="비밀번호"
+              className={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span className={styles.eyeIcon}>👁</span>
             </div>
             <label className={styles.checkRow}>
               <input type="checkbox" /> 아이디 저장
