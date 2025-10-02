@@ -73,6 +73,13 @@
   cursor: pointer;
 }
 
+/* 비활성화 상태 */
+.submitBtn:disabled {
+  background-color: #ccc;   /* 회색 */
+  cursor: default;
+  opacity: 0.6;             /* 살짝 투명하게 */
+}
+
 /* 유의사항 (아코디언 박스) */
 .noticeBox {
   border: 1px solid #ddd;

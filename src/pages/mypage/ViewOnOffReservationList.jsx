@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./viewOnOffReservationList.module.css";
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
+import ErrorModal from "../home/ErrorModal";
 
 function ViewOnOffReservationList() {
 
@@ -24,22 +25,55 @@ function ViewOnOffReservationList() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // 입력 값 받아야 조회 버튼 클릭 가능
+  const isFormValid =
+    form.reservationNo.trim() !== "" &&
+    form.lastName.trim() !== "" &&
+    form.firstName.trim() !== "";
+
+  const handleSearch = () => {
+    if (isFormValid) {
+      onSearch(form); // API 요청 or 부모 컴포넌트로 전달
+    }
+  };
+
+  // 조회 실패 시 모달
+  const [errorModal, setErrorModal] = useState({
+    open: false,
+    message: "",
+    code: ""
+  });
+
   // 조회 버튼을 눌렀을 때 함수 실행
   const handleSubmit = (e) => {
     e.preventDefault(); // 새로고침 막기
 
+    console.log("보내는 데이터:", form);
+
     // 서버에 POST 요청
-    fetch("http://localhost:5173/reservations/check", {
+    fetch("http://localhost:8080/reservation/detail", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form), // form 을 json 으로 변환해서 전달
+      body: JSON.stringify(form), // 예약번호, 이름, 비행일자 등 4개 값
     })
-      .then(res => res.json())
-      .then(data => {
-        navigate("/ReservationDetails", { state: { reservation: data } }); // 조회 성공 시 이동
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("조회 실패 (status: " + res.status + ")");
+        }
+        return res.json();
       })
-      .catch(err => console.error("조회 실패:", err));  // 에러처리
-  };
+      .then(detail => {
+        if (detail) {
+          console.log("예약 상세 데이터:", detail);
+          navigate("/ReservationDetails", { state: { reservation: detail } });
+        } else {
+          alert("조회 결과가 없습니다.");
+        }
+      })
+      .catch(err => {
+        setErrorModal({ open: true, message: err.message, code: err.code });
+      });
+    };
 
   return (
     <React.Fragment>
@@ -60,7 +94,7 @@ function ViewOnOffReservationList() {
                 value={form.reservationNo}
                 onChange={handleChange}
                 placeholder="예약번호 입력"
-                maxLength={6}
+                maxLength={5}
               />
               <label>탑승일자</label>
               <input
@@ -91,7 +125,7 @@ function ViewOnOffReservationList() {
                 name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
-                placeholder="홍"
+                placeholder="성 입력"
               />
               <label>이름</label>
               <input
@@ -99,15 +133,29 @@ function ViewOnOffReservationList() {
                 name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
-                placeholder="길동"
+                placeholder="이름 입력"
               />
               <button type="button" className={styles.addBtn}>추가</button>
             </div>
 
             <div className={styles.formRow}>
-              <button type="submit" className={styles.submitBtn}>조회</button>
+              <button 
+                type="submit" 
+                className={styles.submitBtn}
+                disabled={!isFormValid}
+              >
+                조회
+              </button>
+
+              <ErrorModal
+                open={errorModal.open}
+                message={errorModal.message}
+                code={errorModal.code}
+                onClose={() => setErrorModal({ ...errorModal, open: false })}
+              />
             </div>
           </form>
+
 
           {/* 유의사항 (아코디언) */}
           <div
@@ -137,5 +185,6 @@ function ViewOnOffReservationList() {
     </React.Fragment>
   );
 }
+
 
 export default ViewOnOffReservationList;

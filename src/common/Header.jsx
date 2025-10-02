@@ -56,7 +56,15 @@ function Header() {
 <div className="header__util util pc-only">
       <div className="util__inner">
         <div className="util__link-list" data-custom-toggle="wrap">
-          <a href="javascript:;" className="util__link" data-action="menu" data-menu-name="login">로그인</a>
+          <a 
+          href="javascript:;" 
+          className="util__link" 
+          data-action="menu" 
+          data-menu-name="login"
+          onClick={(e) => {
+            nav('/login');
+          }}
+          >로그인</a>
           <a onClick={() =>nav('/user-agreement')} href="javascript:;" className="util__link" data-action="menu" data-menu-name="join">회원가입</a>
 
           {/* // 로그인 전 노출 */}
