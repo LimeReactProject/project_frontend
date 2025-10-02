@@ -32,9 +32,18 @@ function ScheduleDetail() {
     const [modalType, setModalType] = useState('departure');
     const [loading, setLoading] = useState(false);
     const [flights, setFlights] = useState([]);
+    const [outboundFlights, setOutboundFlights] = useState([]); // 가는편
+    const [inboundFlights, setInboundFlights] = useState([]);   // 오는편
+    
+    // ScheduleDetail에서 조회하기 위한 상태들
+    const [currentDeparture, setCurrentDeparture] = useState(departure || '');
+    const [currentArrival, setCurrentArrival] = useState(arrival || '');
+    const [currentDepartureCode, setCurrentDepartureCode] = useState(departureCode || '');
+    const [currentArrivalCode, setCurrentArrivalCode] = useState(arrivalCode || '');
+    const [currentDepartureDate, setCurrentDepartureDate] = useState(departureDate || '');
+    const [currentReturnDate, setCurrentReturnDate] = useState(returnDate || '');
 
 
-// ScheduleDetail.jsx 수정 부분만!
 
 useEffect(() => {
     const fetchData = async () => {
@@ -42,11 +51,7 @@ useEffect(() => {
         
         setLoading(true);
         try {
-            // 🔍 원본 데이터 확인
-            console.log('원본 departureDate:', departureDate);
-            console.log('타입:', typeof departureDate);
-            
-            // ✅ 날짜 형식 변환 함수 (개선 버전)
+            // 날짜 형식 변환 함수 
             const formatDateForBackend = (dateStr) => {
                 if (!dateStr) return '';
                 
@@ -61,32 +66,65 @@ useEffect(() => {
                 return formatted;
             };
             
-            const formattedDate = formatDateForBackend(departureDate);
+            const formattedDepartureDate = formatDateForBackend(departureDate);
             
-            console.log('변환 후 날짜:', formattedDate); // 디버깅용
+            console.log('변환 후 출발일:', formattedDepartureDate);
             
-            const response = await apiClient.get('/schedule-detail', {
-                params: {
-                    departure: departureCode,
-                    arrival: arrivalCode,
-                    date: formattedDate  // "2025-09-30" 형식
-                }
-            });
-            
-            console.log('받은 데이터:', response.data); // 디버깅용
-            setFlights(response.data || []);
+            if (searchType === '왕복' && returnDate) {
+                // 왕복일 때: 두 개의 API 호출
+                const formattedReturnDate = formatDateForBackend(returnDate);
+                console.log('변환 후 복귀일:', formattedReturnDate);
+                
+                // 가는 편 API 호출
+                const outboundResponse = await apiClient.get('/schedule-detail', {
+                    params: {
+                        departure: departureCode,
+                        arrival: arrivalCode,
+                        date: formattedDepartureDate
+                    }
+                });
+                
+                // 오는 편 API 호출 (역방향)
+                const inboundResponse = await apiClient.get('/schedule-detail', {
+                    params: {
+                        departure: arrivalCode,    // 출발지를 도착지로
+                        arrival: departureCode,    // 도착지를 출발지로
+                        date: formattedReturnDate  // 복귀일
+                    }
+                });
+                
+                console.log('받은 가는편 데이터:', outboundResponse.data);
+                console.log('받은 오는편 데이터:', inboundResponse.data);
+                
+                setOutboundFlights(outboundResponse.data || []);
+                setInboundFlights(inboundResponse.data || []);
+            } else {
+                // 편도일 때: 기존 로직
+                const response = await apiClient.get('/schedule-detail', {
+                    params: {
+                        departure: departureCode,
+                        arrival: arrivalCode,
+                        date: formattedDepartureDate
+                    }
+                });
+                
+                console.log('받은 편도 데이터:', response.data);
+                setFlights(response.data || []);
+            }
             
         } catch (error) {
             console.error('API 호출 실패:', error);
-            console.error('에러 상세:', error.response?.data); // 에러 상세 정보
+            console.error('에러 상세:', error.response?.data);
             setFlights([]);
+            setOutboundFlights([]);
+            setInboundFlights([]);
         } finally {
             setLoading(false);
         }
     };
     
     fetchData();
-}, [departureCode, arrivalCode, departureDate]);
+}, [departureCode, arrivalCode, departureDate, returnDate, searchType]);
 
     console.log('정현이데이터:',flights)
     
@@ -94,10 +132,15 @@ useEffect(() => {
     const handleCitySelect = (cityName, cityCode) => {
         console.log('도시 선택됨:', { cityName, cityCode, modalType });
         if (modalType === 'departure') {
+            setCurrentDeparture(cityName);
+            setCurrentDepartureCode(cityCode);
             console.log('출발지 설정:', { cityName, cityCode });
         } else if (modalType === 'arrival') {
+            setCurrentArrival(cityName);
+            setCurrentArrivalCode(cityCode);
             console.log('도착지 설정:', { cityName, cityCode });
         }
+        setIsSearchModal(false);
     };
 
     // 날짜 선택 함수
@@ -109,13 +152,110 @@ useEffect(() => {
             weekday: 'short'
         }).replace(/\./g, '.').replace(/ /g, '');
         
+        if (type === 'departure') {
+            setCurrentDepartureDate(formattedDate);
+        } else if (type === 'return') {
+            setCurrentReturnDate(formattedDate);
+        }
+        
         console.log(`Selected ${type} date:`, formattedDate);
+        setIsDateModal(false);
     };
 
-    // 조회 함수 - 사용자가 직접 구현할 예정
+    // 조회 함수
     const handleSearch = () => {
-        console.log('조회 실행:', { departure, arrival, departureCode, arrivalCode, departureDate, returnDate });
-        // 여기서 API 호출할 예정
+        // 필수 입력값 검증
+        if (!currentDepartureCode) {
+            alert('출발지를 선택해주세요.');
+            return;
+        }
+        
+        if (!currentArrivalCode) {
+            alert('도착지를 선택해주세요.');
+            return;
+        }
+        
+        if (!currentDepartureDate) {
+            alert('출발일을 선택해주세요.');
+            return;
+        }
+        
+        if (searchType === '왕복' && !currentReturnDate) {
+            alert('복귀일을 선택해주세요.');
+            return;
+        }
+        
+        // 모든 필수값이 입력되었으면 조회 실행
+        fetchNewData();
+    };
+    
+    // 새로운 데이터 조회 함수
+    const fetchNewData = async () => {
+        if (!currentDepartureCode || !currentArrivalCode || !currentDepartureDate) return;
+        
+        setLoading(true);
+        try {
+            // 날짜 형식 변환 함수 
+            const formatDateForBackend = (dateStr) => {
+                if (!dateStr) return '';
+                
+                let formatted = dateStr
+                    .replace(/\([^)]*\)/g, '')
+                    .replace(/\./g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/-+$/, '')
+                    .trim();
+                
+                return formatted;
+            };
+            
+            const formattedDepartureDate = formatDateForBackend(currentDepartureDate);
+            
+            if (searchType === '왕복' && currentReturnDate) {
+                // 왕복일 때: 두 개의 API 호출
+                const formattedReturnDate = formatDateForBackend(currentReturnDate);
+                
+                // 가는 편 API 호출
+                const outboundResponse = await apiClient.get('/schedule-detail', {
+                    params: {
+                        departure: currentDepartureCode,
+                        arrival: currentArrivalCode,
+                        date: formattedDepartureDate
+                    }
+                });
+                
+                // 오는 편 API 호출 (역방향)
+                const inboundResponse = await apiClient.get('/schedule-detail', {
+                    params: {
+                        departure: currentArrivalCode,
+                        arrival: currentDepartureCode,
+                        date: formattedReturnDate
+                    }
+                });
+                
+                setOutboundFlights(outboundResponse.data || []);
+                setInboundFlights(inboundResponse.data || []);
+            } else {
+                // 편도일 때
+                const response = await apiClient.get('/schedule-detail', {
+                    params: {
+                        departure: currentDepartureCode,
+                        arrival: currentArrivalCode,
+                        date: formattedDepartureDate
+                    }
+                });
+                
+                setFlights(response.data || []);
+            }
+            
+        } catch (error) {
+            console.error('API 호출 실패:', error);
+            setFlights([]);
+            setOutboundFlights([]);
+            setInboundFlights([]);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // 날짜 범위 생성 (선택한 날짜 앞뒤 3일씩)
@@ -156,7 +296,7 @@ useEffect(() => {
         return dates;
     };
 
-    const dateRange = generateDateRange(departureDate);
+    const dateRange = generateDateRange(currentDepartureDate);
     
     // 디버깅용 로그
     console.log('departureDate:', departureDate);
@@ -208,7 +348,7 @@ useEffect(() => {
                                     type="button" 
                                     className={`${styles['schedule-start-button']} ${styles['active']}`}
                                 >
-                                    <span className={styles['txt']}>{departure || '출발지'}</span>
+                                    <span className={styles['txt']}>{currentDeparture || '출발지'}</span>
                                 </button>
                                 
                                 <div className={styles['arrow-icon']}>
@@ -220,7 +360,7 @@ useEffect(() => {
                                     type="button" 
                                     className={styles['schedule-target-button']}
                                 >
-                                    <span className={`${styles['txt']} ${styles['before-select']}`}>{arrival || '도착지'}</span>
+                                    <span className={`${styles['txt']} ${styles['before-select']}`}>{currentArrival || '도착지'}</span>
                                 </button>
                             </div>
                             
@@ -237,8 +377,8 @@ useEffect(() => {
                                         <Calendar className={styles['compact-icon']} />
                                         <span className={styles['txt']}>
                                             {searchType === '왕복' 
-                                                ? `${departureDate} ~ ${returnDate || '도착일'}`
-                                                : departureDate
+                                                ? `${currentDepartureDate} ~ ${currentReturnDate || '도착일'}`
+                                                : currentDepartureDate
                                             }
                                         </span>
                                     </button>
@@ -281,18 +421,172 @@ useEffect(() => {
                     <div className={styles['flights-list']}>
                         {loading && <div className={styles['loading']}>항공편 정보를 불러오는 중...</div>}
                         {/* 선택한 날짜의 항공편만 표시 (상세 정보가 있는 것만) */}
-                        {flights
+
+
+                        {searchType === '왕복' ? (
+                            activeTab === '가는 편' ? (
+                                // 가는 편 데이터 표시
+                                outboundFlights
+                                    .filter((flight, index, self) => {
+                                        // 중복 제거
+                                        const isUnique = index === self.findIndex(f => 
+                                            f.flightCode === flight.flightCode && f.flightDate === flight.flightDate
+                                        );
+                                        
+                                        // 날짜 필터링 (출발일)
+                                        const selectedDate = currentDepartureDate
+                                            .replace(/\./g, '-')
+                                            .replace(/\([^)]*\)/g, '')
+                                            .trim()
+                                            .replace(/-$/, '');
+                                        
+                                        return isUnique && flight.flightDate === selectedDate && flight.departureTime !== null;
+                                    })
+                                    .map((flight, index) => {
+                                        // 항공편 표시 로직
+                                        const hours = Math.floor(flight.totalMinutes / 60);
+                                        const minutes = flight.totalMinutes % 60;
+                                        const duration = `${hours}시간 ${minutes}분`;
+                                        
+                                        return (
+                                            <div key={index} className={styles['boarding_detail']}>
+                                                <div className={`${styles['boarding__info']} ${styles['time_wrap']}`}>
+                                                    <div className={styles['flight-info-left']}>
+                                                        <span className={styles['time-num']}>{flight.departureTime}</span>
+                                                        <div className={styles['moving_box']}>
+                                                            <span className={styles['text_pnr']}>{flight.flightCode}</span>
+                                                            <span className={styles['icon-mark']}></span>
+                                                            <span className={styles['moving-time']}>{duration}</span>
+                                                        </div>
+                                                        <span className={`${styles['time-num']} ${styles['target']}`}>{flight.arrivalTime}</span>
+                                                    </div>
+                                                
+                                                    <div className={styles['flight-dates-right']}>
+                                                        <ol className={styles['seukejul_list']}>
+                                                            {dateRange.map((dateInfo, dateIndex) => {
+                                                                const isToday = dateInfo.isSelected;
+                                                                const dateStr = dateInfo.date ? dateInfo.date.toISOString().split('T')[0] : null;
+                                                                const uniqueFlights = outboundFlights.filter((flight, index, self) => 
+                                                                    index === self.findIndex(f => 
+                                                                        f.flightCode === flight.flightCode && f.flightDate === flight.flightDate
+                                                                    )
+                                                                );
+                                                                const hasFlight = dateStr ? uniqueFlights.some(flight => 
+                                                                    flight.flightDate === dateStr && flight.flightCode !== null
+                                                                ) : false;
+                                                                
+                                                                return (
+                                                                    <li key={dateIndex}>
+                                                                        <button
+                                                                            type="button"
+                                                                            className={`${styles['seukejul-btn']} ${isToday ? styles['today'] : ''}`}
+                                                                        >
+                                                                            <div className={styles['date']}>{dateInfo.formatted}</div>
+                                                                            <div className={styles['day']}></div>
+                                                                            <div className={styles['resulte']}>
+                                                                                {hasFlight && (
+                                                                                    <div className={styles['plane-icon']}></div>
+                                                                                )}
+                                                                            </div>
+                                                                        </button>
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                            ) : (
+                                // 오는 편 데이터 표시
+                                inboundFlights
+                                    .filter((flight, index, self) => {
+                                        // 중복 제거
+                                        const isUnique = index === self.findIndex(f => 
+                                            f.flightCode === flight.flightCode && f.flightDate === flight.flightDate
+                                        );
+                                        
+                                        // 날짜 필터링 (복귀일)
+                                        const selectedDate = currentReturnDate
+                                            .replace(/\./g, '-')
+                                            .replace(/\([^)]*\)/g, '')
+                                            .trim()
+                                            .replace(/-$/, '');
+                                        
+                                        return isUnique && flight.flightDate === selectedDate && flight.departureTime !== null;
+                                    })
+                                    .map((flight, index) => {
+                                        // 항공편 표시 로직
+                                        const hours = Math.floor(flight.totalMinutes / 60);
+                                        const minutes = flight.totalMinutes % 60;
+                                        const duration = `${hours}시간 ${minutes}분`;
+                                        
+                                        return (
+                                            <div key={index} className={styles['boarding_detail']}>
+                                                <div className={`${styles['boarding__info']} ${styles['time_wrap']}`}>
+                                                    <div className={styles['flight-info-left']}>
+                                                        <span className={styles['time-num']}>{flight.departureTime}</span>
+                                                        <div className={styles['moving_box']}>
+                                                            <span className={styles['text_pnr']}>{flight.flightCode}</span>
+                                                            <span className={styles['icon-mark']}></span>
+                                                            <span className={styles['moving-time']}>{duration}</span>
+                                                        </div>
+                                                        <span className={`${styles['time-num']} ${styles['target']}`}>{flight.arrivalTime}</span>
+                                                    </div>
+                                                
+                                                    <div className={styles['flight-dates-right']}>
+                                                        <ol className={styles['seukejul_list']}>
+                                                            {dateRange.map((dateInfo, dateIndex) => {
+                                                                const isToday = dateInfo.isSelected;
+                                                                const dateStr = dateInfo.date ? dateInfo.date.toISOString().split('T')[0] : null;
+                                                                const uniqueFlights = inboundFlights.filter((flight, index, self) => 
+                                                                    index === self.findIndex(f => 
+                                                                        f.flightCode === flight.flightCode && f.flightDate === flight.flightDate
+                                                                    )
+                                                                );
+                                                                const hasFlight = dateStr ? uniqueFlights.some(flight => 
+                                                                    flight.flightDate === dateStr && flight.flightCode !== null
+                                                                ) : false;
+                                                                
+                                                                return (
+                                                                    <li key={dateIndex}>
+                                                                        <button
+                                                                            type="button"
+                                                                            className={`${styles['seukejul-btn']} ${isToday ? styles['today'] : ''}`}
+                                                                        >
+                                                                            <div className={styles['date']}>{dateInfo.formatted}</div>
+                                                                            <div className={styles['day']}></div>
+                                                                            <div className={styles['resulte']}>
+                                                                                {hasFlight && (
+                                                                                    <div className={styles['plane-icon']}></div>
+                                                                                )}
+                                                                            </div>
+                                                                        </button>
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                            )
+                        ) : (
+                            // 편도일 때 기존 로직
+                            flights
                             .filter((flight, index, self) => {
                                 // 중복 제거 (같은 flightCode + flightDate 조합은 하나만)
                                 const isUnique = index === self.findIndex(f => 
                                     f.flightCode === flight.flightCode && f.flightDate === flight.flightDate
                                 );
                                 
-                                // 선택한 날짜와 같은 날짜이고, 상세 정보가 있는 항공편만 필터링
-                                const selectedDate = departureDate.replace(/\./g, '-').replace(/\([^)]*\)/g, '').trim();
-                                // 끝에 붙은 - 제거
-                                const cleanSelectedDate = selectedDate.replace(/-$/, '');
-                                console.log('비교:', cleanSelectedDate, 'vs', flight.flightDate, 'departureTime:', flight.departureTime);
+                                    // 선택한 날짜와 같은 날짜이고, 상세 정보가 있는 항공편만 필터링
+                                    const selectedDate = currentDepartureDate.replace(/\./g, '-').replace(/\([^)]*\)/g, '').trim();
+                                    // 끝에 붙은 - 제거
+                                    const cleanSelectedDate = selectedDate.replace(/-$/, '');
+                                    console.log('비교:', cleanSelectedDate, 'vs', flight.flightDate, 'departureTime:', flight.departureTime);
                                 
                                 return isUnique && flight.flightDate === cleanSelectedDate && flight.departureTime !== null;
                             })
@@ -358,7 +652,8 @@ useEffect(() => {
                                         </div>
                                     </div>
                                 );
-                            })}
+                            })
+                        )}
                     </div>
                 </div>
 

@@ -18,10 +18,10 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, searchType }) {
     const [nextMonth, setNextMonth] = useState(new Date(2025, 9)); // 2025년 10월
     const [loading, setLoading] = useState(false);
 
-    // 가격 관련 useEffect 제거 - 이제 날짜 선택만 담당
+   
 
 
-    // 가격 관련 함수들 제거 - 이제 날짜 선택만 담당
+   
 
     const isWeekend = (date) => {
         const day = date.getDay();
@@ -247,7 +247,7 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, searchType }) {
                             }
                         </span>
                     </div>
-                    {/* 가격 관련 노트 제거 */}
+                   
                 </div>
 
                 <div className="modal-footer">

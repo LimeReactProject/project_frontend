@@ -12,6 +12,7 @@ import ReservationDetails from './pages/mypage/ReservationDetails.jsx';
 import Membership from './pages/membership/Membership.jsx';
 import UserAgreement from './pages/membership/UserAgreement.jsx';
 import ScheduleDetail from './pages/flight-information/ScheduleDetail.jsx';
+import FlightTracking from './pages/flight-information/FlightTracking.jsx';
 
 function App() {
  
@@ -31,6 +32,7 @@ function App() {
        <Route path="/membership" element={<Membership/>} />
        <Route path="/user-agreement" element={<UserAgreement/>} />
        <Route path='/ScheduleDetail' element={<ScheduleDetail/>}/>
+       <Route path='/flight-tracking' element={<FlightTracking/>}/>
       </Routes>
    </BrowserRouter>
   )
