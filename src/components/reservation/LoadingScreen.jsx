@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './LoadingScreen.css';
 
 const LoadingScreen = () => {
+  useEffect(() => {
+    // 로딩 화면이 표시될 때 body 스크롤 방지
+    document.body.classList.add('loading-active');
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      // 컴포넌트 언마운트 시 원상복구
+      document.body.classList.remove('loading-active');
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
     <div className="loading-screen">
       <div className="loading-content">

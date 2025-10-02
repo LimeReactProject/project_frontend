@@ -56,7 +56,7 @@ useEffect(() => {
             while (currentDate <= dataEndDate) {
                 const dateString = toYMDLocal(currentDate);
                 datePromises.push(
-                    apiClient.get("/schedule-detail", { 
+                    apiClient.get("/schedule-details", { 
                         params: {
                             departure: departureCode,
                             arrival: arrivalCode,
@@ -255,7 +255,7 @@ const isDisabled = (date) => {
                 const q = toYMDLocal(selectedDate);       // "YYYY-MM-DD"
                 console.log('스케줄 조회 요청:', q);
                 try {
-                    const res = await apiClient.get('/schedule-detail',
+                    const res = await apiClient.get('/schedule-details',
                          { params: {
                                         date: q,
                                         departure: departureCode,

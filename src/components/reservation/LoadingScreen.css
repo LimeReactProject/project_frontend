@@ -2,13 +2,27 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #4a6741 0%, #5a7a52 50%, #6b8b63 100%);
+  width: 100vw;
+  height: 100vh;
+  background: url('../../../public/images/Jeju_Air,_Boeing_737-800_HL8051_NRT_(26585263944).jpg') center center / cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.loading-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 0;
 }
 
 .loading-content {
@@ -16,12 +30,21 @@
   color: white;
   max-width: 800px;
   padding: 0 20px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .airplane-icon {
   font-size: 4rem;
   margin-bottom: 2rem;
   animation: fly 2s ease-in-out infinite alternate;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 @keyframes fly {
@@ -34,6 +57,7 @@
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.02em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .loading-subtitle {
@@ -41,6 +65,7 @@
   font-weight: bold;
   margin: 0 0 3rem 0;
   letter-spacing: -0.02em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .loading-spinner {
@@ -56,6 +81,7 @@
   border-top: 3px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
 }
 
 @keyframes spin {
@@ -69,6 +95,7 @@
   gap: 3rem;
   margin-top: 3rem;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .feature-item {
@@ -78,19 +105,23 @@
   text-align: center;
   min-width: 200px;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 15px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
   transition: transform 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .feature-item:hover {
   transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .feature-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
 }
 
 .feature-title {
@@ -98,12 +129,14 @@
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .feature-desc {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.4;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 /* 반응형 디자인 */
@@ -116,6 +149,7 @@
   .loading-features {
     flex-direction: column;
     gap: 1.5rem;
+    padding: 0 1rem;
   }
   
   .feature-item {
@@ -125,6 +159,10 @@
   
   .airplane-icon {
     font-size: 3rem;
+  }
+  
+  .loading-content {
+    padding: 0 10px;
   }
 }
 
@@ -141,4 +179,19 @@
   .feature-icon {
     font-size: 2.5rem;
   }
+  
+  .loading-screen::before {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  
+  .loading-content {
+    padding: 0 5px;
+  }
+}
+
+/* 전역 스타일 초기화 */
+body.loading-active {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
