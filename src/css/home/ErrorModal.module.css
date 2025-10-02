@@ -1,0 +1,59 @@
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px; right: 10px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #6b7280; /* 회색 */
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: #111; /* 진한 검정 */
+}
+
+.errorCode {
+  color: #ef4444; /* 빨강 (DateModal weekend 색상 계열) */
+  margin: 12px 0;
+  font-weight: 600;
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: 12px;
+  background: #f97316; /* 주황 (DateModal selected 색상) */
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+  margin-bottom: -10px;
+}
+
+.confirmBtn:hover {
+  background: #ea580c; /* hover 시 더 진한 주황 */
+}
