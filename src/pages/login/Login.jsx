@@ -3,10 +3,7 @@ import styles from "./Login.module.css";
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 
-// 상태관리
-const [id, setId] = useState("");
-const [password, setPassword] = useState("");
-const [saveId, setSaveId] = useState(false);
+
 
 
 

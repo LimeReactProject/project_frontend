@@ -135,7 +135,7 @@ function ViewOnOffReservationList() {
                 onChange={handleChange}
                 placeholder="이름 입력"
               />
-              <button type="button" className={styles.addBtn}>추가</button>
+              <button type="button" className={styles.addBtn} >추가</button>
             </div>
 
             <div className={styles.formRow}>
