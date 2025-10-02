@@ -10,7 +10,7 @@ import SearchModal from '../home/SearchModal';
 
 function FlightInfo() {
     const location = useLocation();
-    const navigate = useNavigate();
+    const nav = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('출도착 현황');
     const [searchType, setSearchType] = useState('구간 조회');
@@ -19,7 +19,7 @@ function FlightInfo() {
     const [departureCode, setDepartureCode] = useState('');
     const [arrivalCode, setArrivalCode] = useState('');
     const [flightNumber, setFlightNumber] = useState('');
-    const [departureDate, setDepartureDate] = useState('2025.09.25(목)');
+    const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
     const [isSearchModal, setIsSearchModal] = useState(false);
     const [isDateModal, setIsDateModal] = useState(false);
@@ -80,6 +80,74 @@ function FlightInfo() {
             setSearchParams({ index: '2' });
         }
     };
+
+    const handleSearch = () => {
+        // 필수 입력값 검증
+        if (!departureCode) {
+            alert('출발지를 선택해주세요.');
+            return;
+        }
+        
+        if (!arrivalCode) {
+            alert('도착지를 선택해주세요.');
+            return;
+        }
+        
+        if (!departureDate) {
+            alert('출발일을 선택해주세요.');
+            return;
+        }
+        
+        if (searchType === '왕복' && !returnDate) {
+            alert('복귀일을 선택해주세요.');
+            return;
+        }
+        
+        // 모든 필수값이 입력되었으면 ScheduleDetail로 이동
+        nav('/ScheduleDetail',{
+            state: {
+                departure: departure,
+                arrival: arrival,
+                departureCode: departureCode,
+                arrivalCode: arrivalCode,
+                departureDate: departureDate,
+                returnDate: returnDate
+            }
+        });
+    };
+
+    const handleSection = () => {
+        nav('/flight-tracking',{
+            state: {
+                departure: departure,
+                arrival: arrival,
+                departureCode: departureCode,
+                arrivalCode: arrivalCode,
+                departureDate: departureDate,
+                returnDate: returnDate,
+                searchType: '구간 조회'
+            }
+                
+        })
+    }
+
+    const handleFlightCode = () => {
+        nav('/flight-tracking', {
+            state: {
+                // 편명 조회용 데이터
+                flightNumber: flightNumber,
+                departureDate: departureDate,
+                searchType: '편명 조회',
+                // 구간 조회용 데이터도 함께 전달
+                departure: departure,
+                arrival: arrival,
+                departureCode: departureCode,
+                arrivalCode: arrivalCode,
+                returnDate: returnDate
+            }
+        })
+    }
+        
 
     return (
         <>
@@ -182,7 +250,10 @@ function FlightInfo() {
                                             </button>
                                         </div>
                                         
-                                        <button className={styles['schedule-search-button']}>
+                                        <button 
+                                            className={styles['schedule-search-button']}
+                                            onClick={handleSearch}
+                                        >
                                             <Search className={styles['search-icon']} />
                                             조회
                                         </button>
@@ -261,7 +332,9 @@ function FlightInfo() {
                                                 </button>
                                             </div>
                                             
-                                            <button className={styles['status-search-button']}>
+                                            <button className={styles['status-search-button']}
+                                                    onClick={handleSection}
+                                            >
                                                 <Search className={styles['search-icon']} />
                                                 조회
                                             </button>
@@ -288,6 +361,10 @@ function FlightInfo() {
                                             <label className={styles['input-label']}>출발일 선택</label>
                                             <div className={styles['flight-date-wrapper']}>
                                                 <input 
+                                                   onClick={() => {
+                                                    setModalType('departure');
+                                                    setIsDateModal(true);
+                                                }}
                                                     type="text" 
                                                     className={styles['flight-date-field']}
                                                     value={departureDate}
@@ -297,7 +374,9 @@ function FlightInfo() {
                                             </div>
                                         </div>
                                         
-                                        <button className={styles['search-button']}>
+                                        <button 
+                                        onClick={handleFlightCode}
+                                        className={styles['search-button']}>
                                             <Search className={styles['search-icon']} />
                                             조회
                                         </button>
@@ -326,10 +405,6 @@ function FlightInfo() {
                 onClose={() => setIsDateModal(false)}
                 modalType={modalType}
                 onSelectDate={handleDateSelect}
-                departure={departure}
-                arrival={arrival}
-                departureCode={departureCode}
-                arrivalCode={arrivalCode}
                 searchType={searchType}
             />}
             

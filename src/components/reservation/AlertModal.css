@@ -1,0 +1,86 @@
+.alert-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.alert-modal {
+  background: #fff;
+  border-radius: 4px;
+  width: 320px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.alert-header {
+  padding: 16px 20px 0 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.alert-close-btn {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-close-btn:hover {
+  color: #333;
+}
+
+.alert-content {
+  padding: 20px 24px 24px 24px;
+  text-align: center;
+}
+
+.alert-message {
+  font-family: 'FlightSans';  
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.alert-footer {
+  padding: 0 24px 24px 24px;
+  text-align: center;
+}
+
+.alert-confirm-btn {
+  background: #ff5500;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.alert-confirm-btn:hover {
+  background: #ff5500;
+}
+
+@media (max-width: 480px) {
+  .alert-modal {
+    width: 280px;
+    margin: 20px;
+  }
+}
