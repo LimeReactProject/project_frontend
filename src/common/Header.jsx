@@ -74,7 +74,7 @@ function Header() {
           <a href="javascript:;" onClick={() => URL_LINK.getI18Url('/customerService/csCenter/faqList.do')}
             className="util__link">고객센터</a>
 
-          <a href="javascript:;" onClick={() => URL_LINK.getI18Url('/customerServiceCenter/notice.do')}
+          <a href="javascript:;" onClick={() => nav("/noticeList")}
             className="util__link">공지사항</a>
 
           <button type="button" className="util__country" data-custom-toggle="button">
