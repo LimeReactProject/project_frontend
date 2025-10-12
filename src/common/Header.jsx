@@ -1,5 +1,5 @@
 import '../css/common/Header.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // 필요한 함수들 정의
@@ -19,6 +19,39 @@ const sendGAAttrEvent = (event) => {
 function Header() {
 
   const nav = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 컴포넌트 로드 시 로그인 상태 확인
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const user = sessionStorage.getItem("loginUser");
+      setIsLoggedIn(!!user);
+    };
+
+    checkLoginStatus(); // 처음 실행
+    window.addEventListener("storage", checkLoginStatus); // 로그인/로그아웃 감지
+
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+    };
+  }, []);
+
+  // 마이페이지 버튼 클릭 시 처리
+  const handleMyPageClick = () => {
+    if (isLoggedIn) {
+      nav("/mypage");
+    } else {
+      nav("/login");
+    }
+  };
+
+  // 로그아웃 처리 함수
+  const handleLogout = () => {
+    sessionStorage.removeItem("loginUser");
+    alert("로그아웃 되었습니다.");
+    setIsLoggedIn(false);
+    nav("/"); // 홈으로 이동
+  };
 
 	// 스크롤 시 드롭박스 위치 동적 조정
 	useEffect(() => {
@@ -56,15 +89,29 @@ function Header() {
 <div className="header__util util pc-only">
       <div className="util__inner">
         <div className="util__link-list" data-custom-toggle="wrap">
-          <a 
-          href="javascript:;" 
-          className="util__link" 
-          data-action="menu" 
-          data-menu-name="login"
-          onClick={(e) => {
-            nav('/login');
-          }}
-          >로그인</a>
+
+          {/* 로그인 상태에 따라 버튼 변경 */}
+          {isLoggedIn ? (
+            <a
+              href="javascript:;"
+              className="util__link"
+              onClick={handleLogout}
+            >
+              로그아웃
+            </a>
+          ) : (
+            <a
+              href="javascript:;"
+              className="util__link"
+              data-action="menu" 
+              data-menu-name="login"
+              onClick={() => nav("/login")}
+            >
+              로그인
+            </a>
+          )}
+
+
           <a onClick={() =>nav('/user-agreement')} href="javascript:;" className="util__link" data-action="menu" data-menu-name="join">회원가입</a>
 
           {/* // 로그인 전 노출 */}
@@ -1547,8 +1594,10 @@ function Header() {
 
     {/* 신규 myPage 아이콘*/}
     <div className="header_mypage login">
-      <a href="/login" className="btn_login"
-        >
+      <a 
+      className="btn_login"
+      onClick={handleMyPageClick}
+      >
           <span className="t-hide">마이페이지</span></a>
     </div>
 
