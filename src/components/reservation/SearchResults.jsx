@@ -5,20 +5,28 @@ import Footer from '../../common/Footer';
 
 const SearchResults = ({ searchData, onBack }) => {
   const [selectedOutbound, setSelectedOutbound] = useState(null);
-  const [selectedReturn, setSelectedReturn] = useState(null);
   const [flightData, setFlightData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSeatClass, setSelectedSeatClass] = useState({});
   const [showSeatOptions, setShowSeatOptions] = useState({}); // 좌석 옵션 표시 여부
+  const [showSeatSelection, setShowSeatSelection] = useState(false);
+  const [bookingData, setBookingData] = useState(null);
+  const [showPayment, setShowPayment] = useState(false);
 
   // ✅ 항공편 데이터 변환 함수 수정
 const transformFlightData = (data, searchDate) => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   
+  
   return data.map(flight => {
-    const basePrice = flight.price;
+    console.log('Flight price from API:', flight.price, typeof flight.price);
     
+    const extracted = extractPrice(flight);
+    const basePrice = extracted ?? 0; // 최후의 보루로 0
+    // ✅ 변환된 basePrice 확인
+    console.log('Converted basePrice:', basePrice);
+        
     // 1단계: 기본 클래스 (스탠다드, 비즈라이트)
     const baseClasses = [
       {
@@ -267,9 +275,23 @@ const transformFlightData = (data, searchDate) => {
     };
   });
 };
+// price 후보 키들 중 첫 번째 유효 숫자 리턴
+const extractPrice = (flight) => {
+  const candidates = [
+    flight.price,
+    flight.totalFare,
+    flight.total_fare,
+    flight.fare,
+    flight.amount
+  ];
+  for (const v of candidates) {
+    const n = Number(v);
+    if (Number.isFinite(n) && n >= 0) return n;
+  }
+  return null; // 없으면 null
+};
 
-  // API에서 항공편 데이터 가져오기
-  useEffect(() => {
+useEffect(() => {
   const fetchFlightData = async () => {
     if (!searchData?.departure?.code || !searchData?.arrival?.code || !searchData?.departureDate) {
       console.log('검색 데이터 부족:', searchData);
@@ -291,35 +313,63 @@ const transformFlightData = (data, searchDate) => {
       const day = String(departureDate.getDate()).padStart(2, '0');
       const formattedDate = `${year}-${month}-${day}`;
       
-      const response = await fetch(
-        `http://localhost:8080/api/flight-info/schedule-detail?date=${formattedDate}&departure=${searchData.departure.code}&arrival=${searchData.arrival.code}`
-      );
+      // ✅ API URL 확인
+      const apiUrl = `http://localhost:8080/api/flight-info/schedule-details?date=${formattedDate}&departure=${searchData.departure.code}&arrival=${searchData.arrival.code}`;
+      console.log('🔍 API 호출 URL:', apiUrl);
+      
+      const response = await fetch(apiUrl);
       
       if (response.ok) {
         const text = await response.text();
         
+        // ✅ 원본 응답 텍스트 확인
+        console.log('🔍 원본 응답 텍스트:', text);
+        
         if (text.trim() === '') {
+          console.log('📝 빈 응답 받음');
           setFlightData([]);
         } else {
           try {
             const data = JSON.parse(text);
             
+            // ✅ 파싱된 데이터 전체 확인
+            console.log('🔍 파싱된 전체 데이터:', JSON.stringify(data, null, 2));
+            
             if (Array.isArray(data)) {
+              // ✅ 각 항공편의 모든 필드 확인
+              data.forEach((flight, index) => {
+                console.log(`🔍 Flight ${index} 전체 데이터:`, flight);
+                console.log(`🔍 Flight ${index} price 필드:`, flight.price, typeof flight.price);
+                
+                // ✅ 다른 가격 관련 필드가 있는지 확인
+                Object.keys(flight).forEach(key => {
+                  if (key.toLowerCase().includes('price') || 
+                      key.toLowerCase().includes('cost') || 
+                      key.toLowerCase().includes('fare') ||
+                      key.toLowerCase().includes('amount')) {
+                    console.log(`🔍 가격 관련 필드 ${key}:`, flight[key]);
+                  }
+                });
+              });
+              
               const searchDate = new Date(departureDate.getFullYear(), departureDate.getMonth(), departureDate.getDate());
               const transformedData = transformFlightData(data, searchDate);
               setFlightData(transformedData);
             } else {
+              console.log('📝 배열이 아닌 데이터 받음:', typeof data);
               setFlightData([]);
             }
           } catch (parseError) {
             console.error('JSON 파싱 오류:', parseError);
+            console.error('파싱 실패한 텍스트:', text);
             setFlightData([]);
           }
         }
       } else if (response.status === 204) {
+        console.log('📝 204 No Content 응답');
         setFlightData([]);
       } else {
-        console.error('항공편 데이터 조회 실패:', response.status);
+        console.error('항공편 데이터 조회 실패:', response.status, response.statusText);
         setFlightData([]);
       }
     } catch (error) {
@@ -336,26 +386,28 @@ const transformFlightData = (data, searchDate) => {
   // ✅ 기본 클래스 선택 핸들러
 const handleBaseClassSelect = (flightIndex, classType) => {
   console.log('handleBaseClassSelect called:', flightIndex, classType);
-  
+  setSelectedOutbound(flightIndex);
   // 상태를 동시에 설정
-  setShowSeatOptions({
-    [flightIndex]: classType
-  });
-  
-  // selectedSeatClass도 바로 설정
-  setSelectedSeatClass({
-    [flightIndex]: { classType, optionIndex: 0 }
-  });
+  setShowSeatOptions({[flightIndex]: classType});
+  setSelectedSeatClass({ [flightIndex]: undefined }); 
   
   console.log('Both states set:', flightIndex, classType); // 디버깅용
 };
+const summaryRef = React.useRef(null);
 
   // ✅ 세부 옵션 선택 핸들러
   const handleDetailOptionSelect = (flightIndex, classType, optionIndex) => {
-    setSelectedSeatClass(prev => ({
-      ...prev,
-      [flightIndex]: { classType, optionIndex }
-    }));
+    setSelectedOutbound(flightIndex);
+     setSelectedSeatClass({
+         [flightIndex]: { classType, optionIndex }
+       });
+  
+    // 다음 프레임에 스크롤
+    requestAnimationFrame(() => {
+      if (summaryRef.current) {
+        summaryRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+    });
   };
 
   //오늘 날짜 기준으로 과거 날짜인지 확인하는 함수
@@ -409,7 +461,7 @@ const handleBaseClassSelect = (flightIndex, classType) => {
           } else {
             try {
               const response = await fetch(
-                `http://localhost:8080/api/flight-info/schedule-detail?date=${formattedDate}&departure=${searchData.departure.code}&arrival=${searchData.arrival.code}`
+                `http://localhost:8080/api/flight-info/schedule-details?date=${formattedDate}&departure=${searchData.departure.code}&arrival=${searchData.arrival.code}`
               );
               
               if (response.ok) {
@@ -424,9 +476,11 @@ const handleBaseClassSelect = (flightIndex, classType) => {
                     data = [];
                   }
                 }
-                
-                const minPrice = data.length > 0 ? Math.min(...data.map(flight => flight.price)) : 0;
-                
+                const prices = data
+                .map(f => extractPrice(f))
+                .filter(n => Number.isFinite(n) && n >= 0);
+                const minPrice = prices.length ? Math.min(...prices) : 0;        
+
                 options.push({
                   date: targetDate,
                   price: minPrice,
@@ -477,7 +531,7 @@ const handleBaseClassSelect = (flightIndex, classType) => {
       const formattedDate = `${year}-${month}-${day}`;
       
       const response = await fetch(
-        `http://localhost:8080/api/flight-info/schedule-detail?date=${formattedDate}&departure=${searchData.departure.code}&arrival=${searchData.arrival.code}`
+        `http://localhost:8080/api/flight-info/schedule-details?date=${formattedDate}&departure=${searchData.departure.code}&arrival=${searchData.arrival.code}`
       );
       
       if (response.ok) {
@@ -542,9 +596,23 @@ const handleFlightSelect = (index) => {
   }
 };
 
-  const formatPrice = (price) => {
-    return price.toLocaleString() + '원';
-  };
+const formatPrice = (price) => {
+  const n = Number(price);
+  
+  // ✅ 디버깅을 위해 콘솔 로그 추가
+  console.log('formatPrice input:', price, 'converted:', n);
+  
+  if (!Number.isFinite(n)) {
+    return '가격조회불가';
+  }
+  
+  // ✅ 0 이하 조건을 0 미만으로 변경 (0원도 표시되도록)
+  if (n < 0) {
+    return '가격조회불가';
+  }
+  
+  return n.toLocaleString('ko-KR') + '원';
+};
 
   const formatDate = (date) => {
     const targetDate = date instanceof Date ? date : new Date(date);
@@ -584,6 +652,98 @@ const handleFlightSelect = (index) => {
   }
 
   const outboundFlights = flightData;
+
+  const handleBookingClick = () => {
+    if (selectedOutbound !== null && selectedSeatClass[selectedOutbound]) {
+      const selectedFlight = outboundFlights[selectedOutbound];
+      const seatClassInfo = selectedSeatClass[selectedOutbound];
+      const selectedOption = selectedFlight.detailOptions[seatClassInfo.classType][seatClassInfo.optionIndex];
+
+      const bookingInfo = {
+        flightCode: selectedFlight.flightCode,
+        departure: searchData.departure.city,
+        arrival: searchData.arrival.city,
+        date: formatDate(searchData.departureDate),
+        time: `${selectedFlight.departureTime} - ${selectedFlight.arrivalTime}`,
+        className: selectedOption.name,
+        price: selectedOption.price.toLocaleString(),
+        classType: seatClassInfo.classType
+      };
+
+      setBookingData(bookingInfo);
+      setShowSeatSelection(true);
+    }
+  };
+ // ✅ 좌석 선택 페이지에서 뒤로가기
+ const handleSeatSelectionBack = () => {
+  setShowSeatSelection(false);
+  setBookingData(null);
+};
+
+// ✅ 좌석 선택 완료
+const handleSeatSelectionConfirm = (finalBookingData) => {
+  console.log('최종 예약 데이터:', finalBookingData);
+  setBookingData(finalBookingData);
+  setShowSeatSelection(false);
+  setShowPayment(true);
+};
+// ✅ 결제 페이지에서 뒤로가기
+const handlePaymentBack = () => {
+  setShowPayment(false);
+  setShowSeatSelection(true);
+};
+
+// ✅ 결제 완료
+const handlePaymentComplete = (paymentResult) => {
+  console.log('결제 완료:', paymentResult);
+  // 실제로는 예약 완료 페이지로 이동하거나 메인으로 리다이렉트
+  alert('결제가 완료되었습니다!');
+  setShowPayment(false);
+  setShowSeatSelection(false);
+  setBookingData(null);
+};
+
+// ✅ 결제 페이지 렌더링
+if (showPayment && bookingData) {
+  const Payment = React.lazy(() => import('./Payment'));
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <Payment 
+        bookingData={bookingData}
+        onBack={handlePaymentBack}
+        onPaymentComplete={handlePaymentComplete}
+      />
+    </React.Suspense>
+  );
+}
+
+// ✅ 좌석 선택 페이지 렌더링
+if (showSeatSelection && bookingData) {
+  const SeatSelection = React.lazy(() => import('./SeatSelection'));
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <SeatSelection 
+        flightData={bookingData}
+        onBack={handleSeatSelectionBack}
+        onConfirm={handleSeatSelectionConfirm}
+      />
+    </React.Suspense>
+  );
+}
+// ✅ 좌석 선택 페이지 렌더링
+if (showSeatSelection && bookingData) {
+  const SeatSelection = React.lazy(() => import('./SeatSelection'));
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <SeatSelection 
+        flightData={bookingData}
+        onBack={handleSeatSelectionBack}
+        onConfirm={handleSeatSelectionConfirm}
+      />
+    </React.Suspense>
+  );
+}
+
 
   return (
     <React.Fragment>
@@ -804,8 +964,8 @@ const handleFlightSelect = (index) => {
 {/* ✅ booking-summary 조건 수정 - selectedSeatClass 조건 완화 */}
 {selectedOutbound !== null && 
  !outboundFlights[selectedOutbound]?.isPastTime && 
- showSeatOptions[selectedOutbound] && (
-  <div className="booking-summary-fixed">
+ selectedSeatClass[selectedOutbound] && (
+  <div className="booking-summary-fixed" ref={summaryRef}>
     <div className="summary-content">
       <div className="selected-flights">
         <div className="selected-flight">
@@ -837,7 +997,7 @@ const handleFlightSelect = (index) => {
           )}
         </span>
       </div>
-      <button className="btn-booking">
+      <button className="btn-booking" onClick={handleBookingClick}>
         예약하기
       </button>
     </div>

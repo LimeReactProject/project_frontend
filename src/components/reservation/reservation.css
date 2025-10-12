@@ -216,12 +216,12 @@ body {
 }
 
 
-/* 옵션 행 */
 .options-row {
   display: flex;
   align-items: flex-end;
   gap: 40px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* wrap → nowrap으로 변경 */
+  overflow-x: auto; /* 화면이 작을 때 스크롤 가능하도록 */
 }
 
 .payment-section {
