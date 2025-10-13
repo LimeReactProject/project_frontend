@@ -70,12 +70,13 @@ const API_BASE = 'http://localhost:8080';
        paymentDate: new Date().toLocaleDateString('ko-KR'),
        paymentTime: new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})
      });
-
+     setActualBookingData(resp.reservationDetails); // 서버에서 받은 확정 데이터 사용
+     localStorage.removeItem('paymentConfirmPayload');
     // 선택한 항공편/좌석 보여주기용 bookingData도 세팅
      const completed = {
        ...savedPayload,
        // UI에서 쓰는 필드들 (Payment.jsx의 bookingData 구조에 맞춰 보강)
-       flightCode:  actualBookingData?.flightCode ?? bookingData?.flightCode,
+       flightCode: actualBookingData?.flightCode ?? bookingData?.flightCode,
        className:   actualBookingData?.className  ?? bookingData?.className,
        time:        actualBookingData?.time       ?? bookingData?.time,
        date:        actualBookingData?.date       ?? bookingData?.date,
@@ -91,12 +92,12 @@ const API_BASE = 'http://localhost:8080';
      localStorage.removeItem('paymentConfirmPayload');
    })
    .catch((e) => {
-     console.error(e);
-     alert('결제 승인 처리 중 오류가 발생했습니다.');
-     setStatus('fail');
-
-   })
-   .finally(() => setLoading(false));
+    console.error(e);
+    // ⚠️ 중요: 여기서 바로 실패 처리하지 않고, 고객에게 재시도를 유도해야 합니다.
+    alert('결제 승인 처리 중 오류가 발생했습니다. 잠시 후 재시도 버튼을 눌러주세요.');
+    setStatus('fail'); // fail 컴포넌트에는 '승인 재시도' 버튼이 있으므로 OK
+})
+.finally(() => setLoading(false));
  // eslint-disable-next-line react-hooks/exhaustive-deps
  }, []);
 
@@ -201,8 +202,8 @@ const getTotalAmount = () => {
               <h3>예약 정보</h3>
               <div className="reservation-number">
                 <span className="label">예약번호</span>
-                <span className="number">{generateReservationNumber()}</span>
-              </div>
+                <span className="number">{actualBookingData?.reservNum || '서버에서 발급받은 번호'}</span>
+                </div>
             </div>
 
             {/* 항공편 정보 */}
