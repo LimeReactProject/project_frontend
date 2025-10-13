@@ -12,6 +12,7 @@ const SearchResults = ({ searchData, onBack }) => {
   const [showSeatSelection, setShowSeatSelection] = useState(false);
   const [bookingData, setBookingData] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
+  const [showPaymentComplete, setShowPaymentComplete] = useState(false); // ✅ 추가
 
   // ✅ 항공편 데이터 변환 함수 수정
 const transformFlightData = (data, searchDate) => {
@@ -696,26 +697,47 @@ const handlePaymentBack = () => {
 // ✅ 결제 완료
 const handlePaymentComplete = (paymentResult) => {
   console.log('결제 완료:', paymentResult);
-  // 실제로는 예약 완료 페이지로 이동하거나 메인으로 리다이렉트
-  alert('결제가 완료되었습니다!');
   setShowPayment(false);
-  setShowSeatSelection(false);
-  setBookingData(null);
+  setShowPaymentComplete(true); // ✅ 결제 완료 페이지 표시
 };
 
-// ✅ 결제 페이지 렌더링
-if (showPayment && bookingData) {
-  const Payment = React.lazy(() => import('./Payment'));
-  return (
-    <React.Suspense fallback={<div>Loading...</div>}>
-      <Payment 
-        bookingData={bookingData}
-        onBack={handlePaymentBack}
-        onPaymentComplete={handlePaymentComplete}
-      />
-    </React.Suspense>
-  );
-}
+  if (showPaymentComplete && bookingData) {
+    const PaymentComplete = React.lazy(() => import('./PaymentComplete'));
+    return (
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <PaymentComplete 
+          bookingData={bookingData}
+          onGoHome={() => {
+            setShowPaymentComplete(false);
+            setShowPayment(false);
+            setShowSeatSelection(false);
+            setBookingData(null);
+            setSelectedOutbound(null);
+            setSelectedSeatClass({});
+            setShowSeatOptions({});
+            // 필요시 홈으로 이동 로직 추가
+          }}
+          onViewReservation={() => {
+            // 예약 관리 페이지로 이동 로직 추가
+            console.log('예약 관리 페이지로 이동');
+          }}
+        />
+      </React.Suspense>
+    );
+  }
+ // ✅ 결제 페이지 렌더링 조건 추가
+  if (showPayment && bookingData) {
+    const Payment = React.lazy(() => import('./Payment'));
+    return (
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <Payment 
+          bookingData={bookingData}
+          onBack={handlePaymentBack}
+          onPaymentComplete={handlePaymentComplete} // ✅ 핸들러 전달
+        />
+      </React.Suspense>
+    );
+  }
 
 // ✅ 좌석 선택 페이지 렌더링
 if (showSeatSelection && bookingData) {

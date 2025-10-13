@@ -1,0 +1,557 @@
+.payment-complete-main {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px 0;
+}
+
+.payment-complete-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 로딩 화면 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #22c55e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 완료 헤더 */
+.completion-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.success-icon {
+  margin-bottom: 20px;
+}
+
+.completion-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.completion-message {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 예약 정보 카드 */
+.reservation-info-card {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.reservation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.reservation-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.reservation-number {
+  text-align: right;
+}
+
+.reservation-number .label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.reservation-number .number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #22c55e;
+  letter-spacing: 1px;
+}
+
+/* 항공편 정보 섹션 */
+.flight-info-section {
+  margin-bottom: 30px;
+}
+
+.flight-info-section h4 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.flight-ticket-complete {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  border: 2px dashed #e0e0e0;
+}
+
+.ticket-left-complete {
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px dashed #e0e0e0;
+  padding-right: 20px;
+  margin-right: 20px;
+}
+
+.flight-code {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.flight-class {
+  font-size: 12px;
+  color: #22c55e;
+  background-color: #f0fdf4;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.ticket-right-complete {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flight-route-complete {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.departure-section-complete,
+.arrival-section-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+
+.time {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.date {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.city {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.route-arrow-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  min-width: 60px;
+}
+
+.arrow-line-complete {
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+  margin-bottom: 5px;
+}
+
+.route-arrow-complete span {
+  font-size: 24px;
+  color: #666;
+}
+
+/* 승객 정보 섹션 */
+.passenger-info-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.passenger-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.passenger-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.passenger-type {
+  font-weight: 600;
+  color: #333;
+}
+
+.passenger-count {
+  color: #666;
+}
+
+.seat-info {
+  padding: 10px 15px;
+  background: #f0fdf4;
+  border-radius: 6px;
+  color: #22c55e;
+  font-weight: 500;
+}
+
+/* 결제 정보 카드 */
+.payment-info-card {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.payment-info-card h3 {
+  margin: 0 0 25px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.payment-method-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.payment-method-info .label {
+  font-weight: 600;
+  color: #333;
+}
+
+.toss-pay-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toss-logo-small {
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.payment-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payment-detail-item:last-child {
+  border-bottom: none;
+}
+
+.total-amount-row {
+  border-top: 2px solid #333;
+  padding-top: 15px;
+  font-weight: 600;
+}
+
+.total-amount-complete {
+  font-size: 20px;
+  font-weight: bold;
+  color: #22c55e;
+}
+
+/* 요금 상세 내역 카드 */
+.fare-breakdown-card {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.fare-breakdown-card h3 {
+  margin: 0 0 25px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.breakdown-section {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.breakdown-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.breakdown-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.breakdown-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.breakdown-total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #333;
+}
+
+.breakdown-item.total {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.breakdown-item.total span:last-child {
+  font-size: 18px;
+  color: #22c55e;
+}
+
+/* 액션 버튼들 */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: 15px 20px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #f8f9fa;
+  border-color: #999;
+  color: #333;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #357ae8, #2e8b57);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+/* 안내사항 */
+.completion-notice {
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  border-left: 4px solid #22c55e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.completion-notice h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.completion-notice ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #666;
+}
+
+.completion-notice li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .payment-complete-container {
+    padding: 0 15px;
+  }
+  
+  .completion-header {
+    padding: 30px 15px;
+  }
+  
+  .completion-header h1 {
+    font-size: 24px;
+  }
+  
+  .reservation-info-card,
+  .payment-info-card,
+  .fare-breakdown-card {
+    padding: 20px;
+  }
+  
+  .reservation-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .flight-ticket-complete {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  .ticket-left-complete {
+    border-right: none;
+    border-bottom: 2px dashed #e0e0e0;
+    padding: 15px 0;
+    margin: 0 0 15px 0;
+  }
+  
+  .flight-route-complete {
+    gap: 15px;
+  }
+  
+  .time {
+    font-size: 18px;
+  }
+  
+  .city {
+    font-size: 14px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-secondary,
+  .btn-primary {
+    padding: 18px;
+  }
+  
+  .reservation-number .number {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .completion-header h1 {
+    font-size: 20px;
+  }
+  
+  .completion-message {
+    font-size: 14px;
+  }
+  
+  .reservation-info-card,
+  .payment-info-card,
+  .fare-breakdown-card,
+  .completion-notice {
+    padding: 15px;
+  }
+  
+  .flight-route-complete {
+    gap: 10px;
+  }
+  
+  .time {
+    font-size: 16px;
+  }
+}

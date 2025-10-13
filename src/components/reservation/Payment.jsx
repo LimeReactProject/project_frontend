@@ -1,39 +1,128 @@
-import React, { useState } from 'react';
-import './Payment.css';
-import Header from '../../common/Header';
-import Footer from '../../common/Footer';
+import React, { useEffect, useState, useMemo } from "react";
+import "./Payment.css";
+import Header from "../../common/Header";
+import Footer from "../../common/Footer";
+import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 
 const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('toss');
+  const [paymentWidget, setPaymentWidget] = useState/** @type {PaymentWidgetInstance | null} */(null);
+  const [paymentMethodWidget, setPaymentMethodWidget] = useState(null);
 
-  const handlePayment = () => {
-    // 실제 토스페이 결제 로직 구현
-    console.log('토스페이 결제 진행:', bookingData);
-    
-    // 임시로 결제 완료 처리
-    setTimeout(() => {
-      onPaymentComplete({
-        ...bookingData,
-        paymentMethod: 'toss',
-        paymentStatus: 'completed',
-        paymentTime: new Date().toISOString()
-      });
-    }, 2000);
-  };
+  // 🔐 테스트 클라이언트 키 & 고객 키 (데모용)
+  const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+  // customerKey는 가급적 회원 고유값을 사용하세요. (비회원이면 랜덤 생성)
+  const customerKey = useMemo(() => {
+    // 예: 로그인 사용자라면 userId 등으로 대체
+    return "demo-user-12345";
+  }, []);
 
-  const formatPrice = (price) => {
-    if (typeof price === 'string') {
-      return price;
-    }
-    return price?.toLocaleString() + '원' || '0원';
-  };
+  const TEST_MODE = true;
+  const TEST_AMOUNT = 100;
+
+  const formatPrice = (price) => (typeof price === "string" ? price : (price ?? 0).toLocaleString() + "원");
 
   const getTotalAmount = () => {
-    const flightPrice = parseInt(bookingData.price?.replace(/[^0-9]/g, '') || '0');
-    const seatPrice = bookingData.selectedSeat ? 
-      (bookingData.selectedSeat.type === 'bizlite' ? 10000 : 5000) : 0;
+    const flightPrice = parseInt(bookingData.price?.replace(/[^0-9]/g, "") || "0", 10);
+    const seatPrice = bookingData.selectedSeat
+      ? (bookingData.selectedSeat.type === "bizlite" ? 10000 : 5000)
+      : 0;
     return flightPrice + seatPrice;
   };
+
+  // ✅ 성공 페이지에서 서버 승인용 데이터 복원할 수 있게 저장
+  const persistBookingForConfirm = (booking, orderId, amount) => {
+    const payload = {
+      reservNum:   booking.reservNum,
+      optNum:      booking.optNum,
+      scheduleNum: booking.scheduleNum,
+      memberNum:   booking.memberNum,
+      seatId:      booking.selectedSeat?.seatId ?? null,
+      orderId,
+      amount,
+    };
+    localStorage.setItem("paymentConfirmPayload", JSON.stringify(payload));
+  };
+
+  // ✅ toss 위젯 로드 & 렌더
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      // 1) 위젯 로드
+      const widget = await loadPaymentWidget(clientKey, customerKey);
+
+
+      setPaymentWidget(widget);
+
+      // 2) 결제수단 영역 렌더 (할인수단 위젯은 렌더하지 않음)
+      const methodWidget = await widget.renderPaymentMethods(
+        "#payment-method",
+        { value: TEST_MODE ? TEST_AMOUNT : getTotalAmount() },
+        {
+          variantKey: "DEFAULT",
+          // 필요시 특정 수단만 보이고 싶다면(예: 카드만)
+          // selectablePaymentMethods: ["CARD"],
+        }
+      );
+      setPaymentMethodWidget(methodWidget);
+
+      // 3) 약관 동의 영역 렌더
+      await widget.renderAgreement("#agreement", { variantKey: "AGREEMENT" });
+
+      // ⚠️ 중요: "할인/쿠폰/포인트" 등은 별도 위젯을 렌더해야 나타납니다.
+      // 아래처럼 아무것도 렌더하지 않으면 화면에 "할인수단" 섹션이 안 나옵니다.
+      // 예) renderXxxPromotion / renderCoupons / renderPoint 같은 걸 호출하지 마세요.
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [clientKey, customerKey]);
+
+  // 금액 변동 시 UI 금액 갱신
+  useEffect(() => {
+    if (paymentMethodWidget) {
+      paymentMethodWidget.updateAmount(TEST_MODE ? TEST_AMOUNT : getTotalAmount());
+    }
+  }, [paymentMethodWidget, bookingData]);
+
+  // ✅ 결제 버튼
+  const handlePayment = async () => {
+    if (!paymentWidget) {
+      alert("결제 시스템을 준비 중입니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    // 주문번호 임의 생성(실서비스는 서버에서 생성 권장)
+    const orderId = btoa(Math.random().toString()).slice(0, 20);
+    const amount = TEST_MODE ? TEST_AMOUNT : getTotalAmount();
+
+    // 성공 페이지에서 서버 승인(또는 데모 처리)용 데이터 저장
+    persistBookingForConfirm(bookingData, orderId, amount);
+
+    try {
+      await paymentWidget.requestPayment({
+        orderId,
+        orderName: `${bookingData.flightCode} 항공편 (${bookingData.departure} → ${bookingData.arrival})`,
+        amount, // ← SDK v2에서는 명시적으로 amount 넣어도 됩니다 (위젯 금액과 동일하게)
+        // 고객정보
+        customerEmail: "customer@example.com",
+        customerName: "김승객",
+        customerMobilePhone: "01012345678",
+        // 콜백 URL
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
+      });
+    } catch (error) {
+      console.error("[requestPayment] error:", error);
+      if (error?.code === "USER_CANCEL") {
+        alert("결제가 취소되었습니다.");
+      } else {
+        alert("결제 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+    }
+  };
+
 
   return (
     <React.Fragment>
@@ -167,57 +256,34 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
               <div className="total-line">
                 <span>예상 결제금액</span>
                 <span className="total-amount">
-                  {getTotalAmount().toLocaleString()}원 &gt;
+                  {getTotalAmount().toLocaleString()}원
                 </span>
               </div>
             </div>
           </div>
         </div>
-          {/* 결제방법 선택 */}
-          <div className="payment-method-card">
-            <h3>결제방법</h3>
-            
-            <div className="payment-options">
-                <div 
-                className={`payment-option ${selectedPaymentMethod === 'toss' ? 'selected' : ''}`}
-                onClick={() => setSelectedPaymentMethod('toss')}
-                >
-                <input 
-                    type="radio" 
-                    name="payment" 
-                    value="toss" 
-                    checked={selectedPaymentMethod === 'toss'}
-                    onChange={() => setSelectedPaymentMethod('toss')}
-                />
-                <span>토스페이 결제</span>
-                </div>
+         {/* ✅ 토스페이먼츠 결제방법 섹션만 유지 */}
+      <div className="payment-method-card">
+        
+        {/* ✅ 토스페이먼츠 결제 UI가 렌더링될 영역 */}
+        <div id="payment-method"></div>
+        
+        {/* ✅ 이용약관 동의 UI가 렌더링될 영역 */}
+        <div id="agreement"></div>
 
-                <div 
-                className={`payment-option disabled ${selectedPaymentMethod === 'card' ? 'selected' : ''}`}
-                >
-                <input 
-                    type="radio" 
-                    name="payment" 
-                    value="card" 
-                    checked={selectedPaymentMethod === 'card'}
-                    disabled
-                />
-                <span>신용결제</span>
-                </div>
-            </div>
-            </div>
+        {/* ✅ 기존 결제방법 선택 UI 완전 제거 */}
+      </div>
 
-
-          {/* 결제 버튼 */}
-          <div className="payment-action">
-            <button 
-              className="payment-btn toss-pay"
-              onClick={handlePayment}
-            >
-              <div className="toss-pay-logo">toss</div>
-              <span>토스페이 최대 {getTotalAmount().toLocaleString()}원 결제하기</span>
-            </button>
-          </div>
+      {/* ✅ 토스페이 결제 버튼만 유지 */}
+      <div className="payment-action">
+        <button 
+          className="payment-btn toss-pay"
+          onClick={handlePayment}
+        >
+          <div className="toss-pay-logo">toss</div>
+ <span>{(TEST_MODE ? TEST_AMOUNT : getTotalAmount()).toLocaleString()}원 결제하기</span>
+        </button>
+      </div>
 
           {/* 유의사항 */}
           <div className="payment-notice">
