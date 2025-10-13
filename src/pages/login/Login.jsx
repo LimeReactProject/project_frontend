@@ -60,7 +60,12 @@ function Login() {
       const response = await axios.post("http://localhost:8080/login/loginCk", {
         userId: id,
         userPw: password,
-      });
+      },
+      {
+        withCredentials: true
+      }
+    
+    );
 
       const data = response.data;
 
@@ -82,6 +87,8 @@ function Login() {
       setLoginError(true);
     }
   };
+
+  
   
 
   return (

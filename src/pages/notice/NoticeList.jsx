@@ -11,19 +11,31 @@ function NoticeList() {
     
     const [loading,setLoading] = useState(false);
     const [form,setForm] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1); 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [userRole, setUserRole] = useState(null); 
 
     const totalPages = form.meta?.totalPages || 1;
 
     useEffect(()=>{
 
+        const user = sessionStorage.getItem('loginUser')
+        
+        if (user) {
+            try {
+                const userData = JSON.parse(user);
+                setUserRole(userData.role || userData.userRole);
+            } catch (e) {
+                console.error('사용자 정보 파싱 오류:', e);
+            }
+        }
+
         const fetchData = async() => {
 
             try{
-                setLoading(true);
-                const response = await apiClient.get('/list');
+                setLoading(true);iClient.get('/list');
                 setForm(response.data);
-                console.log(response.data)
+                
+                const response = await apconsole.log(response.data)
             } catch(error){
                 console.error('에러:',error);
             } finally {
@@ -54,7 +66,9 @@ function NoticeList() {
             </div>
 
             <div className={styles.headerActions}>
+                {userRole === 'ADMIN' && (
                 <Link className={styles.writeButton} to="/noticeNew">공지 작성</Link>
+                )}
             </div>
 
       

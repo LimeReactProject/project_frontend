@@ -4,6 +4,7 @@ import apiClient from "../../apis/NoticeApi";
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import styles from "./NoticeDetail.module.css";
+import axios from "axios";
 
 
 function NoticeDetail() {
@@ -13,9 +14,21 @@ function NoticeDetail() {
     const [form, setForm] = useState({});
     const [loading, setLoading] = useState(false);
     const [updating, setUpdating] = useState(false);
+    const [userRole, setUserRole] = useState(null);
     
 
     useEffect(()=>{
+        // 사용자 역할 확인
+        const user = sessionStorage.getItem("loginUser");
+        if (user) {
+            try {
+                const userData = JSON.parse(user);
+                setUserRole(userData.role || userData.userRole);
+            } catch (e) {
+                console.error('사용자 정보 파싱 오류:', e);
+            }
+        }
+
         const axiosData = async() => {
             try{
                 setLoading(true);
@@ -30,6 +43,8 @@ function NoticeDetail() {
        }
         axiosData();
     },[id])
+
+    
 
 
     const toggleImportantAndGoBack = async () => {
@@ -68,10 +83,10 @@ function NoticeDetail() {
 
             <div className={styles.actions}>
                 <Link className={styles.backButton} to="/noticeList">목록</Link>
-                {form?.noticeId && (
+                {userRole === 'ADMIN' && form?.noticeId && (
                     <Link className={styles.editButton} to={`/noticeEdit/${form.noticeId}`}>수정</Link>
                 )}
-                {form?.noticeId && (
+                {userRole === 'ADMIN' && form?.noticeId && (
                     <button
                         className={styles.importantButton}
                         disabled={updating}
