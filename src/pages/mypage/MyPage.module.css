@@ -1,0 +1,148 @@
+.main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  font-family: "Pretendard", sans-serif;
+  color: #222;
+}
+
+.titleSection {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.titleSection h2 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.titleSection p {
+  margin-top: 8px;
+  font-size: 16px;
+  color: #555;
+}
+
+.reserveBtn {
+  margin-top: 15px;
+  padding: 12px 24px;
+  background-color: #ff5b00;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.infoSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 30px;
+  background: #fafafa;
+  border-top: 3px solid #ff5b00;
+  border-radius: 8px;
+}
+
+.infoBox {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profileIcon {
+  width: 60px;
+  height: 60px;
+  background: #ccc;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.memberInfo p {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.memberInfo a {
+  color: #ff5b00;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.pointsBox {
+  text-align: right;
+}
+
+.pointLabel {
+  font-size: 15px;
+  color: #777;
+}
+
+.pointValue {
+  font-size: 26px;
+  font-weight: bold;
+  color: #222;
+}
+
+.benefitBtn {
+  margin-top: 6px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+.subMenu {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.subMenu button {
+  border: none;
+  background: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.reservationSection {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.reservationSection h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.reservationBox {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 6px;
+  text-align: center;
+  color: #555;
+}
+
+.link {
+  color: #ff5b00;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.pastBtn {
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
