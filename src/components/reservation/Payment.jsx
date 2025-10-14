@@ -20,9 +20,24 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
   const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // ✅ 위젯용 gck(문서 데모 키)
   const customerKey = useMemo(() => ANONYMOUS, []);
 
+  const didInitRef = useRef(false);
+  const STUDY_MOCK = true;  //테스트 환경에서 할것
+
+  const FRONT_ORIGIN = "http://localhost:5173"; // 프론트 개발 주소로 고정
 
   const TEST_MODE = true;
   const TEST_AMOUNT = 100;
+const optNumByClassName = (className) => {
+  switch (className) {
+    case '스탠다드': return '4';
+    case '비즈라이트': return '5';
+    // 필요하면 PLUS들도 매핑
+    case '수하물 PLUS+': return '1';
+    case '수하물 좌석 PLUS+': return '2';
+    case '프리미엄 PLUS+': return '3';
+    default: return '4'; // 기본값
+  }
+};
 
   const getTotalAmount = () => {
     const flightPrice = parseInt(bookingData?.price?.replace(/[^0-9]/g, "") || "0", 10);
@@ -93,14 +108,17 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
     // 초기화 함수
     const init = async () => {
       if (cancelled) return;
-      
+      if (didInitRef.current) return; // 이미 한 번 성공한 초기화가 있으면 재진입 금지
+
       console.log(`[Toss] Attempting widget initialization. Attempt #${initAttempts + 1}`);
       setIsReady(false);
       
       try {
         await initializePaymentWidget(clientKey, customerKey);
         if (cancelled) return;
-        
+        didInitRef.current = true;
+
+
         setIsReady(true);
         console.log("[Toss] Widget initialized successfully.");
       } catch (e) {
@@ -124,8 +142,7 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
     
     return () => {
       cancelled = true;
-      widgetRef.current = null;
-      methodsRef.current = null;
+
       // setIsReady(false); // 재시도 로직을 위해 제거
     };
   }, [clientKey, customerKey, initAttempts, initializePaymentWidget, isReady]);
@@ -134,42 +151,59 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
   useEffect(() => {
     if (!methodsRef.current) return;
     const nextAmount = TEST_MODE ? TEST_AMOUNT : getTotalAmount();
+    console.log("[Toss] updateAmount ->", nextAmount);
+
     methodsRef.current.updateAmount(nextAmount);
   }, [bookingData, TEST_MODE, TEST_AMOUNT, getTotalAmount]);
 
-  const persistBookingForConfirm = (booking, orderId, amount) => {
-    // ... (기존 로직 유지)
-    const payload = {
-      reservNum: booking?.reservNum ?? null,
-      optNum: booking?.optNum ?? null,
-      scheduleNum: booking?.scheduleNum ?? null,
-      memberNum: booking?.memberNum ?? null,
-      seatId: booking?.selectedSeat?.seatId ?? null,
-      orderId,
-      amount,
-    };
-    localStorage.setItem("paymentConfirmPayload", JSON.stringify(payload));
+ const persistBookingForConfirm = (booking, orderId, amount) => {
+  const optNum = booking?.optNum ?? optNumByClassName(booking?.className);
+  const scheduleNum = booking?.scheduleNum; // 예: 'SCH20251016-2' (반드시 세팅돼 있어야 함)
+
+  const seatId =
+    booking?.selectedSeat?.seatId ||
+    booking?.selectedSeat?.id ||
+    null;
+
+  const selectedSeat =
+    booking?.selectedSeat
+      ? {
+          ...booking.selectedSeat,
+          seatNumber: booking.selectedSeat.seatNumber || booking.selectedSeat.id,
+          seatId: seatId || booking.selectedSeat.id,
+        }
+      : null;
+
+  const payload = {
+    reservNum: booking?.reservNum ?? null,
+    optNum,                    // ★ 반드시 채움
+    scheduleNum,               // ★ 반드시 채움
+    memberNum: booking?.memberNum ?? null, // 비로그인일 경우 백에서 발급
+    seatId,                    // DB seat_id
+    orderId,
+    amount,
+    orderName: `${booking?.flightCode ?? "항공편"} (${booking?.departure ?? ""} → ${booking?.arrival ?? ""})`,
+    bookingSnapshot: {
+      flightCode: booking?.flightCode,
+      className: booking?.className,
+      time: booking?.time,
+      date: booking?.date,
+      departure: booking?.departure,
+      arrival: booking?.arrival,
+      price: booking?.price,
+      selectedSeat,
+    },
   };
 
+  localStorage.setItem("paymentConfirmPayload", JSON.stringify(payload));
+  sessionStorage.setItem("paymentConfirmPayload", JSON.stringify(payload));
+};
   // ✅ 결제 버튼 핸들러 (안정성 강화)
   const handlePayment = async () => {
-    const widget = widgetRef.current;
-    
-    // 1. 초기 준비 상태 확인 및 대기
-    if (!widget || !isReady) {
-      // ✅ 렌더링 완료 상태를 보장하기 위해 최대 500ms(약 30프레임) 추가 대기
-      let maxWait = 5; // 100ms * 5 = 500ms 대기 시도
-      while ((!widgetRef.current || !isReady) && maxWait > 0) {
-          console.log("결제 UI 대기 중...");
-          await new Promise(resolve => setTimeout(resolve, 100)); // 100ms 대기
-          maxWait--;
-      }
-      
-      if (!widgetRef.current || !isReady) {
-        alert("결제 UI를 준비 중입니다. 화면이 보이는 상태인지 확인 후 다시 시도해주세요. (INIT-FAIL)");
-        return;
-      }
-    }
+  if (!widgetRef.current) {
+    alert("결제 UI 초기화 정보가 없습니다. 새로고침 후 다시 시도해주세요.");
+    return;
+  }
     
     // 2. 최종 가시성 확인
     if (!containersAreVisible()) {
@@ -194,8 +228,8 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
         customerEmail: "customer@example.com",
         customerName: "김승객",
         customerMobilePhone: "01012345678",
-        successUrl: `${window.location.origin}/payment/success`,
-        failUrl: `${window.location.origin}/payment/fail`,
+        successUrl: `${FRONT_ORIGIN}/payment/success${STUDY_MOCK ? "?mock=1" : ""}`,
+         failUrl: `${FRONT_ORIGIN}/payment/fail`,
       });
       onPaymentComplete?.({ orderId, amount });
     } catch (error) {
@@ -214,6 +248,8 @@ const Payment = ({ bookingData, onBack, onPaymentComplete }) => {
       }
     }
   };
+  // 사용자가 선택한 스케줄 키를 정확히 들고 있어야 함 (예: 'SCH20251016-2')
+
 
   return (
     <React.Fragment>

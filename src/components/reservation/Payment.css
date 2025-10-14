@@ -633,3 +633,15 @@
       font-size: 16px;
     }
   }
+
+  /* Payment.css에 추가 */
+#payment-method,
+#agreement {
+  min-height: 80px; /* Toss 위젯이 자리 잡을 높이 확보 */
+}
+
+.payment-method-card {
+  /* 부모도 높이/overflow로 가려지지 않도록 */
+  min-height: 120px;
+  overflow: visible;
+}

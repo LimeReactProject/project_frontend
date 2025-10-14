@@ -34,14 +34,18 @@ const SeatSelection = ({ flightData, onBack, onConfirm }) => {
     }
   };
 
-  const handleConfirm = () => {
-    if (selectedSeat && onConfirm) {
-      onConfirm({
-        ...flightData,
-        selectedSeat
-      });
-    }
-  };
+const handleConfirm = () => {
+  if (selectedSeat && onConfirm) {
+    onConfirm({
+      ...flightData,
+      selectedSeat: {
+        ...selectedSeat,
+        seatNumber: selectedSeat.id,    // ← 표시는 항상 'S01' 같은 ID로
+        seatId: selectedSeat.id,        // ← DB 업데이트용 seat_id도 함께 넘김
+      },
+    });
+  }
+};
   
 
   const getSeatPrice = (seatType) => {
