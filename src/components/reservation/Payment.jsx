@@ -157,8 +157,35 @@ const optNumByClassName = (className) => {
   }, [bookingData, TEST_MODE, TEST_AMOUNT, getTotalAmount]);
 
  const persistBookingForConfirm = (booking, orderId, amount) => {
-  const optNum = booking?.optNum ?? optNumByClassName(booking?.className);
-  const scheduleNum = booking?.scheduleNum; // 예: 'SCH20251016-2' (반드시 세팅돼 있어야 함)
+ // 1) SearchResults에서 넘어온 snake/camel을 최우선 사용
+ let optNum = booking?.opt_num ?? booking?.optNum ?? null;
+
+ // 2) 없으면 최후의 보루로 클래스+옵션명으로 정확 매핑
+ if (!optNum) {
+   const cls = booking?.classType === 'bizlite' ? '비즈라이트' : '스탠다드';
+   const name = booking?.className; // '스탠다드' 또는 '수하물 PLUS+' 등
+   const key =
+     (name === '스탠다드' || name === '비즈라이트') ? name : `${cls}_${name}`;
+   const MAP = {
+     '스탠다드': '4',
+     '비즈라이트': '5',
+     '스탠다드_수하물 PLUS+': '1',
+     '스탠다드_수하물 좌석 PLUS+': '2',
+     '스탠다드_프리미엄 PLUS+': '3',
+     '비즈라이트_수하물 PLUS+': '6',
+     '비즈라이트_수하물 좌석 PLUS+': '7',
+     '비즈라이트_프리미엄 PLUS+': '8',
+   };
+   optNum = MAP[key] ?? null;
+ }
+
+const optName = booking?.opt_name ?? booking?.optName ?? booking?.className ?? null; 
+
+
+   const scheduleNum = booking?.scheduleNum || booking?.schedule_id || booking?.scheduleId; 
+    
+    // 2. template_id 추출 (template_id, templateId, templateNum 등 다양한 키값 체크)
+    const templateId = booking?.template_id || booking?.templateId || booking?.templateNum; 
 
   const seatId =
     booking?.selectedSeat?.seatId ||
@@ -170,16 +197,25 @@ const optNumByClassName = (className) => {
       ? {
           ...booking.selectedSeat,
           seatNumber: booking.selectedSeat.seatNumber || booking.selectedSeat.id,
-          seatId: seatId || booking.selectedSeat.id,
+          seatId: String(seatId || booking.selectedSeat.seatId || ''),
         }
       : null;
-
+    // --- ⭐️ 콘솔 로그 추가 ⭐️ ---
+    console.log("--- [TOSS_PAYMENT] 예약 메타데이터 확인 ---");
+    console.log(`1. bookingData Prop 전체:`, booking);
+    console.log(`2. 추출된 scheduleNum (스케줄 번호):`, scheduleNum);
+    console.log(`3. 추출된 template_id (템플릿 ID):`, templateId);
+    console.log(`4. 생성된 orderId:`, orderId);
+    console.log("-----------------------------------------");
+    
   const payload = {
     reservNum: booking?.reservNum ?? null,
-    optNum,                    // ★ 반드시 채움
-    scheduleNum,               // ★ 반드시 채움
+    optNum,                    
+    optName,
+    scheduleNum,               
+    template_id: templateId, // <-- 백엔드로 전달될 템플릿 ID (template_id 오류 해결)
     memberNum: booking?.memberNum ?? null, // 비로그인일 경우 백에서 발급
-    seatId,                    // DB seat_id
+    seatId: selectedSeat?.seatId ?? null,
     orderId,
     amount,
     orderName: `${booking?.flightCode ?? "항공편"} (${booking?.departure ?? ""} → ${booking?.arrival ?? ""})`,

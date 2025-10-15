@@ -538,3 +538,9 @@
       gap: 30px;
     }
   }
+  .seat.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
+}

@@ -13,7 +13,25 @@ const SearchResults = ({ searchData, onBack }) => {
   const [bookingData, setBookingData] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
   const [showPaymentComplete, setShowPaymentComplete] = useState(false); // ✅ 추가
+const loggedPricesRef = React.useRef(new Set());
 
+// DB lime_option 매핑
+const OPTION_MAP = {
+  '스탠다드':                 { opt_num: '4', opt_name: '스탠다드' },
+  '비즈라이트':               { opt_num: '5', opt_name: '비즈라이트' },
+  '스탠다드_수하물 PLUS+':     { opt_num: '1', opt_name: '스탠다드_수하물 PLUS+' },
+  '스탠다드_수하물 좌석 PLUS+': { opt_num: '2', opt_name: '스탠다드_수하물 좌석 PLUS+' },
+  '스탠다드_프리미엄 PLUS+':   { opt_num: '3', opt_name: '스탠다드_프리미엄 PLUS+' },
+  '비즈라이트_수하물 PLUS+':   { opt_num: '6', opt_name: '비즈라이트_수하물 PLUS+' },
+  '비즈라이트_수하물 좌석 PLUS+': { opt_num: '7', opt_name: '비즈라이트_수하물 좌석 PLUS+' },
+  '비즈라이트_프리미엄 PLUS+': { opt_num: '8', opt_name: '비즈라이트_프리미엄 PLUS+' },
+};
+
+const toMinutes = (t) => {
+  if (!t) return Number.MAX_SAFE_INTEGER;
+  const [h, m] = String(t).split(':').map(n => parseInt(n, 10) || 0);
+  return h * 60 + m;
+};
   // ✅ 항공편 데이터 변환 함수 수정
 const transformFlightData = (data, searchDate) => {
   const now = new Date();
@@ -272,10 +290,21 @@ const transformFlightData = (data, searchDate) => {
       baseClasses,
       detailOptions,
       isPastTime,
-      bookingDisabled: isPastTime
+      bookingDisabled: isPastTime,
+          scheduleNum: flight.scheduleNum ?? flight.schedule_num ?? null,
+      templateId:  flight.templateId  ?? flight.template_id  ?? null,
     };
   });
 };
+// 로그 도우미
+const logFormatPriceOnce = React.useCallback((price, converted) => {
+  if (process.env.NODE_ENV !== 'development') return;
+  const key = String(price);
+  if (!loggedPricesRef.current.has(key)) {
+    console.log('formatPrice input:', price, 'converted:', converted);
+    loggedPricesRef.current.add(key);
+  }
+}, []);
 // price 후보 키들 중 첫 번째 유효 숫자 리턴
 const extractPrice = (flight) => {
   const candidates = [
@@ -388,28 +417,45 @@ useEffect(() => {
 const handleBaseClassSelect = (flightIndex, classType) => {
   console.log('handleBaseClassSelect called:', flightIndex, classType);
   setSelectedOutbound(flightIndex);
-  // 상태를 동시에 설정
-  setShowSeatOptions({[flightIndex]: classType});
-  setSelectedSeatClass({ [flightIndex]: undefined }); 
-  
-  console.log('Both states set:', flightIndex, classType); // 디버깅용
+  setShowSeatOptions({ [flightIndex]: classType });
+  setSelectedSeatClass({}); // 초기화 (혹은 { [flightIndex]: { classType, optionIndex: 0 } }로 기본옵션 자동선택도 가능)
 };
+
 const summaryRef = React.useRef(null);
 
   // ✅ 세부 옵션 선택 핸들러
-  const handleDetailOptionSelect = (flightIndex, classType, optionIndex) => {
-    setSelectedOutbound(flightIndex);
-     setSelectedSeatClass({
-         [flightIndex]: { classType, optionIndex }
-       });
-  
-    // 다음 프레임에 스크롤
-    requestAnimationFrame(() => {
-      if (summaryRef.current) {
-        summaryRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }
-    });
-  };
+const handleDetailOptionSelect = (flightIndex, classType, optionIndex) => {
+  const flight = outboundFlights?.[flightIndex];
+  const opt = flight?.detailOptions?.[classType]?.[optionIndex];
+
+  // 클래스 한글명
+  const classDisplay = classType === 'standard' ? '스탠다드' : '비즈라이트';
+  // 첫 번째 옵션은 단일명(스탠다드/비즈라이트), 그 외는 "클래스_옵션명"
+  const optKey = optionIndex === 0 ? classDisplay : `${classDisplay}_${opt?.name}`;
+  const dbOpt = OPTION_MAP[optKey];
+
+  console.log('[선택한 옵션]', {
+    flightIndex,
+    flightCode: flight?.flightCode,
+    classType,
+    classDisplay,
+    optionIndex,
+    optionName: opt?.name,
+    price: opt?.price,
+    optKey,
+    db_opt_num: dbOpt?.opt_num,
+    db_opt_name: dbOpt?.opt_name,
+  });
+
+  setSelectedOutbound(flightIndex);
+  setSelectedSeatClass({ [flightIndex]: { classType, optionIndex } });
+
+  requestAnimationFrame(() => {
+    if (summaryRef.current) {
+      summaryRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  });
+};
 
   //오늘 날짜 기준으로 과거 날짜인지 확인하는 함수
   const isPastDate = (date) => {
@@ -599,19 +645,11 @@ const handleFlightSelect = (index) => {
 
 const formatPrice = (price) => {
   const n = Number(price);
-  
-  // ✅ 디버깅을 위해 콘솔 로그 추가
-  console.log('formatPrice input:', price, 'converted:', n);
-  
-  if (!Number.isFinite(n)) {
-    return '가격조회불가';
-  }
-  
-  // ✅ 0 이하 조건을 0 미만으로 변경 (0원도 표시되도록)
-  if (n < 0) {
-    return '가격조회불가';
-  }
-  
+
+  // 기존 console.log 대신
+  logFormatPriceOnce(price, n);
+
+  if (!Number.isFinite(n) || n < 0) return '가격조회불가';
   return n.toLocaleString('ko-KR') + '원';
 };
 
@@ -639,7 +677,10 @@ const formatPrice = (price) => {
     const minutes = totalMinutes % 60;
     return `${hours}시간 ${minutes}분`;
   };
-
+const outboundFlights = React.useMemo(
+  () => [...flightData].sort((a, b) => toMinutes(a.departureTime) - toMinutes(b.departureTime)),
+  [flightData]
+);
   if (loading) {
     return (
       <React.Fragment>
@@ -652,29 +693,61 @@ const formatPrice = (price) => {
     );
   }
 
-  const outboundFlights = flightData;
 
-  const handleBookingClick = () => {
-    if (selectedOutbound !== null && selectedSeatClass[selectedOutbound]) {
-      const selectedFlight = outboundFlights[selectedOutbound];
-      const seatClassInfo = selectedSeatClass[selectedOutbound];
-      const selectedOption = selectedFlight.detailOptions[seatClassInfo.classType][seatClassInfo.optionIndex];
+const handleBookingClick = async () => {
+  if (selectedOutbound !== null && selectedSeatClass[selectedOutbound]) {
+    const selectedFlight = outboundFlights[selectedOutbound];
+    const seatClassInfo = selectedSeatClass[selectedOutbound];
+    const flight = outboundFlights[selectedOutbound];
 
-      const bookingInfo = {
-        flightCode: selectedFlight.flightCode,
-        departure: searchData.departure.city,
-        arrival: searchData.arrival.city,
-        date: formatDate(searchData.departureDate),
-        time: `${selectedFlight.departureTime} - ${selectedFlight.arrivalTime}`,
-        className: selectedOption.name,
-        price: selectedOption.price.toLocaleString(),
-        classType: seatClassInfo.classType
-      };
-
-      setBookingData(bookingInfo);
-      setShowSeatSelection(true);
+    const sc = selectedSeatClass[selectedOutbound] || { classType: showSeatOptions[selectedOutbound], optionIndex: 0 };
+    const selectedOption = selectedFlight.detailOptions[seatClassInfo.classType][seatClassInfo.optionIndex];
+    const classDisplay = seatClassInfo.classType === 'standard' ? '스탠다드' : '비즈라이트';
+    const optKey = seatClassInfo.optionIndex === 0
+      ? classDisplay
+      : `${classDisplay}_${selectedOption.name}`;
+    const dbOpt = OPTION_MAP[optKey];
+    // 좌석 조회 호출 (templateId 기준)
+    let seats = [];
+    try {
+      const tid = flight.templateId ?? flight.template_id;
+      if (!tid) {
+        console.warn('[SearchResults] templateId가 없습니다. 좌석 조회를 건너뜁니다.');
+      } else {
+        const seatRes = await fetch(`http://localhost:8080/api/flight-info/seats?templateId=${tid}`);
+        if (seatRes.ok) {
+          seats = await seatRes.json();
+          console.log('[SearchResults] fetched seats:', seats);
+        } else {
+          console.warn('[SearchResults] 좌석 조회 실패:', seatRes.status, seatRes.statusText);
+        }
+      }
+    } catch (e) {
+      console.error('[SearchResults] 좌석 조회 에러:', e);
     }
-  };
+
+    const bookingInfo = {
+      flightCode: selectedFlight.flightCode,
+      departure: searchData.departure.city,
+      arrival: searchData.arrival.city,
+      date: formatDate(searchData.departureDate),
+      time: `${selectedFlight.departureTime} - ${selectedFlight.arrivalTime}`,
+      className: selectedOption.name,
+      price: selectedOption.price.toLocaleString(),
+      classType: seatClassInfo.classType,
+      scheduleNum: flight.scheduleNum ?? flight.schedule_num ?? null,
+      templateId: flight.templateId ?? flight.template_id ?? null,
+      opt_num: dbOpt?.opt_num || null,
+      opt_name: dbOpt?.opt_name || null,
+      optNum: dbOpt?.opt_num || null,   // ← 추가
+      optName: dbOpt?.opt_name || null, // ← 추가
+      seats, // ← 여기로 좌석을 넣어서 SeatSelection에 전달
+    };
+
+    setBookingData(bookingInfo);
+    setShowSeatSelection(true);
+  }
+};
  // ✅ 좌석 선택 페이지에서 뒤로가기
  const handleSeatSelectionBack = () => {
   setShowSeatSelection(false);
@@ -739,19 +812,7 @@ const handlePaymentComplete = (paymentResult) => {
     );
   }
 
-// ✅ 좌석 선택 페이지 렌더링
-if (showSeatSelection && bookingData) {
-  const SeatSelection = React.lazy(() => import('./SeatSelection'));
-  return (
-    <React.Suspense fallback={<div>Loading...</div>}>
-      <SeatSelection 
-        flightData={bookingData}
-        onBack={handleSeatSelectionBack}
-        onConfirm={handleSeatSelectionConfirm}
-      />
-    </React.Suspense>
-  );
-}
+
 // ✅ 좌석 선택 페이지 렌더링
 if (showSeatSelection && bookingData) {
   const SeatSelection = React.lazy(() => import('./SeatSelection'));

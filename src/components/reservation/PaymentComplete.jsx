@@ -11,6 +11,7 @@ const PaymentComplete = ({ bookingData, onGoHome, onViewReservation }) => {
   const didRun = React.useRef(false);
 
   useEffect(() => {
+    
     if (didRun.current) return;   // ✅ 두 번째 호출 차단
     didRun.current = true;
 
@@ -112,7 +113,7 @@ const API_BASE = 'http://localhost:8080';
 
   const snapSel = completed?.selectedSeat || {};
   const seatIdForSave =
-    snapSel.seatId || snapSel.id || savedPayload.seatId || null;
+  String(snapSel.seatId || snapSel.id || savedPayload.seatId || '');
     const reservNumForSave =
       savedPayload.reservNum || completed.reservNum || `JA${Date.now()}`;
 

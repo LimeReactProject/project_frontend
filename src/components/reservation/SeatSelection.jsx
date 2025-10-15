@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './SeatSelection.css';
 import Header from '../../common/Header';
 import Footer from '../../common/Footer';
@@ -7,32 +7,39 @@ const SeatSelection = ({ flightData, onBack, onConfirm }) => {
   const [selectedSeat, setSelectedSeat] = useState(null);
 
   // ✅ 전체 좌석 데이터 - 4개 좌석 모두 표시
-  const allSeats = [
-    { id: 'B01', row: 1, column: 'A', type: 'bizlite', available: true },
-    { id: 'B02', row: 1, column: 'B', type: 'bizlite', available: true },
-    { id: 'S01', row: 2, column: 'A', type: 'standard', available: true },
-    { id: 'S02', row: 2, column: 'B', type: 'standard', available: true }
-  ];
+const allSeats = React.useMemo(() => {
+  if (!Array.isArray(flightData?.seats)) return [];
+  return flightData.seats.map(s => ({
+    id: s.seatName,                                     // 'B01' / 'S01'
+    type: String(s.seatType).toLowerCase() === 'bizlite' ? 'bizlite' : 'standard',
+    available: true,
+    is_reserved: Number(s.is_reserved),                 // 0 = 불가, 1 = 가능
+  }));
+}, [flightData]);
 
   // ✅ 선택 가능한 좌석 필터링
-  const getSelectableSeats = () => {
-    return allSeats.map(seat => ({
+const getSelectableSeats = () => {
+  return allSeats.map(seat => {
+    const blocked = seat.is_reserved === 0; // 0이면 막음
+    return {
       ...seat,
-      selectable: seat.type === flightData.classType
-    }));
-  };
-
+      selectable: seat.type === flightData.classType && !blocked,
+      blocked,
+    };
+  });
+};
   const selectableSeats = getSelectableSeats();
 
   // ✅ 비즈니스 클래스와 일반석 좌석 분리
   const bizliteSeats = selectableSeats.filter(seat => seat.type === 'bizlite');
   const standardSeats = selectableSeats.filter(seat => seat.type === 'standard');
 
-  const handleSeatClick = (seat) => {
-    if (seat.available && seat.selectable) {
-      setSelectedSeat(seat);
-    }
-  };
+const handleSeatClick = (seat) => {
+  if (seat.available && seat.selectable) {
+    console.log('[SeatSelection] 클릭한 좌석:', seat); //선택한 좌석이 뜨도록 
+    setSelectedSeat(seat);
+  }
+};
 
 const handleConfirm = () => {
   if (selectedSeat && onConfirm) {
@@ -51,7 +58,24 @@ const handleConfirm = () => {
   const getSeatPrice = (seatType) => {
     return seatType === 'bizlite' ? 10000 : 5000;
   };
-
+useEffect(() => {
+  if (flightData) {
+    console.log('[SeatSelection] 받은 옵션:', {
+      opt_num: flightData.opt_num,
+      opt_name: flightData.opt_name,
+    });
+  }
+}, [flightData]);
+  // 선택 상태 변화를 항상 추적
+useEffect(() => {
+  if (selectedSeat) {
+    console.log('[SeatSelection] 선택된 좌석 변경:', {
+      id: selectedSeat.id,
+      type: selectedSeat.type,
+      is_reserved: selectedSeat.is_reserved,
+    });
+  }
+}, [selectedSeat]);
   return (
     <React.Fragment>
       <Header />
@@ -162,11 +186,25 @@ const handleConfirm = () => {
                           <div
                             key={seat.id}
                             className={`seat ${
-                              selectedSeat?.id === seat.id ? 'selected' : 
-                              seat.selectable ? 'available' : 'occupied'
+                          selectedSeat?.id === seat.id
+                            ? 'selected'
+                            : seat.blocked
+                              ? 'disabled'
+                              : seat.selectable
+                                ? 'available'
+                                : 'occupied'
                             }`}
-                            onClick={() => handleSeatClick(seat)}
-                            title={seat.selectable ? '선택 가능' : '다른 클래스 좌석'}
+                            onClick={() => {
+                              if (seat.blocked || !seat.available || !seat.selectable) return; // 막힌 좌석 차단
+                              handleSeatClick(seat);
+                            }}
+                              title={
+                            seat.blocked
+                              ? '예약 불가 좌석입니다.'
+                              : seat.selectable
+                                ? '선택 가능'
+                                : '다른 클래스 좌석'
+                          }
                           >
                             {seat.id}
                           </div>
