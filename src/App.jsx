@@ -20,6 +20,7 @@ import NoticeDetail from './pages/notice/NoticeDetail.jsx';
 import NoticeNew from './pages/notice/NoticeNew.jsx';
 
 import MyPage from './pages/mypage/MyPage.jsx';
+import PaymentComplete from './components/reservation/PaymentComplete.jsx';
 
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
        <Route path='/noticeDetail/:id' element={<NoticeDetail/>}/>
        <Route path='/noticeNew' element={<NoticeNew/>}/>
        <Route path='/mypage' element={<MyPage/>}/>
+       <Route path="/payment/success" element={<PaymentComplete />} />
+   
       </Routes>
    </BrowserRouter>
   )

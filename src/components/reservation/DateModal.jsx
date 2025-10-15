@@ -46,7 +46,7 @@ useEffect(() => {
             // 전체 데이터 범위에서 실제 스케줄이 있는 날짜들을 조회
             const priceMap = {};
             const dataStartDate = new Date(2025, 8, 30); // 9월 30일
-            const dataEndDate = new Date(2025, 9, 12);   // 10월 12일
+            const dataEndDate = new Date(2025, 9, 20);   // 10월 12일
             const currentDate = new Date(dataStartDate);
             
             console.log(`${departureCode} → ${arrivalCode} 스케줄 조회 시작`);
@@ -150,7 +150,7 @@ const isDisabled = (date) => {
     
     // 데이터가 있는 범위
     const dataStartDate = new Date(2025, 8, 30);
-    const dataEndDate = new Date(2025, 9, 12);
+    const dataEndDate = new Date(2025, 9, 20);
     
     // 과거 날짜이거나 데이터 범위를 벗어나면 비활성화
     if (date < today || date < dataStartDate || date > dataEndDate) {
@@ -293,7 +293,7 @@ const renderCalendar = (monthDate) => {
 
     // 데이터 범위
     const dataStartDate = new Date(2025, 8, 30);
-    const dataEndDate = new Date(2025, 9, 12);
+    const dataEndDate = new Date(2025, 9, 20);
 
     for (let i = 0; i < 42; i++) {
         const date = new Date(currentDate);

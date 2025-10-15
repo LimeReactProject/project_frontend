@@ -216,18 +216,20 @@ body {
 }
 
 
-/* 옵션 행 */
 .options-row {
   display: flex;
   align-items: flex-end;
   gap: 40px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* wrap → nowrap으로 변경 */
+  overflow-x: auto; /* 화면이 작을 때 스크롤 가능하도록 */
 }
 
 .payment-section {
   display: flex;
   align-items: center;
   gap: 20px; /* 제목과 옵션 사이 간격 */
+  flex-wrap: nowrap; /* 줄바꿈 방지 추가 */
+
 }
 
 .section-title {
@@ -235,7 +237,8 @@ body {
   font-weight: 600;
   color: #666;
   margin-bottom: 0; /* 하단 마진 제거 */
-
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  flex-shrink: 0; /* 제목이 축소되지 않도록 */
 }
 .btnMark{
     background-position: 0 0;
@@ -279,8 +282,10 @@ body {
 
 .payment-options {
   display: flex;
-  gap: 30px;
+  flex-direction: row; /* 가로 방향으로 배치 */
   align-items: center;
+  gap: 20px; /* 옵션들 사이 간격 */
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
 }
 
 .payment-option {
@@ -291,8 +296,8 @@ body {
   font-size: 14px;
   color: #333;
   white-space: nowrap;
+  flex-shrink: 0; /* 축소 방지 */
 }
-
 .payment-option input[type="radio"] {
   margin: 0;
   width: 16px;
@@ -404,15 +409,27 @@ body {
     margin-left: 0;
   }
   
+  /* ✅ 이 부분을 수정 - payment-section만 별도로 처리 */
   .options-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 30px;
+    display: flex;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap; /* nowrap에서 wrap으로 변경 */
+  }
+  
+  /* ✅ payment-section은 가로 유지 */
+  .payment-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+    min-width: 300px; /* 최소 너비 보장 */
   }
   
   .btn-search {
     margin-left: 0;
-    width: 100%;
+    width: auto; /* 100%에서 auto로 변경 */
+    min-width: 120px;
   }
 }
 
@@ -443,11 +460,6 @@ body {
     font-size: 20px;
   }
   
-  .payment-options {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
   .promotion-row {
     flex-direction: column;
     align-items: stretch;
@@ -457,8 +469,40 @@ body {
   .promo-input {
     width: 100%;
   }
+  
+  /* ✅ 768px 이하에서도 가로 유지 */
+  .options-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+  
+  .payment-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: nowrap;
+  }
+  
+  .payment-options {
+    flex-direction: row !important;
+    gap: 15px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 5px 0;
+  }
+  
+  .payment-option {
+    font-size: 13px;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  .btn-search {
+    width: 100%;
+  }
 }
-
 @media (max-width: 480px) {
   .page-title {
     font-size: 24px;
