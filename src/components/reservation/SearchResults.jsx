@@ -815,10 +815,19 @@ const handlePaymentComplete = (paymentResult) => {
 
 // ✅ 좌석 선택 페이지 렌더링
 if (showSeatSelection && bookingData) {
-  const SeatSelection = React.lazy(() => import('./SeatSelection'));
-  return (
+  const SeatSelection = React.lazy(async () => {
+    try {
+      const m = await import('./SeatSelection');
+      // default 없을 때도 대비
+      return { default: m.default ?? m.SeatSelection };
+    } catch (e) {
+      console.error('[Lazy] SeatSelection 로드 실패:', e);
+      throw e;
+    }
+  });
+return (
     <React.Suspense fallback={<div>Loading...</div>}>
-      <SeatSelection 
+      <SeatSelection
         flightData={bookingData}
         onBack={handleSeatSelectionBack}
         onConfirm={handleSeatSelectionConfirm}
@@ -826,7 +835,6 @@ if (showSeatSelection && bookingData) {
     </React.Suspense>
   );
 }
-
 
   return (
     <React.Fragment>
