@@ -14,6 +14,7 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
     const [recentSearches, setRecentSearches] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [countries, setCountries] = useState([]);
+    const [favoriteCities, setFavoriteCities] = useState(new Set());
 
     // API에서 데이터 가져오기 
     useEffect(() => {
@@ -57,6 +58,48 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
             getData();
         }
     }, [isOpen]);
+
+    // 즐겨찾기 토글 함수
+    const toggleFavorite = (cityName, cityCode) => {
+        const cityKey = `${cityName}-${cityCode}`;
+        setFavoriteCities(prev => {
+            const newFavorites = new Set(prev);
+            if (newFavorites.has(cityKey)) {
+                newFavorites.delete(cityKey);
+                // 즐겨찾기에서 제거
+                setFavorites(prevFav => prevFav.filter(item => !(item.name === cityName && item.code === cityCode)));
+            } else {
+                newFavorites.add(cityKey);
+                // 즐겨찾기에 추가 (중복 체크)
+                setFavorites(prevFav => {
+                    // 이미 존재하는지 확인
+                    const exists = prevFav.some(item => item.name === cityName && item.code === cityCode);
+                    if (!exists) {
+                        return [...prevFav, { name: cityName, code: cityCode }];
+                    }
+                    return prevFav;
+                });
+            }
+            return newFavorites;
+        });
+    };
+
+    // 즐겨찾기 상태 확인 함수
+    const isFavorite = (cityName, cityCode) => {
+        const cityKey = `${cityName}-${cityCode}`;
+        return favoriteCities.has(cityKey);
+    };
+
+    // 즐겨찾기 삭제 함수
+    const removeFavorite = (cityName, cityCode) => {
+        const cityKey = `${cityName}-${cityCode}`;
+        setFavoriteCities(prev => {
+            const newFavorites = new Set(prev);
+            newFavorites.delete(cityKey);
+            return newFavorites;
+        });
+        setFavorites(prevFav => prevFav.filter(item => !(item.name === cityName && item.code === cityCode)));
+    };
 
     if (!isOpen) return null;
 
@@ -161,7 +204,7 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
                                             className="item-delete"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                console.log('Delete favorite:', item.name);
+                                                removeFavorite(item.name, item.code);
                                             }}
                                         >
                                             ×
@@ -225,13 +268,14 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
                                                      <span className="city-code">{city.code}</span>
                                                  </div>
                                                  <div 
-                                                     className="favorite-btn"
+                                                     className={`favorite-btn ${isFavorite(city.name, city.code) ? 'favorited' : ''}`}
                                                      onClick={(e) => {
                                                          e.stopPropagation();
-                                                         console.log('Toggle favorite:', city.name);
+                                                         toggleFavorite(city.name, city.code);
                                                      }}
+                                                     title={isFavorite(city.name, city.code) ? '즐겨찾기에서 제거' : '즐겨찾기에 추가'}
                                                  >
-                                                     <Star size={16} />
+                                                     <Star size={16} fill={isFavorite(city.name, city.code) ? '#f59e0b' : 'none'} />
                                                  </div>
                                              </button>
                                          ))

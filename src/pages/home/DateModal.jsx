@@ -11,7 +11,7 @@ const toYMDLocal = (d) => {
     return `${y}-${m}-${day}`;
 };
 
-function DateModal({ isOpen, onClose, modalType, onSelectDate, searchType }) {
+function DateModal({ isOpen, onClose, modalType, onSelectDate, searchType, allowPastDates = false }) {
     const [selectedDeparture, setSelectedDeparture] = useState(null);
     const [selectedReturn, setSelectedReturn] = useState(null);
     const [currentMonth, setCurrentMonth] = useState(new Date(2025, 8)); // 2025년 9월 (0-based)
@@ -29,9 +29,16 @@ function DateModal({ isOpen, onClose, modalType, onSelectDate, searchType }) {
     };
 
     const isDisabled = (date) => {
+        // allowPastDates가 true이면 지나간 날짜도 선택 가능 (월만 체크)
+        if (allowPastDates) {
+            // 오직 현재 표시된 월이 아닌 날짜만 비활성화
+            return date.getMonth() !== currentMonth.getMonth() && date.getMonth() !== nextMonth.getMonth();
+        }
+        
+        // 기본적으로는 오늘 이전 날짜는 비활성화
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        return date < today || date.getMonth() !== currentMonth.getMonth() && date.getMonth() !== nextMonth.getMonth();
+        return date < today || (date.getMonth() !== currentMonth.getMonth() && date.getMonth() !== nextMonth.getMonth());
     };
 
     const isSelected = (date) => {

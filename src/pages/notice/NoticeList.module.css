@@ -1,0 +1,139 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.header {
+    margin-bottom: 40px;
+}
+.headerActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.writeButton {
+    display: inline-block;
+    background: #ff6b00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.writeButton:hover { background: #ff7f26; }
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #666;
+}
+
+.list {
+    border-top: 2px solid #222;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+}
+
+.content {
+    flex: 1;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.badgeImportant {
+    align-self: flex-start;
+    margin-bottom: 6px;
+}
+
+.noticeTitle {
+    font-size: 18px;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.badgeImportant {
+    display: inline-block;
+    background-color: #ff6b00;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.date {
+    font-size: 14px;
+    color: #999;
+}
+
+.arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 60px;
+}
+
+.pageBtn {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}
+
+.pageNum {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}
+
+.pageNumActive {
+    background-color: #ff6b00;
+    color: white;
+    border-color: #ff6b00;
+}

@@ -353,7 +353,7 @@ function FlightInfo() {
                                             />
                                             <div className={styles['input-help']}>
                                                 <span className={styles['help-icon']}>i</span>
-                                                <span className={styles['help-text']}>편명은 3~4 자리의 숫자로 입력해주세요.</span>
+                                                <span className={styles['help-text']}>편명은 5자리로 입력해주세요.</span>
                                             </div>
                                         </div>
                                         
@@ -406,6 +406,7 @@ function FlightInfo() {
                 modalType={modalType}
                 onSelectDate={handleDateSelect}
                 searchType={searchType}
+                allowPastDates={true}
             />}
             
             {/* 디버깅용 - DateModal에 전달되는 값 확인 */}

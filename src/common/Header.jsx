@@ -1,6 +1,7 @@
 import '../css/common/Header.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // 필요한 함수들 정의
 const URL_LINK = {
@@ -46,12 +47,30 @@ function Header() {
   };
 
   // 로그아웃 처리 함수
-  const handleLogout = () => {
+  // const handleLogout = () => {
+  //   sessionStorage.removeItem("loginUser");
+  //   alert("로그아웃 되었습니다.");
+  //   setIsLoggedIn(false);
+  //   nav("/"); // 홈으로 이동
+  // };
+
+  const handleLogout = async() => {
+      try {
+        // 서버에 로그아웃 요청 (선택사항)
+        await axios.post("http://localhost:8080/login/logout", {}, {
+          withCredentials: true
+        });
+    } catch(error) {
+      // 서버 요청이 실패해도 클라이언트 로그아웃은 진행
+      console.warn("서버 로그아웃 요청 실패, 클라이언트 로그아웃 진행:", error.message);
+    }
+    
+    // 클라이언트 측 로그아웃 처리
     sessionStorage.removeItem("loginUser");
     alert("로그아웃 되었습니다.");
     setIsLoggedIn(false);
-    nav("/"); // 홈으로 이동
-  };
+    nav("/");
+  }
 
 	// 스크롤 시 드롭박스 위치 동적 조정
 	useEffect(() => {
@@ -121,7 +140,7 @@ function Header() {
           <a href="javascript:;" onClick={() => URL_LINK.getI18Url('/customerService/csCenter/faqList.do')}
             className="util__link">고객센터</a>
 
-          <a href="javascript:;" onClick={() => URL_LINK.getI18Url('/customerServiceCenter/notice.do')}
+          <a href="javascript:;" onClick={() => nav("/noticeList")}
             className="util__link">공지사항</a>
 
           <button type="button" className="util__country" data-custom-toggle="button">
