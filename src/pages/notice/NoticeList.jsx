@@ -32,10 +32,10 @@ function NoticeList() {
         const fetchData = async() => {
 
             try{
-                setLoading(true);iClient.get('/list');
+                setLoading(true);
+                const response = await apiClient.get('/list');
                 setForm(response.data);
-                
-                const response = await apconsole.log(response.data)
+                console.log(response.data);
             } catch(error){
                 console.error('에러:',error);
             } finally {

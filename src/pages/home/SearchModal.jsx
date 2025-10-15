@@ -14,6 +14,7 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
     const [recentSearches, setRecentSearches] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [countries, setCountries] = useState([]);
+    const [favoriteCities, setFavoriteCities] = useState(new Set());
 
     // API에서 데이터 가져오기 
     useEffect(() => {
@@ -57,6 +58,30 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
             getData();
         }
     }, [isOpen]);
+
+    // 즐겨찾기 토글 함수
+    const toggleFavorite = (cityName, cityCode) => {
+        const cityKey = `${cityName}-${cityCode}`;
+        setFavoriteCities(prev => {
+            const newFavorites = new Set(prev);
+            if (newFavorites.has(cityKey)) {
+                newFavorites.delete(cityKey);
+                // 즐겨찾기에서 제거
+                setFavorites(prevFav => prevFav.filter(item => !(item.name === cityName && item.code === cityCode)));
+            } else {
+                newFavorites.add(cityKey);
+                // 즐겨찾기에 추가
+                setFavorites(prevFav => [...prevFav, { name: cityName, code: cityCode }]);
+            }
+            return newFavorites;
+        });
+    };
+
+    // 즐겨찾기 상태 확인 함수
+    const isFavorite = (cityName, cityCode) => {
+        const cityKey = `${cityName}-${cityCode}`;
+        return favoriteCities.has(cityKey);
+    };
 
     if (!isOpen) return null;
 
@@ -225,13 +250,14 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
                                                      <span className="city-code">{city.code}</span>
                                                  </div>
                                                  <div 
-                                                     className="favorite-btn"
+                                                     className={`favorite-btn ${isFavorite(city.name, city.code) ? 'favorited' : ''}`}
                                                      onClick={(e) => {
                                                          e.stopPropagation();
-                                                         console.log('Toggle favorite:', city.name);
+                                                         toggleFavorite(city.name, city.code);
                                                      }}
+                                                     title={isFavorite(city.name, city.code) ? '즐겨찾기에서 제거' : '즐겨찾기에 추가'}
                                                  >
-                                                     <Star size={16} />
+                                                     <Star size={16} fill={isFavorite(city.name, city.code) ? '#f59e0b' : 'none'} />
                                                  </div>
                                              </button>
                                          ))

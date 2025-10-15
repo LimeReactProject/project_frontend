@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Calendar, Search, Plane } from "lucide-react";
+import { Calendar, Search, Plane, FileText } from "lucide-react";
 import Header from "../../common/Header";
 import Footer from "../../common/Footer";
 import DateModal from "../home/DateModal";
 import SearchModal from "../home/SearchModal";
+import CustomerIdentificationModal from "../../components/CustomerIdentificationModal";
 import { apiClient } from "../../apis/FlightInfoApi";
 import styles from './FlightTracking.module.css';
 
@@ -38,6 +39,8 @@ function FlightTracking() {
     const [modalType, setModalType] = useState('departure');
     const [loading, setLoading] = useState(false);
     const [flights, setFlights] = useState([]);
+    const [isCustomerModal, setIsCustomerModal] = useState(false);
+    const [customerData, setCustomerData] = useState(null);
     
     // 도시 선택 함수
     const handleCitySelect = (cityName, cityCode) => {
@@ -58,7 +61,7 @@ function FlightTracking() {
             month: '2-digit',
             day: '2-digit',
             weekday: 'short'
-        }).replace(/\./g, '.').replace(/ /g, '');
+        }).replace(/ /g, '');
         
         setCurrentDepartureDate(formattedDate);
         setIsDateModal(false);
@@ -139,6 +142,39 @@ function FlightTracking() {
             await fetchRouteData();
         } else {
             await fetchFlightCodeData();
+        }
+    };
+
+    // 고객확인서 조회 함수
+    const fetchCustomerIdentification = async (flightCode, departureCode, arrivalCode, flightDate) => {
+        try {
+            console.log('원본 날짜:', flightDate);
+            
+            // 날짜 형식 변환: 2025.10.01.(수) -> 2025-10-01
+            let formattedDate = flightDate
+                .replace(/\./g, '-')  // 점을 하이픈으로 변경
+                .replace(/\([^)]*\)/g, '')  // 괄호와 그 안의 내용 제거
+                .replace(/-+$/, '')  // 끝에 있는 하이픈들 제거
+                .trim();  // 공백 제거
+            
+            console.log('변환된 날짜:', formattedDate);
+            console.log('요청 파라미터:', { flightCode, departureCode, arrivalCode, flightDate: formattedDate });
+            
+            const params = {
+                flightCode,
+                departureCode,
+                arrivalCode,
+                flightDate: formattedDate
+            };
+            const response = await apiClient.get('/customer-identification-form', { params });
+            console.log('백엔드 응답 전체:', response);
+            console.log('백엔드 응답 데이터:', response.data);
+            setCustomerData(response.data);
+            setIsCustomerModal(true);
+        } catch (error) {
+            console.error('고객확인서 조회 실패:', error);
+            console.error('에러 상세:', error.response?.data);
+            alert('고객확인서를 불러올 수 없습니다.');
         }
     };
      
@@ -253,13 +289,20 @@ function FlightTracking() {
                                     />
                                     <div className={styles['input-help']}>
                                         <span className={styles['help-icon']}>i</span>
-                                        <span className={styles['help-text']}>편명은 3~4 자리의 숫자로 입력해주세요.</span>
+                                        <span className={styles['help-text']}>편명은 5자리로 입력해주세요.</span>
                                     </div>
                                 </div>
                                 
                                 <div className={styles['input-group']}>
                                     <label className={styles['input-label']}>출발일 선택</label>
-                                    <div className={styles['flight-date-wrapper']}>
+                                    <div 
+                                        className={styles['flight-date-wrapper']}
+                                        onClick={() => {
+                                            setModalType('departure');
+                                            setIsDateModal(true);
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <input 
                                             type="text" 
                                             className={styles['flight-date-field']}
@@ -340,6 +383,36 @@ function FlightTracking() {
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    {/* 고객확인서 버튼 - 비운항인 경우에만 표시 */}
+                                    {item.flightStatus === '비운항' && (
+                                        <div className={styles['customer-button-container']}>
+                                            <button 
+                                                className={styles['customer-button']}
+                                                onClick={() => {
+                                                    if (searchType === '구간 조회') {
+                                                        fetchCustomerIdentification(
+                                                            item.flightCode, 
+                                                            currentDepartureCode, 
+                                                            currentArrivalCode, 
+                                                            currentDepartureDate
+                                                        );
+                                                    } else {
+                                                        // 편명 조회의 경우 출발지/도착지 정보가 없으므로 기본값 사용
+                                                        fetchCustomerIdentification(
+                                                            item.flightCode, 
+                                                            'ICN', // 기본값
+                                                            'NRT', // 기본값
+                                                            currentDepartureDate
+                                                        );
+                                                    }
+                                                }}
+                                            >
+                                                <FileText size={16} />
+                                                고객확인서
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -362,6 +435,13 @@ function FlightTracking() {
                 modalType={modalType}
                 onSelectDate={handleDateSelect}
                 searchType="편도"
+                allowPastDates={true}
+            />
+            
+            <CustomerIdentificationModal 
+                isOpen={isCustomerModal}
+                onClose={() => setIsCustomerModal(false)}
+                data={customerData}
             />
             
             <Footer/>

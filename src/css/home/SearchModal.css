@@ -371,6 +371,14 @@
      color: #fbbf24;
    }
    
+   .favorite-btn.favorited {
+     color: #f59e0b;
+   }
+   
+   .favorite-btn.favorited:hover {
+     color: #d97706;
+   }
+   
    .no-cities {
      display: flex;
      align-items: center;
