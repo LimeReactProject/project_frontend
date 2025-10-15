@@ -70,8 +70,15 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
                 setFavorites(prevFav => prevFav.filter(item => !(item.name === cityName && item.code === cityCode)));
             } else {
                 newFavorites.add(cityKey);
-                // 즐겨찾기에 추가
-                setFavorites(prevFav => [...prevFav, { name: cityName, code: cityCode }]);
+                // 즐겨찾기에 추가 (중복 체크)
+                setFavorites(prevFav => {
+                    // 이미 존재하는지 확인
+                    const exists = prevFav.some(item => item.name === cityName && item.code === cityCode);
+                    if (!exists) {
+                        return [...prevFav, { name: cityName, code: cityCode }];
+                    }
+                    return prevFav;
+                });
             }
             return newFavorites;
         });
@@ -81,6 +88,17 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
     const isFavorite = (cityName, cityCode) => {
         const cityKey = `${cityName}-${cityCode}`;
         return favoriteCities.has(cityKey);
+    };
+
+    // 즐겨찾기 삭제 함수
+    const removeFavorite = (cityName, cityCode) => {
+        const cityKey = `${cityName}-${cityCode}`;
+        setFavoriteCities(prev => {
+            const newFavorites = new Set(prev);
+            newFavorites.delete(cityKey);
+            return newFavorites;
+        });
+        setFavorites(prevFav => prevFav.filter(item => !(item.name === cityName && item.code === cityCode)));
     };
 
     if (!isOpen) return null;
@@ -186,7 +204,7 @@ function SearchModal({ isOpen, onClose, modalType, onSelectCity }) {
                                             className="item-delete"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                console.log('Delete favorite:', item.name);
+                                                removeFavorite(item.name, item.code);
                                             }}
                                         >
                                             ×
