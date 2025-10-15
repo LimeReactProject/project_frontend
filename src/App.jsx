@@ -13,8 +13,15 @@ import Membership from './pages/membership/Membership.jsx';
 import UserAgreement from './pages/membership/UserAgreement.jsx';
 import ScheduleDetail from './pages/flight-information/ScheduleDetail.jsx';
 import FlightTracking from './pages/flight-information/FlightTracking.jsx';
+
+import NoticeList from './pages/notice/NoticeList.jsx';
+import NoticeEdit from './pages/notice/NoticeEdit.jsx';
+import NoticeDetail from './pages/notice/NoticeDetail.jsx';
+import NoticeNew from './pages/notice/NoticeNew.jsx';
+
 import MyPage from './pages/mypage/MyPage.jsx';
 import PaymentComplete from './components/reservation/PaymentComplete.jsx';
+
 
 function App() {
  
@@ -35,6 +42,11 @@ function App() {
        <Route path="/user-agreement" element={<UserAgreement/>} />
        <Route path='/ScheduleDetail' element={<ScheduleDetail/>}/>
        <Route path='/flight-tracking' element={<FlightTracking/>}/>
+
+       <Route path='/noticeList' element={<NoticeList/>}/>
+       <Route path='/noticeEdit/:id' element={<NoticeEdit/>}/>
+       <Route path='/noticeDetail/:id' element={<NoticeDetail/>}/>
+       <Route path='/noticeNew' element={<NoticeNew/>}/>
        <Route path='/mypage' element={<MyPage/>}/>
        <Route path="/payment/success" element={<PaymentComplete />} />
    
