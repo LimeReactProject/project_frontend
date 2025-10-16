@@ -841,6 +841,7 @@
   min-height: 160px;
 }
 
+
 .detail-option-card:hover {
   border-color: #ff5500;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -852,10 +853,6 @@
   box-shadow: 0 2px 8px rgba(255, 85, 0, 0.2);
 }
 
-.detail-option-card.recommended {
-  border-color: #ff5500;
-  background: linear-gradient(135deg, #fff5f0 0%, #ffffff 100%);
-}
 
 /* ✅ 체크박스 스타일 - 크기 축소 */
 .detail-option-checkbox {
@@ -871,19 +868,6 @@
   accent-color: #ff5500;
 }
 
-/* ✅ 추천 배지 - 크기 축소 */
-.recommended-badge {
-  position: absolute;
-  top: -6px;
-  right: 8px;
-  background: #ff5500;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: bold;
-  z-index: 1;
-}
 
 /* ✅ 카드 정보 영역 - 패딩 축소 */
 .detail-option-left {
@@ -1269,4 +1253,43 @@ detail-option-card:hover {
   .search-results-main {
     padding-bottom: 150px; /* 모바일에서는 더 큰 여백 */
   }
+
+  /* ✅ 좌석 가용성 정보 스타일 */
+.seat-availability-summary {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.seats-available {
+  color: #28a745;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.seats-unavailable {
+  color: #dc3545;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ✅ 비활성화된 예약 버튼 스타일 */
+.btn-booking.disabled {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.btn-booking:disabled {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.btn-booking:disabled:hover {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  transform: none !important;
+}
 }

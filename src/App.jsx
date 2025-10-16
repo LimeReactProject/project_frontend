@@ -21,6 +21,7 @@ import NoticeNew from './pages/notice/NoticeNew.jsx';
 
 import MyPage from './pages/mypage/MyPage.jsx';
 import PaymentComplete from './components/reservation/PaymentComplete.jsx';
+import FareOption from './pages/fareoption/FareOption.jsx';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
        <Route path='/mypage' element={<MyPage/>}/>
        <Route path="/payment/success" element={<PaymentComplete />} />
    
+        <Route path="/fare-option" element={<FareOption />} />
       </Routes>
    </BrowserRouter>
   )

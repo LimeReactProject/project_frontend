@@ -268,7 +268,7 @@ function Header() {
                         data-ep-language-environment="ko-KR"
                         data-event-name="click_lnb"
                         data-ep-visit-login-yn="N"
-                        onClick={(e) => { sendGAAttrEvent(e); URL_LINK.getI18Url('/additionalService/service/fareOption.do'); }}
+                        onClick={(e) => { sendGAAttrEvent(e); nav('/fare-option'); }}
                         >운임옵션</a
                       >
                     </li>
